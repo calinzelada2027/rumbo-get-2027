@@ -11,7 +11,7 @@
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
 header{background:var(--blue);color:white;padding:28px 22px 38px;border-radius:0 0 32px 32px}
 header h1{margin:0 0 12px;font-size:27px}header p{margin:0;font-size:18px}
-main{max-width:650px;margin:auto;padding:20px 15px 110px}
+main{max-width:650px;margin:auto;padding:20px 15px 120px}
 .card{background:#fff;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 4px 15px rgba(0,0,0,.09)}
 .card h2,.card h3{margin:0 0 16px}.big{font-size:40px;font-weight:700;margin:15px 0}.green{color:var(--green)}.muted{color:var(--muted)}
 button{border:0;border-radius:12px;background:var(--blue2);color:#fff;padding:13px 16px;font-weight:700;font-size:15px}
@@ -25,19 +25,34 @@ nav button{background:transparent;color:var(--ink);padding:6px 2px;font-size:12p
 .view{display:none}.view.active{display:block}
 input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-radius:10px;margin:6px 0 12px;font-size:16px;background:white}
 .row{display:flex;gap:8px;flex-wrap:wrap}.pill{display:inline-block;background:#edf5ff;color:#17477f;border-radius:999px;padding:5px 9px;font-size:12px;margin-top:5px}
-.pill.greenp{background:#edf8f2;color:#13764c}.pill.redp{background:#fff1f2;color:#b4232c}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.search{margin-top:8px}
 .history{background:#f8fafc;border:1px solid #e2e8f0;border-radius:15px;padding:14px;margin-top:12px}
-.persona-actions{display:flex;gap:8px;margin-top:10px}.persona-actions button{padding:8px 11px;font-size:13px}
+.persona-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.persona-actions button{padding:8px 11px;font-size:13px}
 .warning{display:block;color:#b54708;margin:-6px 0 10px;font-size:13px;font-weight:700}
 .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:50;align-items:flex-end;justify-content:center}
 .modal.open{display:flex}.modal-card{background:white;width:100%;max-width:650px;max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -6px 30px rgba(0,0,0,.18)}
 .modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.modal-head h2{margin:0}.closebtn{background:#eef3f8;color:var(--ink);font-size:20px;padding:7px 11px}
+/* Seguimientos 4.3 */
+.alpha{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}.alpha::-webkit-scrollbar{display:none}
+.alpha button{min-width:38px;padding:9px 10px;background:#eef3f8;color:#344054;border-radius:10px;white-space:nowrap}
+.alpha button.active{background:var(--blue);color:#fff}
+.follow-result{border:1px solid #e4e7ec;border-radius:15px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}
+.follow-result.selected{border:2px solid var(--blue2);background:#f7fbff}
+.follow-result .name{font-weight:700;font-size:16px;margin-bottom:6px}
+.meta-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
+.stage-new{background:#f3f4f6;color:#6B7280}.stage-attempt{background:#f1f5f9;color:#64748B}.stage-conv{background:#eff6ff;color:#2563EB}.stage-cita{background:#eef2ff;color:#4F46E5}.stage-presented{background:#f5f3ff;color:#7C3AED}.stage-client{background:#f0fdf4;color:#16A34A}.stage-dist{background:#ecfdf5;color:#047857}.stage-hold{background:#f8fafc;color:#475569}
+.urg-overdue{background:#fef2f2;color:#DC2626}.urg-today{background:#fff7ed;color:#EA580C}.urg-tomorrow{background:#fffbeb;color:#CA8A04}.urg-soon{background:#eff6ff;color:#2563EB}.urg-later{background:#f8fafc;color:#475569}.urg-none{background:#f3f4f6;color:#9CA3AF}.urg-done{background:#f0fdf4;color:#16A34A}
+.selected-card{border:2px solid #dbeafe;background:#f8fbff}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.action-grid button{padding:11px 9px;font-size:13px}
+.recent-wrap{margin:4px 0 12px}.recent-chip{background:#f8fafc;color:#344054;border:1px solid #e4e7ec;padding:8px 10px;margin:4px 4px 0 0;font-size:13px}
+.countnote{font-size:12px;color:var(--muted);margin:4px 0 8px}
+.activity-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.activity-row:last-child{border-bottom:0}
+.activity-text{flex:1;font-size:14px;line-height:1.35}.activity-text small{display:block;color:var(--muted);margin-top:4px}.undo{background:#fff1f2;color:#b4232c;padding:7px 9px;font-size:12px}
 </style>
 </head>
 <body>
 <header><h1>RUMBO A GET 2027</h1><p>Plan de Acción · 90 días</p></header>
-
 <main>
 <section id="inicio" class="view active">
  <div class="card">
@@ -45,9 +60,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
   <p class="green" id="todayMsg">Vamos por la meta del día</p>
   <button onclick="goToNewProspect()">+ NUEVO PROSPECTO</button>
  </div>
-
  <div class="card"><h2>🔥 Prioridades · Semana 2</h2><div id="priorityList"></div></div>
-
  <div class="card"><h2>📊 Avance semanal · Semana 2</h2>
   <div class="grid">
    <div class="dato">Contactos<b><span id="weekContacts">0</span> / 30</b></div>
@@ -57,17 +70,16 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
   </div>
   <div class="history"><b>Semana 1 cerrada · 1–6 septiembre</b><br><span class="muted">27 contactos · 14 conversaciones · 6 invitaciones · 2 presentaciones · 6 seguimientos · 16 h Bloque Poder</span></div>
  </div>
-
  <div class="card"><h2>📈 Meta Septiembre</h2><h2>3,000 PV</h2><p>Meta de ingresos: <b>S/ 5,000</b></p></div>
 </section>
 
 <section id="prospectos" class="view">
  <div class="card">
   <div class="topline"><h2>👥 Prospectos</h2><span class="pill" id="prospectCount"></span></div>
-  <input class="search" id="buscar" placeholder="Buscar por nombre, estado o categoría" oninput="renderProspects()">
+  <input class="search" id="buscar" placeholder="Buscar por nombre, etapa o categoría" oninput="renderProspects()">
   <div id="prospectList"></div>
  </div>
- <div class="card">
+ <div class="card" id="newProspectCard">
   <h2>➕ Nuevo prospecto</h2>
   <input id="nombre" placeholder="Nombre y apellido" oninput="checkNameWarning()">
   <small id="nameWarning" class="warning"></small>
@@ -81,15 +93,32 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 </section>
 
 <section id="seguimientos" class="view">
- <div class="card"><h2>🔁 Seguimientos</h2>
-  <select id="segProspect"></select>
+ <div class="card">
+  <h2>🔁 Seguimientos</h2>
+  <input class="search" id="segSearch" placeholder="🔎 Buscar prospecto por nombre" oninput="renderFollowSearch()">
+  <div id="alphaBar" class="alpha"></div>
+  <div class="recent-wrap"><b>Recientes</b><div id="recentList"></div></div>
+  <div id="followCount" class="countnote"></div>
+  <div id="followResults"></div>
+ </div>
+ <div class="card selected-card" id="followFormCard">
+  <h2 id="selectedTitle">Selecciona un prospecto</h2>
+  <div id="selectedMeta" class="meta-line"></div>
+  <div id="selectedNext" class="history" style="display:none"></div>
+  <label>Fecha del próximo paso</label>
   <input id="segFecha" type="date">
-  <textarea id="segNota" placeholder="Próximo paso"></textarea>
-  <div class="row">
-   <button onclick="addFollow()">Guardar seguimiento</button>
-   <button class="secondary" onclick="markConversation()">Registrar conversación</button>
-   <button class="secondary" onclick="markPresentation()">Presentación realizada</button>
+  <label>Próximo paso</label>
+  <textarea id="segNota" placeholder="Ej.: Proponer videollamada por WhatsApp"></textarea>
+  <button onclick="addFollow()">Guardar seguimiento</button>
+  <div class="action-grid">
+   <button class="secondary" onclick="markAttempt()">✉️ Registrar intento</button>
+   <button class="secondary" onclick="markConversation()">💬 Registrar conversación</button>
+   <button class="secondary" onclick="markAppointment()">📅 Cita acordada</button>
+   <button class="secondary" onclick="markPresentation()">▶️ Presentación realizada</button>
+   <button class="secondary" onclick="markClient()">✓ Nuevo cliente</button>
+   <button class="secondary" onclick="markDistributor()">★ Nuevo distribuidor</button>
   </div>
+  <p class="muted">La etapa principal nunca retrocede. El seguimiento se muestra aparte como acción pendiente.</p>
  </div>
  <div class="card"><h2>Pendientes / actividad</h2><div id="activityList"></div></div>
 </section>
@@ -101,6 +130,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Conversaciones<b id="rConversations">0</b></div>
    <div class="dato">Presentaciones<b id="rPresentations">0</b></div>
    <div class="dato">Seguimientos<b id="rFollowups">0</b></div>
+   <div class="dato">Clientes nuevos<b id="rClients">0</b></div>
+   <div class="dato">Distribuidores nuevos<b id="rDistributors">0</b></div>
   </div>
  </div>
  <div class="card"><h2>🗂️ Semana 1 cerrada</h2>
@@ -110,7 +141,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>Los prospectos de la Semana 1 quedan como historial. Hoy la Semana 2 empieza en cero. Un prospecto nuevo no suma contacto hasta que exista conversación real.</p><small class="muted">Versión 4.2 · Inicio simplificado, edición, eliminación y alerta de duplicados</small></div>
+ <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.3 · Buscador inteligente, estados principales, urgencias y deshacer actividad</small></div>
 </section>
 </main>
 
@@ -121,7 +152,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
   <label>Nombre</label><input id="editNombre" placeholder="Nombre y apellido">
   <label>Teléfono</label><input id="editTelefono" placeholder="Teléfono">
   <label>Categoría</label><select id="editCategoria"><option>A - Negocio</option><option>B - Cliente</option><option>Por definir</option></select>
-  <label>Estado</label><select id="editEstado"><option>Nuevo</option><option>Contactado</option><option>Conversación</option><option>Invitado</option><option>Presentado</option><option>Seguimiento</option><option>Cliente</option><option>Distribuidor</option><option>No por ahora</option><option>Por definir</option></select>
+  <label>Etapa principal</label><select id="editEstado"><option>Nuevo</option><option>Intento de contacto</option><option>Conversación</option><option>Invitado/Cita</option><option>Presentado</option><option>Cliente</option><option>Distribuidor</option><option>No por ahora</option></select>
   <label>Origen</label><select id="editOrigen"><option>Conocido</option><option>Frío</option><option>Nutri Healthy</option><option>Referido</option><option>Redes sociales</option><option>Otro</option></select>
   <label>Próximo paso</label><textarea id="editNext" placeholder="Próximo paso"></textarea>
   <label>Fecha / momento</label><input id="editNextDate" placeholder="Ej.: 30/09/2026, próxima semana">
@@ -141,92 +172,110 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 const SEED=[{"name": "Adan Llamo", "phone": "912576254", "category": "A - Negocio", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-01", "next": "Confirmar inscripción e iniciar plan de acción", "next_date": "2026-09-10", "notes": "Presentación de negocio realizada 02/09. Mostró interés y manifestó intención de inscribirse como distribuidor a partir del 10/09. Pendiente confirmar inscripción e iniciar activación.", "id": 1, "contacted": true}, {"name": "Alex Santa Maria", "phone": "956877045", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo visites", "notes": "Respondió WhatsApp. Pendiente conversación presencial sobre hábitos/bienestar.", "id": 2, "contacted": true}, {"name": "Alexander Peralta Chunga", "phone": "999652647", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo encuentres", "notes": "Respondió cordialmente. No profundizó por WhatsApp. Pendiente conversación presencial.", "id": 3, "contacted": true}, {"name": "Anderson Villanueva", "phone": "902675148", "category": "B - Cliente", "origin": "Nutri Healthy", "status": "Presentado", "last": "", "next": "", "next_date": "", "notes": "", "id": 4, "contacted": true}, {"name": "Andy Navarro", "phone": "922737361", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-01", "next": "Profundizar / presentar plan de negocio", "next_date": "2026-09-02", "notes": "Conversación presencial. Se explicó a grandes rasgos el negocio. Acordamos profundizar mañana.", "id": 5, "contacted": true}, {"name": "Anita Molero", "phone": "950034264", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "", "next": "", "next_date": "", "notes": "", "id": 6, "contacted": true}, {"name": "Arbañil Chozo", "phone": "991107462", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "Abordarlo presencialmente", "next_date": "", "notes": "Todavía nada hasta que hables con él.", "id": 7, "contacted": false}, {"name": "Dalma Fernandez", "phone": "952320371", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "2026-09-01", "next": "Continuar conversación desde su número personal", "next_date": "Pendiente respuesta", "notes": "Respondió y se retomó conversación. Pendiente detectar interés/necesidad.", "id": 8, "contacted": true}, {"name": "Sandra Vilchez", "phone": "995782631", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "Unos días después", "notes": "", "id": 9, "contacted": true}, {"name": "Carlos La Ciencia", "phone": "964755023", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Mantener relación / retomar más adelante", "next_date": "", "notes": "", "id": 10, "contacted": true}, {"name": "Beto Torres Cueva", "phone": "975810570", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 11, "contacted": true}, {"name": "Bibliana Briceño", "phone": "910025852", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 12, "contacted": false}, {"name": "Calin Ubillus", "phone": "950284011", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "", "next": "Concretar presentación del Plan de Marketing", "next_date": "03 o 04/09/2026", "notes": "Nuevo intento de contacto sin respuesta.", "id": 13, "contacted": true}, {"name": "Casharo", "phone": "941932401", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 14, "contacted": false}, {"name": "Celinda Gallardo", "phone": "941966428", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 15, "contacted": false}, {"name": "Cesar Bustamante", "phone": "941925377", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-04", "next": "Segundo contacto si no responde", "next_date": "", "notes": "Mensaje enviado, sin respuesta.", "id": 16, "contacted": true}, {"name": "Cesar Davila", "phone": "949960660", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Mensaje enviado, sin respuesta.", "id": 17, "contacted": true}, {"name": "Cesar Matallana", "phone": "958994500", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-05", "next": "Concretar día y hora para conversar sobre el proyecto", "next_date": "2026-09-07", "notes": "Respondió positivamente: acepta sentarse a conversar.", "id": 18, "contacted": true}, {"name": "Cesar Rodriguez", "phone": "988405859", "category": "A - Negocio", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 19, "contacted": false}, {"name": "Chavo Gustavo", "phone": "942193009", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 20, "contacted": false}, {"name": "Morayma Pizarro", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-03", "next": "Esperar respuesta por el producto / confirmar si desea avanzar con la compra o inscripción", "next_date": "", "notes": "Interesada en inscribirse para consumo personal. No interesada actualmente en desarrollar negocio.", "id": 21, "contacted": true}, {"name": "Elias Fernández", "phone": "922335449", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 22, "contacted": true}, {"name": "Ali Martinez", "phone": "953133003", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 23, "contacted": true}, {"name": "Consuelo Ocampo", "phone": "996494090", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Posible perfil de emprendedor.", "id": 24, "contacted": true}, {"name": "Carlos Alberto", "phone": "952651183", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 25, "contacted": false}, {"name": "Diana Miranda", "phone": "941932401", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 26, "contacted": false}, {"name": "Luis Vilchez", "phone": "945183319", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 27, "contacted": false}, {"name": "Chumacero", "phone": "48 355 917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 28, "contacted": false}, {"name": "Cinthia M. Morí Heredia", "phone": "971422661", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Continuar conversación y conocer cómo está actualmente", "next_date": "2026-09-07", "notes": "Sobrina en Lima. Se retomó contacto.", "id": 29, "contacted": true}, {"name": "Dirk Mejia", "phone": "939842304", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 30, "contacted": false}, {"name": "Dr Chasquero", "phone": "961435027", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 31, "contacted": false}, {"name": "Duayen- Maestro", "phone": "921610475", "category": "A - Negocio", "origin": "Conocido", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 32, "contacted": false}, {"name": "Eber Rebaza", "phone": "967754233", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 33, "contacted": false}, {"name": "Edgar Ortiz", "phone": "991367969", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 34, "contacted": false}, {"name": "Edgar Torres", "phone": "978415692", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-05", "next": "Segundo contacto e invitación a evaluación", "next_date": "2026-06-09", "notes": "Conoce tu actividad. Mensaje enviado, sin respuesta.", "id": 35, "contacted": true}, {"name": "Edgardo Sandoval", "phone": "992220549", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 36, "contacted": false}, {"name": "Edinson Maquita", "phone": "949405791", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-05", "next": "Esperar respuesta / segundo contacto", "next_date": "2026-09-09", "notes": "Mensaje enviado. Sin respuesta reportada.", "id": 37, "contacted": true}, {"name": "Edwin Ampuero", "phone": "982178585", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Retomar conversación y conocer necesidades", "next_date": "2026-09-09", "notes": "Primo lejano. Se retomó contacto; receptivo a conversar posteriormente.", "id": 38, "contacted": true}, {"name": "Efrain Meza", "phone": "929253999", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 39, "contacted": false}, {"name": "Elvira Cruz", "phone": "918898043", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 40, "contacted": false}, {"name": "Elena Vallejos", "phone": "922373394", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 41, "contacted": false}, {"name": "Eli Chachapoyas", "phone": "978951082", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 42, "contacted": false}, {"name": "Elias Arquitecto", "phone": "952226747", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 43, "contacted": false}, {"name": "Elias Serrato", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 44, "contacted": false}, {"name": "Elíseo Bazan", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 45, "contacted": false}, {"name": "Eloy Silva", "phone": "981340917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 46, "contacted": false}, {"name": "Elmer Herrera", "phone": "949500205", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 47, "contacted": false}, {"name": "Elva Cubas", "phone": "949408677", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 48, "contacted": false}, {"name": "Judith Diaz", "phone": "957311588", "category": "A - Negocio", "origin": "Frío", "status": "Presentado", "last": "2026-09-04", "next": "Retomar conversación y acordar siguiente paso", "next_date": "2026-09-07", "notes": "Contacto en frío. Le interesa emprender. Fue invitada a la reunión del sábado pero no asistió.", "id": 49, "contacted": true}, {"name": "Celso", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Presentado", "last": "2026-09-04", "next": "Confirmar compra del paquete de 7 días para su esposa", "next_date": "Próxima semana", "notes": "Manifestó intención de comprar esta semana para iniciar la siguiente.", "id": 50, "contacted": true}, {"name": "Samir Carvajal", "phone": "", "category": "A - Negocio", "origin": "Conocido", "status": "No por ahora", "last": "2026-06-04", "next": "Sin seguimiento inmediato", "next_date": "", "notes": "Conversó, pero no mostró interés actualmente.", "id": 51, "contacted": true}];
 const PRIORITIES=[{"name": "Adan Llamo", "note": "Confirmar inscripción e iniciar plan de acción"}, {"name": "Judith Diaz", "note": "Retomar conversación y acordar siguiente paso"}, {"name": "Celso", "note": "Confirmar compra del paquete de 7 días para su esposa"}, {"name": "Cesar Matallana", "note": "Concretar día y hora para conversar sobre el proyecto"}, {"name": "Calin Ubillus", "note": "Concretar presentación del Plan de Marketing"}];
 const KEY='rumboGET2027_v4';
-let db=JSON.parse(localStorage.getItem(KEY)||'null') || {
-  prospects:SEED,
-  week2:{contacts:0,conversations:0,presentations:0,followups:0,power:0},
-  activities:[]
-};
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+const STAGE_ORDER={'Nuevo':0,'Intento de contacto':1,'Conversación':2,'Invitado/Cita':3,'Presentado':4,'Cliente':5,'Distribuidor':6,'No por ahora':-1};
+let followLetter='Todos';
+let selectedFollowId=null;
+
+function localISO(d=new Date()){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function normName(s){return String(s||'').trim().replace(/\s+/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()}
+function normPhone(s){return String(s||'').replace(/\D/g,'')}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function deriveStage(p){
+ const s=String(p.stage||p.status||'').trim(); const notes=normName((p.notes||'')+' '+(p.next||''));
+ if(s==='Distribuidor')return 'Distribuidor'; if(s==='Cliente')return 'Cliente'; if(s==='Presentado')return 'Presentado';
+ if(s==='Invitado'||s==='Invitado/Cita'||s==='Cita')return 'Invitado/Cita'; if(s==='Conversación')return 'Conversación';
+ if(s==='Contactado')return (notes.includes('respondio')||notes.includes('convers'))?'Conversación':'Intento de contacto';
+ if(s==='Seguimiento'){if(notes.includes('presentacion')&&notes.includes('realizada'))return 'Presentado';return 'Conversación'}
+ if(s==='No por ahora')return 'No por ahora'; return 'Nuevo';
+}
+function stageClass(s){return {'Nuevo':'stage-new','Intento de contacto':'stage-attempt','Conversación':'stage-conv','Invitado/Cita':'stage-cita','Presentado':'stage-presented','Cliente':'stage-client','Distribuidor':'stage-dist','No por ahora':'stage-hold'}[s]||'stage-new'}
+function stageIcon(s){return {'Nuevo':'○','Intento de contacto':'✉️','Conversación':'💬','Invitado/Cita':'📅','Presentado':'▶️','Cliente':'✓','Distribuidor':'★','No por ahora':'⏸'}[s]||'○'}
+function stageText(s){return {'Nuevo':'NUEVO','Intento de contacto':'INTENTO','Conversación':'CONVERSACIÓN','Invitado/Cita':'CITA','Presentado':'PRESENTADO','Cliente':'CLIENTE','Distribuidor':'DISTRIBUIDOR','No por ahora':'NO POR AHORA'}[s]||String(s||'NUEVO').toUpperCase()}
+function stageBadge(s){return `<span class="badge ${stageClass(s)}">${stageIcon(s)} ${stageText(s)}</span>`}
+function advanceStage(p,target){const cur=p.stage||deriveStage(p);if(target==='No por ahora'){p.stage=target;p.status=target;return};if((STAGE_ORDER[target]??0)>(STAGE_ORDER[cur]??0))p.stage=target;else p.stage=cur;p.status=p.stage}
+
+let db=JSON.parse(localStorage.getItem(KEY)||'null') || {prospects:SEED,week2:{contacts:0,conversations:0,presentations:0,followups:0,power:0,clients:0,distributors:0},activities:[]};
+if(!db.week2)db.week2={contacts:0,conversations:0,presentations:0,followups:0,power:0};
+for(const k of ['contacts','conversations','presentations','followups','power','clients','distributors'])if(typeof db.week2[k]!=='number')db.week2[k]=0;
+if(!Array.isArray(db.prospects))db.prospects=SEED;
+for(const p of db.prospects){p.stage=deriveStage(p);p.status=p.stage;if(typeof p.everConversation!=='boolean')p.everConversation=['Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage);}
+function inferProspectId(text){const nt=normName(text);let hits=db.prospects.filter(p=>nt.includes(normName(p.name))).sort((a,b)=>b.name.length-a.name.length);return hits[0]?.id||null}
+function migrateActivity(a,i){if(typeof a!=='string')return a;let type='other',delta={};if(a.startsWith('🔁')){type='followup';delta.followups=1}else if(a.startsWith('💬')){type='conversation';delta.conversations=1}else if(a.startsWith('📣')||a.startsWith('▶️')){type='presentation';delta.presentations=1};return {id:'legacy-'+i+'-'+Date.now(),text:a,type,date:'2026-09-07',prospectId:inferProspectId(a),delta,legacy:true}}
+const hadLegacyActivities=(db.activities||[]).some(a=>typeof a==='string');
+if(hadLegacyActivities && typeof db.legacyTodayContacts!=='number')db.legacyTodayContacts=db.week2.contacts||0;
+db.activities=(db.activities||[]).map(migrateActivity);
+function persist(){localStorage.setItem(KEY,JSON.stringify(db))}
+persist();
+
+function save(){persist();render()}
 function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
 function goToNewProspect(){show('prospectos');setTimeout(()=>{const el=document.getElementById('nombre');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.focus();}},120)}
-function todayISO(){return new Date().toISOString().slice(0,10)}
-function normName(s){return String(s||'').trim().replace(/\s+/g,' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-function normPhone(s){return String(s||'').replace(/\D/g,'')}
+function todayISO(){return localISO()}
 function findSameName(n,excludeId=null){const k=normName(n);return k?db.prospects.find(p=>Number(p.id)!==Number(excludeId)&&normName(p.name)===k):null}
 function findSamePhone(t,excludeId=null){const k=normPhone(t);return k?db.prospects.find(p=>Number(p.id)!==Number(excludeId)&&normPhone(p.phone)===k):null}
-function checkNameWarning(){
- const d=findSameName(nombre.value);
- nameWarning.textContent=d?'⚠️ Ya existe un prospecto con este nombre: '+d.name:'';
-}
+function checkNameWarning(){const d=findSameName(nombre.value);nameWarning.textContent=d?'⚠️ Ya existe un prospecto con este nombre: '+d.name:''}
 function addProspect(){
- const n=nombre.value.trim().replace(/\s+/g,' '),t=telefono.value.trim();
- if(!n)return alert('Escribe el nombre.');
- const samePhone=findSamePhone(t);
- if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');
- const sameName=findSameName(n);
- if(sameName&&!confirm('⚠️ Ya existe un prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardarlo de todos modos?'))return;
- db.prospects.push({id:Date.now(),name:n,phone:t,category:categoria.value,origin:origen.value,status:'Nuevo',last:'',next:nota.value.trim(),next_date:'',notes:nota.value.trim(),contacted:false});
+ const n=nombre.value.trim().replace(/\s+/g,' '),t=telefono.value.trim();if(!n)return alert('Escribe el nombre.');
+ const samePhone=findSamePhone(t);if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');
+ const sameName=findSameName(n);if(sameName&&!confirm('⚠️ Ya existe un prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardarlo de todos modos?'))return;
+ db.prospects.push({id:Date.now(),name:n,phone:t,category:categoria.value,origin:origen.value,status:'Nuevo',stage:'Nuevo',last:'',next:'',next_date:'',notes:nota.value.trim(),contacted:false,everConversation:false});
  nombre.value='';telefono.value='';nota.value='';nameWarning.textContent='';save();alert('Prospecto guardado. Todavía no suma como contacto.');
 }
-function openEdit(id){
- const p=db.prospects.find(x=>Number(x.id)===Number(id)); if(!p)return;
- editId.value=p.id;editNombre.value=p.name||'';editTelefono.value=p.phone||'';
- editCategoria.value=['A - Negocio','B - Cliente','Por definir'].includes(p.category)?p.category:'Por definir';
- editEstado.value=['Nuevo','Contactado','Conversación','Invitado','Presentado','Seguimiento','Cliente','Distribuidor','No por ahora','Por definir'].includes(p.status)?p.status:'Por definir';
- editOrigen.value=['Conocido','Frío','Nutri Healthy','Referido','Redes sociales','Otro'].includes(p.origin)?p.origin:'Otro';
- editNext.value=p.next||'';editNextDate.value=p.next_date||'';editNotes.value=p.notes||'';
- editModal.classList.add('open');editModal.setAttribute('aria-hidden','false');
-}
+function openEdit(id){const p=db.prospects.find(x=>Number(x.id)===Number(id));if(!p)return;editId.value=p.id;editNombre.value=p.name||'';editTelefono.value=p.phone||'';editCategoria.value=['A - Negocio','B - Cliente','Por definir'].includes(p.category)?p.category:'Por definir';editEstado.value=['Nuevo','Intento de contacto','Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage)?p.stage:'Nuevo';editOrigen.value=['Conocido','Frío','Nutri Healthy','Referido','Redes sociales','Otro'].includes(p.origin)?p.origin:'Otro';editNext.value=p.next||'';editNextDate.value=p.next_date||'';editNotes.value=p.notes||'';editModal.classList.add('open');editModal.setAttribute('aria-hidden','false')}
 function closeEdit(){editModal.classList.remove('open');editModal.setAttribute('aria-hidden','true')}
 function saveEdit(){
- const id=Number(editId.value),p=db.prospects.find(x=>Number(x.id)===id);if(!p)return;
- const n=editNombre.value.trim().replace(/\s+/g,' '),t=editTelefono.value.trim();
- if(!n)return alert('Escribe el nombre.');
- const samePhone=findSamePhone(t,id);if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');
- const sameName=findSameName(n,id);if(sameName&&!confirm('⚠️ Ya existe otro prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardar este nombre de todos modos?'))return;
- p.name=n;p.phone=t;p.category=editCategoria.value;p.status=editEstado.value;p.origin=editOrigen.value;p.next=editNext.value.trim();p.next_date=editNextDate.value.trim();p.notes=editNotes.value.trim();
- if(!p.contacted && !['Nuevo','Por definir',''].includes(p.status))p.contacted=true;
- closeEdit();save();alert('Cambios guardados.');
+ const id=Number(editId.value),p=db.prospects.find(x=>Number(x.id)===id);if(!p)return;const n=editNombre.value.trim().replace(/\s+/g,' '),t=editTelefono.value.trim();if(!n)return alert('Escribe el nombre.');
+ const samePhone=findSamePhone(t,id);if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');const sameName=findSameName(n,id);if(sameName&&!confirm('⚠️ Ya existe otro prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardar este nombre de todos modos?'))return;
+ p.name=n;p.phone=t;p.category=editCategoria.value;p.stage=editEstado.value;p.status=p.stage;p.origin=editOrigen.value;p.next=editNext.value.trim();p.next_date=editNextDate.value.trim();p.notes=editNotes.value.trim();if(['Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage))p.everConversation=true;closeEdit();save();alert('Cambios guardados.');
 }
-function deleteProspect(id){
- const p=db.prospects.find(x=>Number(x.id)===Number(id));if(!p)return;
- if(!confirm('¿Eliminar a '+p.name+' de la lista?\n\nLos resultados ya registrados no se borrarán.'))return;
- db.prospects=db.prospects.filter(x=>Number(x.id)!==Number(id));
- save();alert('Prospecto eliminado.');
+function deleteProspect(id){const p=db.prospects.find(x=>Number(x.id)===Number(id));if(!p)return;if(!confirm('¿Eliminar a '+p.name+' de la lista?\n\nLos resultados ya registrados no se borrarán.'))return;db.prospects=db.prospects.filter(x=>Number(x.id)!==Number(id));if(Number(selectedFollowId)===Number(id))selectedFollowId=null;save();alert('Prospecto eliminado.')}
+
+function parseDate(v){if(!v)return null;let m=String(v).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3],12);m=String(v).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1],12);return null}
+function fmtDate(v){const d=parseDate(v);if(!d)return v||'';return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+function followUrgency(p){
+ if(!p.next)return {key:'none',rank:(p.stage==='Nuevo'?6:5),cls:'urg-none',icon:'⚪',label:'SIN PRÓXIMO PASO',date:''};
+ const d=parseDate(p.next_date);if(!d)return {key:'later',rank:4,cls:'urg-later',icon:'🗓️',label:'PROGRAMADO',date:p.next_date||'SIN FECHA'};
+ const t=new Date();t.setHours(12,0,0,0);const diff=Math.round((d-t)/86400000);
+ if(diff<0)return {key:'overdue',rank:0,cls:'urg-overdue',icon:'🔴',label:'VENCIDO',date:fmtDate(p.next_date)};
+ if(diff===0)return {key:'today',rank:1,cls:'urg-today',icon:'🟠',label:'HOY',date:fmtDate(p.next_date)};
+ if(diff===1)return {key:'tomorrow',rank:2,cls:'urg-tomorrow',icon:'🟡',label:'MAÑANA',date:fmtDate(p.next_date)};
+ if(diff<=7)return {key:'soon',rank:3,cls:'urg-soon',icon:'🔵',label:'PRÓXIMO',date:fmtDate(p.next_date)};
+ return {key:'later',rank:4,cls:'urg-later',icon:'🗓️',label:'PROGRAMADO',date:fmtDate(p.next_date)};
 }
-function selectedProspect(){
- const id=Number(segProspect.value); return db.prospects.find(p=>Number(p.id)===id);
+function urgencyBadge(p){const u=followUrgency(p);return `<span class="badge ${u.cls}">${u.icon} ${u.label}${u.date?' · '+esc(u.date):''}</span>`}
+
+function selectedProspect(){return db.prospects.find(p=>Number(p.id)===Number(selectedFollowId))}
+function snapshot(p){return {stage:p.stage,status:p.status,next:p.next,next_date:p.next_date,last:p.last,everConversation:p.everConversation}}
+function addActivity(p,type,text,delta={},before=null){const a={id:'a-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),prospectId:p?.id||null,type,text,date:todayISO(),delta,before};db.activities.unshift(a);for(const [k,v] of Object.entries(delta))db.week2[k]=Math.max(0,(db.week2[k]||0)+v);return a}
+function requireSelected(){const p=selectedProspect();if(!p)alert('Primero selecciona un prospecto.');return p}
+function markAttempt(){const p=requireSelected();if(!p)return;const before=snapshot(p);advanceStage(p,'Intento de contacto');p.last=todayISO();addActivity(p,'attempt','✉️ Intento de contacto · '+p.name,{},before);save()}
+function markConversation(){const p=requireSelected();if(!p)return;const before=snapshot(p);let dc=0;if(!p.everConversation){p.everConversation=true;dc=1};advanceStage(p,'Conversación');p.last=todayISO();addActivity(p,'conversation','💬 Conversación · '+p.name,{conversations:1,contacts:dc},before);save()}
+function markAppointment(){const p=requireSelected();if(!p)return;const before=snapshot(p);advanceStage(p,'Invitado/Cita');p.last=todayISO();addActivity(p,'appointment','📅 Cita acordada · '+p.name,{},before);save()}
+function markPresentation(){const p=requireSelected();if(!p)return;const before=snapshot(p);advanceStage(p,'Presentado');p.last=todayISO();addActivity(p,'presentation','▶️ Presentación realizada · '+p.name,{presentations:1},before);save()}
+function markClient(){const p=requireSelected();if(!p)return;if(p.stage==='Cliente'||p.stage==='Distribuidor')return alert('Este prospecto ya está registrado como '+p.stage+'.');const before=snapshot(p);advanceStage(p,'Cliente');p.last=todayISO();addActivity(p,'client','✓ Nuevo cliente · '+p.name,{clients:1},before);save()}
+function markDistributor(){const p=requireSelected();if(!p)return;if(p.stage==='Distribuidor')return alert('Este prospecto ya está registrado como Distribuidor.');const before=snapshot(p);advanceStage(p,'Distribuidor');p.last=todayISO();addActivity(p,'distributor','★ Nuevo distribuidor · '+p.name,{distributors:1},before);save()}
+function addFollow(){const p=requireSelected();if(!p)return;const note=segNota.value.trim(),date=segFecha.value;if(!note)return alert('Escribe el próximo paso antes de guardar el seguimiento.');if(!date)return alert('Selecciona la fecha del próximo paso.');const before=snapshot(p);p.next=note;p.next_date=date;addActivity(p,'followup','🔁 '+p.name+' · '+note,{followups:1},before);segNota.value='';save()}
+function deleteActivity(id){const idx=db.activities.findIndex(a=>String(a.id)===String(id));if(idx<0)return;const a=db.activities[idx];if(!confirm('¿Eliminar este registro de actividad?\n\nSe corregirá el contador correspondiente.'))return;for(const [k,v] of Object.entries(a.delta||{}))db.week2[k]=Math.max(0,(db.week2[k]||0)-v);const p=db.prospects.find(x=>Number(x.id)===Number(a.prospectId));if(p&&a.before){const newer=db.activities.slice(0,idx).some(x=>Number(x.prospectId)===Number(p.id));if(!newer)Object.assign(p,a.before)}db.activities.splice(idx,1);save()}
+
+function setFollowLetter(letter){followLetter=letter;renderFollowSearch()}
+function selectFollowProspect(id){selectedFollowId=Number(id);const p=selectedProspect();if(p&&parseDate(p.next_date))segFecha.value=p.next_date;else segFecha.value=todayISO();renderFollowSearch();renderSelected();setTimeout(()=>document.getElementById('followFormCard').scrollIntoView({behavior:'smooth',block:'start'}),80)}
+function relevance(name,q){const n=normName(name),x=normName(q);if(!x)return 9;if(n===x)return 0;if(n.startsWith(x))return 1;if(n.includes(x))return 2;return 99}
+function renderFollowSearch(){
+ const letters=['Todos',...'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'];alphaBar.innerHTML=letters.map(l=>`<button class="${followLetter===l?'active':''}" onclick="setFollowLetter('${l}')">${l}</button>`).join('');
+ const q=segSearch.value||'';let rows=db.prospects.filter(p=>{const n=normName(p.name);const letterOk=followLetter==='Todos'||n.startsWith(normName(followLetter));const qOk=!q||n.includes(normName(q));return letterOk&&qOk});
+ rows.sort((a,b)=>{if(q){const ra=relevance(a.name,q),rb=relevance(b.name,q);if(ra!==rb)return ra-rb}else{const ua=followUrgency(a).rank,ub=followUrgency(b).rank;if(ua!==ub)return ua-ub}return a.name.localeCompare(b.name,'es',{sensitivity:'base'})});
+ const shown=rows.slice(0,25);followCount.textContent=rows.length?`Mostrando ${shown.length} de ${rows.length} resultado${rows.length===1?'':'s'}`:'Sin resultados';
+ followResults.innerHTML=shown.length?shown.map(p=>`<div class="follow-result ${Number(selectedFollowId)===Number(p.id)?'selected':''}" onclick="selectFollowProspect(${p.id})"><div class="name">${esc(p.name)}</div><div class="meta-line"><span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}</div><div class="meta-line">${urgencyBadge(p)}</div>${p.next?`<small><b>${esc(p.next)}</b></small>`:''}</div>`).join(''):'<div class="history"><b>No se encontró ningún prospecto.</b><br><span class="muted">Puedes ir a Prospectos y agregarlo.</span><br><br><button onclick="goToNewProspect()">+ Nuevo prospecto</button></div>';
+ const recentIds=[];for(const a of db.activities){if(a.prospectId&&!recentIds.includes(Number(a.prospectId)))recentIds.push(Number(a.prospectId));if(recentIds.length>=5)break}const rec=recentIds.map(id=>db.prospects.find(p=>Number(p.id)===id)).filter(Boolean);recentList.innerHTML=rec.length?rec.map(p=>`<button class="recent-chip" onclick="selectFollowProspect(${p.id})">${esc(p.name)}</button>`).join(''):'<span class="muted">Aún no hay recientes.</span>';
 }
-function addFollow(){
- const p=selectedProspect(); if(!p)return alert('Selecciona un prospecto.');
- const note=segNota.value.trim()||'Seguimiento'; p.next=note;p.next_date=segFecha.value;p.status='Seguimiento';
- db.week2.followups++;db.activities.unshift('🔁 '+p.name+' · '+note);segNota.value='';save();
-}
-function markConversation(){
- const p=selectedProspect(); if(!p)return alert('Selecciona un prospecto.');
- db.week2.conversations++;
- if(!p.contacted){p.contacted=true;db.week2.contacts++;}
- p.status='Conversación';p.last=todayISO();db.activities.unshift('💬 Conversación · '+p.name);save();
-}
-function markPresentation(){
- const p=selectedProspect(); if(!p)return alert('Selecciona un prospecto.');
- db.week2.presentations++;p.status='Presentado';p.last=todayISO();db.activities.unshift('📣 Presentación realizada · '+p.name);save();
-}
-function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function renderProspects(){
- const q=(buscar.value||'').toLowerCase();
- const rows=db.prospects.filter(p=>(p.name+' '+p.status+' '+p.category).toLowerCase().includes(q));
- prospectCount.textContent=db.prospects.length+' registrados';
- prospectList.innerHTML=rows.map(p=>`<div class="persona"><b>${esc(p.name)}</b><small>${esc(p.category||'Sin categoría')} · ${esc(p.status||'Sin estado')}${p.phone?' · '+esc(p.phone):''}</small>${p.next?`<small><b>Próximo:</b> ${esc(p.next)}${p.next_date?' · '+esc(p.next_date):''}</small>`:''}${p.notes?`<small class="muted">${esc(p.notes)}</small>`:''}<div class="persona-actions"><button class="secondary" onclick="openEdit(${p.id})">✏️ Editar</button><button class="danger" onclick="deleteProspect(${p.id})">🗑️ Eliminar</button></div></div>`).join('');
-}
+function renderSelected(){const p=selectedProspect();if(!p){selectedTitle.textContent='Selecciona un prospecto';selectedMeta.innerHTML='';selectedNext.style.display='none';return}selectedTitle.textContent=p.name;selectedMeta.innerHTML=`<span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}`;if(p.next){selectedNext.style.display='block';selectedNext.innerHTML=`${urgencyBadge(p)}<br><b style="display:inline-block;margin-top:8px">${esc(p.next)}</b>`}else selectedNext.style.display='none'}
+
+function renderProspects(){const q=normName(buscar.value||'');const rows=db.prospects.filter(p=>normName(p.name+' '+p.stage+' '+p.category).includes(q));prospectCount.textContent=db.prospects.length+' registrados';prospectList.innerHTML=rows.map(p=>`<div class="persona"><b>${esc(p.name)}</b><div class="meta-line"><span class="muted">${esc(p.category||'Sin categoría')}${p.phone?' · '+esc(p.phone):''}</span>${stageBadge(p.stage)}</div><div class="meta-line">${urgencyBadge(p)}</div>${p.next?`<small><b>Próximo:</b> ${esc(p.next)}</small>`:''}${p.notes?`<small class="muted">${esc(p.notes)}</small>`:''}<div class="persona-actions"><button class="secondary" onclick="openEdit(${p.id})">✏️ Editar</button><button class="danger" onclick="deleteProspect(${p.id})">🗑️ Eliminar</button></div></div>`).join('')}
+function renderActivity(){activityList.innerHTML=db.activities.length?db.activities.slice(0,30).map(a=>`<div class="activity-row"><div class="activity-text">${esc(a.text||'Actividad')}<small>${fmtDate(a.date)||a.date||''}</small></div><button class="undo" onclick="deleteActivity('${esc(a.id)}')">🗑️</button></div>`).join(''):'<p class="muted">Aún no hay actividad registrada en Semana 2.</p>'}
+function renderPriorities(){priorityList.innerHTML=PRIORITIES.map(x=>{const p=db.prospects.find(p=>normName(p.name)===normName(x.name));if(!p)return `<div class="persona"><b>${esc(x.name)}</b><small>${esc(x.note)}</small></div>`;return `<div class="persona"><b>${esc(p.name)}</b><div class="meta-line">${stageBadge(p.stage)} ${urgencyBadge(p)}</div><small>${esc(p.next||x.note)}</small></div>`}).join('')}
+function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
 function render(){
- todayContacts.textContent=db.week2.contacts;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;
- rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;
- todayMsg.textContent=db.week2.contacts>=5?'✅ Meta diaria cumplida':'Te faltan '+(5-db.week2.contacts)+' contactos para la meta';
- priorityList.innerHTML=PRIORITIES.map(x=>`<div class="persona"><b>${esc(x.name)}</b><small>${esc(x.note)}</small></div>`).join('');
- renderProspects();
- segProspect.innerHTML='<option value="">Selecciona prospecto</option>'+db.prospects.map(p=>`<option value="${p.id}">${esc(p.name)} · ${esc(p.status||'Sin estado')}</option>`).join('');
- activityList.innerHTML=db.activities.length?db.activities.slice(0,20).map(a=>`<div class="persona">${esc(a)}</div>`).join(''):'<p class="muted">Aún no hay actividad registrada en Semana 2.</p>';
+ const tc=countTodayNewContacts();todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;todayMsg.textContent=tc>=5?'✅ Meta diaria cumplida':'Te faltan '+Math.max(0,5-tc)+' contactos para la meta';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();
 }
 segFecha.value=todayISO();render();
 </script>
