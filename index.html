@@ -28,6 +28,11 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 .pill.greenp{background:#edf8f2;color:#13764c}.pill.redp{background:#fff1f2;color:#b4232c}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.search{margin-top:8px}
 .history{background:#f8fafc;border:1px solid #e2e8f0;border-radius:15px;padding:14px;margin-top:12px}
+.persona-actions{display:flex;gap:8px;margin-top:10px}.persona-actions button{padding:8px 11px;font-size:13px}
+.warning{display:block;color:#b54708;margin:-6px 0 10px;font-size:13px;font-weight:700}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:50;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}.modal-card{background:white;width:100%;max-width:650px;max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -6px 30px rgba(0,0,0,.18)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.modal-head h2{margin:0}.closebtn{background:#eef3f8;color:var(--ink);font-size:20px;padding:7px 11px}
 </style>
 </head>
 <body>
@@ -64,7 +69,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
  </div>
  <div class="card">
   <h2>➕ Nuevo prospecto</h2>
-  <input id="nombre" placeholder="Nombre y apellido">
+  <input id="nombre" placeholder="Nombre y apellido" oninput="checkNameWarning()">
+  <small id="nameWarning" class="warning"></small>
   <input id="telefono" placeholder="Teléfono">
   <select id="categoria"><option>A - Negocio</option><option>B - Cliente</option><option>Por definir</option></select>
   <select id="origen"><option>Conocido</option><option>Frío</option><option>Nutri Healthy</option><option>Referido</option><option>Redes sociales</option><option>Otro</option></select>
@@ -104,9 +110,25 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>Los prospectos de la Semana 1 quedan como historial. Hoy la Semana 2 empieza en cero. Un prospecto nuevo no suma contacto hasta que exista conversación real.</p></div>
+ <div class="card"><h3>Regla clave</h3><p>Los prospectos de la Semana 1 quedan como historial. Hoy la Semana 2 empieza en cero. Un prospecto nuevo no suma contacto hasta que exista conversación real.</p><small class="muted">Versión 4.1 · edición, eliminación y alerta de duplicados</small></div>
 </section>
 </main>
+
+<div id="editModal" class="modal" aria-hidden="true">
+ <div class="modal-card">
+  <div class="modal-head"><h2>✏️ Editar prospecto</h2><button class="closebtn" onclick="closeEdit()">✕</button></div>
+  <input type="hidden" id="editId">
+  <label>Nombre</label><input id="editNombre" placeholder="Nombre y apellido">
+  <label>Teléfono</label><input id="editTelefono" placeholder="Teléfono">
+  <label>Categoría</label><select id="editCategoria"><option>A - Negocio</option><option>B - Cliente</option><option>Por definir</option></select>
+  <label>Estado</label><select id="editEstado"><option>Nuevo</option><option>Contactado</option><option>Conversación</option><option>Invitado</option><option>Presentado</option><option>Seguimiento</option><option>Cliente</option><option>Distribuidor</option><option>No por ahora</option><option>Por definir</option></select>
+  <label>Origen</label><select id="editOrigen"><option>Conocido</option><option>Frío</option><option>Nutri Healthy</option><option>Referido</option><option>Redes sociales</option><option>Otro</option></select>
+  <label>Próximo paso</label><textarea id="editNext" placeholder="Próximo paso"></textarea>
+  <label>Fecha / momento</label><input id="editNextDate" placeholder="Ej.: 30/09/2026, próxima semana">
+  <label>Notas</label><textarea id="editNotes" placeholder="Notas"></textarea>
+  <div class="row"><button onclick="saveEdit()">Guardar cambios</button><button class="secondary" onclick="closeEdit()">Cancelar</button></div>
+ </div>
+</div>
 
 <nav>
 <button onclick="show('inicio')"><span>🏠</span>Inicio</button>
@@ -127,12 +149,49 @@ let db=JSON.parse(localStorage.getItem(KEY)||'null') || {
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
 function todayISO(){return new Date().toISOString().slice(0,10)}
+function normName(s){return String(s||'').trim().replace(/\s+/g,' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
+function normPhone(s){return String(s||'').replace(/\D/g,'')}
+function findSameName(n,excludeId=null){const k=normName(n);return k?db.prospects.find(p=>Number(p.id)!==Number(excludeId)&&normName(p.name)===k):null}
+function findSamePhone(t,excludeId=null){const k=normPhone(t);return k?db.prospects.find(p=>Number(p.id)!==Number(excludeId)&&normPhone(p.phone)===k):null}
+function checkNameWarning(){
+ const d=findSameName(nombre.value);
+ nameWarning.textContent=d?'⚠️ Ya existe un prospecto con este nombre: '+d.name:'';
+}
 function addProspect(){
- const n=nombre.value.trim(),t=telefono.value.trim();
+ const n=nombre.value.trim().replace(/\s+/g,' '),t=telefono.value.trim();
  if(!n)return alert('Escribe el nombre.');
- if(t&&db.prospects.some(p=>p.phone===t))return alert('Ese teléfono ya está registrado.');
+ const samePhone=findSamePhone(t);
+ if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');
+ const sameName=findSameName(n);
+ if(sameName&&!confirm('⚠️ Ya existe un prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardarlo de todos modos?'))return;
  db.prospects.push({id:Date.now(),name:n,phone:t,category:categoria.value,origin:origen.value,status:'Nuevo',last:'',next:nota.value.trim(),next_date:'',notes:nota.value.trim(),contacted:false});
- nombre.value='';telefono.value='';nota.value='';save();alert('Prospecto guardado. Todavía no suma como contacto.');
+ nombre.value='';telefono.value='';nota.value='';nameWarning.textContent='';save();alert('Prospecto guardado. Todavía no suma como contacto.');
+}
+function openEdit(id){
+ const p=db.prospects.find(x=>Number(x.id)===Number(id)); if(!p)return;
+ editId.value=p.id;editNombre.value=p.name||'';editTelefono.value=p.phone||'';
+ editCategoria.value=['A - Negocio','B - Cliente','Por definir'].includes(p.category)?p.category:'Por definir';
+ editEstado.value=['Nuevo','Contactado','Conversación','Invitado','Presentado','Seguimiento','Cliente','Distribuidor','No por ahora','Por definir'].includes(p.status)?p.status:'Por definir';
+ editOrigen.value=['Conocido','Frío','Nutri Healthy','Referido','Redes sociales','Otro'].includes(p.origin)?p.origin:'Otro';
+ editNext.value=p.next||'';editNextDate.value=p.next_date||'';editNotes.value=p.notes||'';
+ editModal.classList.add('open');editModal.setAttribute('aria-hidden','false');
+}
+function closeEdit(){editModal.classList.remove('open');editModal.setAttribute('aria-hidden','true')}
+function saveEdit(){
+ const id=Number(editId.value),p=db.prospects.find(x=>Number(x.id)===id);if(!p)return;
+ const n=editNombre.value.trim().replace(/\s+/g,' '),t=editTelefono.value.trim();
+ if(!n)return alert('Escribe el nombre.');
+ const samePhone=findSamePhone(t,id);if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');
+ const sameName=findSameName(n,id);if(sameName&&!confirm('⚠️ Ya existe otro prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardar este nombre de todos modos?'))return;
+ p.name=n;p.phone=t;p.category=editCategoria.value;p.status=editEstado.value;p.origin=editOrigen.value;p.next=editNext.value.trim();p.next_date=editNextDate.value.trim();p.notes=editNotes.value.trim();
+ if(!p.contacted && !['Nuevo','Por definir',''].includes(p.status))p.contacted=true;
+ closeEdit();save();alert('Cambios guardados.');
+}
+function deleteProspect(id){
+ const p=db.prospects.find(x=>Number(x.id)===Number(id));if(!p)return;
+ if(!confirm('¿Eliminar a '+p.name+' de la lista?\n\nLos resultados ya registrados no se borrarán.'))return;
+ db.prospects=db.prospects.filter(x=>Number(x.id)!==Number(id));
+ save();alert('Prospecto eliminado.');
 }
 function selectedProspect(){
  const id=Number(segProspect.value); return db.prospects.find(p=>Number(p.id)===id);
@@ -157,7 +216,7 @@ function renderProspects(){
  const q=(buscar.value||'').toLowerCase();
  const rows=db.prospects.filter(p=>(p.name+' '+p.status+' '+p.category).toLowerCase().includes(q));
  prospectCount.textContent=db.prospects.length+' registrados';
- prospectList.innerHTML=rows.map(p=>`<div class="persona"><b>${esc(p.name)}</b><small>${esc(p.category||'Sin categoría')} · ${esc(p.status||'Sin estado')}${p.phone?' · '+esc(p.phone):''}</small>${p.next?`<small><b>Próximo:</b> ${esc(p.next)}${p.next_date?' · '+esc(p.next_date):''}</small>`:''}${p.notes?`<small class="muted">${esc(p.notes)}</small>`:''}</div>`).join('');
+ prospectList.innerHTML=rows.map(p=>`<div class="persona"><b>${esc(p.name)}</b><small>${esc(p.category||'Sin categoría')} · ${esc(p.status||'Sin estado')}${p.phone?' · '+esc(p.phone):''}</small>${p.next?`<small><b>Próximo:</b> ${esc(p.next)}${p.next_date?' · '+esc(p.next_date):''}</small>`:''}${p.notes?`<small class="muted">${esc(p.notes)}</small>`:''}<div class="persona-actions"><button class="secondary" onclick="openEdit(${p.id})">✏️ Editar</button><button class="danger" onclick="deleteProspect(${p.id})">🗑️ Eliminar</button></div></div>`).join('');
 }
 function render(){
  todayContacts.textContent=db.week2.contacts;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;
