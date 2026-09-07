@@ -2,96 +2,131 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17477f">
 <title>Rumbo a GET 2027</title>
 <style>
-body{margin:0;font-family:Arial;background:#f4f7fb;color:#17243b}
-header{background:#123c70;color:white;padding:25px 18px;border-radius:0 0 25px 25px}
-h1{margin:0;font-size:24px}
-main{padding:15px 15px 90px;max-width:600px;margin:auto}
-.card{background:white;margin-bottom:14px;padding:17px;border-radius:18px;box-shadow:0 2px 10px #ddd}
-.meta{font-size:34px;font-weight:bold}
-.verde{color:#15945d}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.dato{border:1px solid #ddd;padding:12px;border-radius:12px}
-.dato b{display:block;font-size:20px}
-button{background:#1769d2;color:white;border:0;padding:12px;border-radius:12px;font-weight:bold}
-.persona{padding:12px 0;border-bottom:1px solid #eee}
-nav{position:fixed;bottom:0;left:0;right:0;background:white;padding:12px;display:flex;justify-content:space-around;border-top:1px solid #ddd}
-nav span{font-size:12px;text-align:center}
+*{box-sizing:border-box}
+:root{--blue:#17477f;--blue2:#1769d2;--ink:#172238;--muted:#667085;--bg:#f4f7fb;--green:#15945d;--line:#e7eaf0}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--blue);color:white;padding:28px 22px 38px;border-radius:0 0 32px 32px}
+header h1{margin:0 0 12px;font-size:27px} header p{margin:0;font-size:18px}
+main{max-width:650px;margin:auto;padding:20px 15px 105px}
+.card{background:white;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 4px 15px rgba(0,0,0,.09)}
+.card h2,.card h3{margin:0 0 18px}.big{font-size:40px;font-weight:700;margin:15px 0}.green{color:var(--green)}
+button{border:0;border-radius:12px;background:var(--blue2);color:white;padding:13px 16px;font-weight:700;font-size:15px}
+.persona{padding:12px 0;border-bottom:1px solid var(--line)}.persona:last-child{border-bottom:0}
+.persona b{font-size:17px}.persona small{display:block;margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dato{border:1px solid #ddd;border-radius:15px;padding:13px}.dato b{display:block;font-size:22px;margin-top:3px}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #ddd;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 3px calc(8px + env(safe-area-inset-bottom));z-index:10}
+nav button{background:transparent;color:var(--ink);padding:6px 2px;font-size:12px;font-weight:400}
+nav button span{display:block;font-size:20px;margin-bottom:3px}
+.view{display:none}.view.active{display:block}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-radius:10px;margin:6px 0 12px;font-size:16px;background:white}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.pill{display:inline-block;background:#edf5ff;color:#17477f;border-radius:999px;padding:6px 10px;font-size:13px}
+.empty{color:var(--muted);font-size:14px}
 </style>
 </head>
 <body>
-
-<header>
-<h1>RUMBO A GET 2027</h1>
-<p>Plan de Acción · 90 días</p>
-</header>
+<header><h1>RUMBO A GET 2027</h1><p>Plan de Acción · 90 días</p></header>
 
 <main>
+<section id="inicio" class="view active">
+ <div class="card">
+  <div>🎯 CONTACTOS DE HOY</div><div class="big"><span id="todayContacts">0</span> / 5</div>
+  <p class="green">Vamos por la meta del día</p>
+  <button onclick="show('prospectos');setTimeout(()=>document.getElementById('nombre').focus(),100)">+ NUEVO PROSPECTO</button>
+ </div>
+ <div class="card"><h2>🔥 Prioridades</h2>
+  <div class="persona"><b>Adán Llamo</b><small>Confirmar inscripción y próximo paso</small></div>
+  <div class="persona"><b>Judith Díaz</b><small>Retomar conversación</small></div>
+  <div class="persona"><b>Celso</b><small>Seguimiento del paquete para su esposa</small></div>
+  <div class="persona"><b>César Matallana</b><small>Concretar conversación</small></div>
+  <div class="persona"><b>Calin Ubillus</b><small>Concretar presentación</small></div>
+ </div>
+ <div class="card"><h2>📊 Avance semanal</h2><div class="grid">
+  <div class="dato">Contactos<b id="weekContacts">27 / 30</b></div>
+  <div class="dato">Presentaciones<b>2 / 5</b></div>
+  <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
+ </div></div>
+ <div class="card"><h2>📈 Meta Septiembre</h2><h2>3,000 PV</h2><p>Meta de ingresos: <b>S/ 5,000</b></p></div>
+</section>
 
-<div class="card">
-<p>🎯 CONTACTOS DE HOY</p>
-<div class="meta">0 / 5</div>
-<p class="verde">Vamos por la meta del día</p>
-<button>+ NUEVO PROSPECTO</button>
-</div>
+<section id="prospectos" class="view">
+ <div class="card"><h2>👥 Nuevo prospecto</h2>
+  <input id="nombre" placeholder="Nombre y apellido">
+  <input id="telefono" placeholder="Teléfono">
+  <select id="origen"><option>Contacto personal</option><option>Referido</option><option>Redes sociales</option><option>En frío</option></select>
+  <textarea id="nota" placeholder="Nota breve / interés"></textarea>
+  <button onclick="addProspect()">Guardar prospecto</button>
+  <p class="empty">Guardar un prospecto no suma un contacto. El contacto se registra cuando realmente conversas con esa persona.</p>
+ </div>
+ <div class="card"><h2>Mis prospectos</h2><div id="prospectList"></div></div>
+</section>
 
-<div class="card">
-<h3>🔥 Prioridades</h3>
+<section id="seguimientos" class="view">
+ <div class="card"><h2>🔁 Seguimientos</h2><p>Registra aquí el siguiente paso después de una conversación.</p>
+  <select id="segProspect"></select>
+  <input id="segFecha" type="date">
+  <textarea id="segNota" placeholder="Próximo paso"></textarea>
+  <button onclick="addFollow()">Guardar seguimiento</button>
+ </div>
+ <div class="card"><h2>Pendientes</h2><div id="followList"></div></div>
+</section>
 
-<div class="persona">
-<b>Adán Llamo</b><br>
-<small>Confirmar inscripción y próximo paso</small>
-</div>
-
-<div class="persona">
-<b>Judith Díaz</b><br>
-<small>Retomar conversación</small>
-</div>
-
-<div class="persona">
-<b>Celso</b><br>
-<small>Seguimiento del paquete para su esposa</small>
-</div>
-
-<div class="persona">
-<b>César Matallana</b><br>
-<small>Concretar conversación</small>
-</div>
-
-<div class="persona">
-<b>Calin Ubillus</b><br>
-<small>Concretar presentación</small>
-</div>
-
-</div>
-
-<div class="card">
-<h3>📊 Avance semanal</h3>
-
-<div class="grid">
-<div class="dato">Contactos<b>27 / 30</b></div>
-<div class="dato">Presentaciones<b>2 / 5</b></div>
-<div class="dato">Seguimientos<b>6</b></div>
-<div class="dato">Bloque Poder<b>16 h</b></div>
-</div>
-</div>
-
-<div class="card">
-<h3>📈 Meta Septiembre</h3>
-<p><b>3,000 PV</b></p>
-<p>Meta de ingresos: <b>S/ 5,000</b></p>
-</div>
-
+<section id="resultados" class="view">
+ <div class="card"><h2>📊 Resultados</h2>
+  <div class="grid">
+   <div class="dato">Contactos hoy<b id="rContacts">0</b></div>
+   <div class="dato">Prospectos<b id="rProspects">0</b></div>
+   <div class="dato">Seguimientos<b id="rFollows">0</b></div>
+   <div class="dato">Meta diaria<b>5</b></div>
+  </div>
+ </div>
+ <div class="card"><h3>Regla clave</h3><p>Un prospecto nuevo no cuenta como contacto hasta que exista una conversación real de ida y vuelta. Ese primer contacto cuenta una sola vez.</p></div>
+</section>
 </main>
 
 <nav>
-<span>🏠<br>Inicio</span>
-<span>👥<br>Prospectos</span>
-<span>🔁<br>Seguimientos</span>
-<span>📊<br>Resultados</span>
+<button onclick="show('inicio')"><span>🏠</span>Inicio</button>
+<button onclick="show('prospectos')"><span>👥</span>Prospectos</button>
+<button onclick="show('seguimientos')"><span>🔁</span>Seguimientos</button>
+<button onclick="show('resultados')"><span>📊</span>Resultados</button>
 </nav>
 
+<script>
+const KEY='rumboGET2027_v2';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"prospects":[],"follows":[],"contacts":{}}');
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
+function today(){return new Date().toISOString().slice(0,10)}
+function addProspect(){
+ const n=document.getElementById('nombre').value.trim(), t=document.getElementById('telefono').value.trim();
+ if(!n)return alert('Escribe el nombre del prospecto.');
+ if(t && db.prospects.some(p=>p.phone===t))return alert('Ese teléfono ya está registrado.');
+ db.prospects.push({id:Date.now(),name:n,phone:t,origin:origen.value,note:nota.value,contacted:false});
+ nombre.value='';telefono.value='';nota.value='';save();
+}
+function markContact(id){
+ let p=db.prospects.find(x=>x.id===id); if(!p||p.contacted)return;
+ p.contacted=true; db.contacts[today()]=(db.contacts[today()]||0)+1; save();
+}
+function addFollow(){
+ if(!segProspect.value)return alert('Primero registra un prospecto.');
+ db.follows.push({id:Date.now(),pid:Number(segProspect.value),date:segFecha.value,note:segNota.value});
+ segNota.value='';save();
+}
+function render(){
+ const c=db.contacts[today()]||0; todayContacts.textContent=c;rContacts.textContent=c;weekContacts.textContent=(27+c)+' / 30';
+ rProspects.textContent=db.prospects.length;rFollows.textContent=db.follows.length;
+ prospectList.innerHTML=db.prospects.length?db.prospects.map(p=>`<div class="persona"><b>${esc(p.name)}</b><small>${esc(p.origin)}${p.note?' · '+esc(p.note):''}</small>${p.contacted?'<span class="pill">✓ Contactado</span>':`<br><button onclick="markContact(${p.id})">Registrar conversación</button>`}</div>`).join(''):'<p class="empty">Aún no has agregado prospectos.</p>';
+ segProspect.innerHTML=db.prospects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+ followList.innerHTML=db.follows.length?db.follows.map(f=>{let p=db.prospects.find(x=>x.id===f.pid);return `<div class="persona"><b>${esc(p?p.name:'Prospecto')}</b><small>${esc(f.date||'Sin fecha')} · ${esc(f.note||'Seguimiento')}</small></div>`}).join(''):'<p class="empty">No hay seguimientos registrados.</p>';
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+segFecha.value=today();render();
+</script>
 </body>
 </html>
