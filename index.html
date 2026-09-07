@@ -43,7 +43,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
  <div class="card">
   <div>🎯 CONTACTOS DE HOY</div><div class="big"><span id="todayContacts">0</span> / 5</div>
   <p class="green" id="todayMsg">Vamos por la meta del día</p>
-  <button onclick="show('prospectos');setTimeout(()=>document.getElementById('nombre').focus(),100)">+ NUEVO PROSPECTO</button>
+  <button onclick="goToNewProspect()">+ NUEVO PROSPECTO</button>
  </div>
 
  <div class="card"><h2>🔥 Prioridades · Semana 2</h2><div id="priorityList"></div></div>
@@ -110,7 +110,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>Los prospectos de la Semana 1 quedan como historial. Hoy la Semana 2 empieza en cero. Un prospecto nuevo no suma contacto hasta que exista conversación real.</p><small class="muted">Versión 4.1 · edición, eliminación y alerta de duplicados</small></div>
+ <div class="card"><h3>Regla clave</h3><p>Los prospectos de la Semana 1 quedan como historial. Hoy la Semana 2 empieza en cero. Un prospecto nuevo no suma contacto hasta que exista conversación real.</p><small class="muted">Versión 4.2 · Inicio simplificado, edición, eliminación y alerta de duplicados</small></div>
 </section>
 </main>
 
@@ -148,6 +148,7 @@ let db=JSON.parse(localStorage.getItem(KEY)||'null') || {
 };
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
+function goToNewProspect(){show('prospectos');setTimeout(()=>{const el=document.getElementById('nombre');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.focus();}},120)}
 function todayISO(){return new Date().toISOString().slice(0,10)}
 function normName(s){return String(s||'').trim().replace(/\s+/g,' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
 function normPhone(s){return String(s||'').replace(/\D/g,'')}
