@@ -47,6 +47,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.action-grid button{padding:11px 9px;font-size:13px}
 .recent-wrap{margin:4px 0 12px}.recent-chip{background:#f8fafc;color:#344054;border:1px solid #e4e7ec;padding:8px 10px;margin:4px 4px 0 0;font-size:13px}
 .countnote{font-size:12px;color:var(--muted);margin:4px 0 8px}
+.daily-counters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 14px}.daily-box{border:1px solid #e4e7ec;border-radius:16px;padding:14px;background:#f8fbff}.daily-label{font-size:13px;font-weight:700;color:#344054}.daily-number{font-size:34px;font-weight:800;margin:8px 0 5px}.daily-help{font-size:12px;line-height:1.3;color:var(--muted)}@media(max-width:390px){.daily-counters{grid-template-columns:1fr}.daily-number{font-size:32px}}
 .activity-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.activity-row:last-child{border-bottom:0}
 .activity-text{flex:1;font-size:14px;line-height:1.35}.activity-text small{display:block;color:var(--muted);margin-top:4px}.undo{background:#fff1f2;color:#b4232c;padding:7px 9px;font-size:12px}
 </style>
@@ -56,8 +57,19 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 <main>
 <section id="inicio" class="view active">
  <div class="card">
-  <div>🎯 CONTACTOS DE HOY</div><div class="big"><span id="todayContacts">0</span> / 5</div>
-  <p class="green" id="todayMsg">Vamos por la meta del día</p>
+  <h2 style="margin-bottom:10px">🎯 Actividad de hoy</h2>
+  <div class="daily-counters">
+   <div class="daily-box">
+    <div class="daily-label">📨 GESTIONES DE HOY</div>
+    <div class="daily-number"><span id="todayGestures">0</span> / 5</div>
+    <div class="daily-help" id="gesturesMsg">Mensajes, llamadas o abordajes realizados.</div>
+   </div>
+   <div class="daily-box">
+    <div class="daily-label">💬 CONTACTOS REALES</div>
+    <div class="daily-number"><span id="todayContacts">0</span> / 5</div>
+    <div class="daily-help" id="todayMsg">Personas que respondieron y conversaron contigo.</div>
+   </div>
+  </div>
   <button onclick="goToNewProspect()">+ NUEVO PROSPECTO</button>
  </div>
  <div class="card"><h2>🔥 Prioridades · Semana 2</h2><div id="priorityList"></div></div>
@@ -274,8 +286,9 @@ function renderProspects(){const q=normName(buscar.value||'');const rows=db.pros
 function renderActivity(){activityList.innerHTML=db.activities.length?db.activities.slice(0,30).map(a=>`<div class="activity-row"><div class="activity-text">${esc(a.text||'Actividad')}<small>${fmtDate(a.date)||a.date||''}</small></div><button class="undo" onclick="deleteActivity('${esc(a.id)}')">🗑️</button></div>`).join(''):'<p class="muted">Aún no hay actividad registrada en Semana 2.</p>'}
 function renderPriorities(){priorityList.innerHTML=PRIORITIES.map(x=>{const p=db.prospects.find(p=>normName(p.name)===normName(x.name));if(!p)return `<div class="persona"><b>${esc(x.name)}</b><small>${esc(x.note)}</small></div>`;return `<div class="persona"><b>${esc(p.name)}</b><div class="meta-line">${stageBadge(p.stage)} ${urgencyBadge(p)}</div><small>${esc(p.next||x.note)}</small></div>`}).join('')}
 function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
+function countTodayGestures(){const ids=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!['attempt','conversation'].includes(a.type))continue;if(a.prospectId!=null)ids.add(String(a.prospectId));}return ids.size}
 function render(){
- const tc=countTodayNewContacts();todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;todayMsg.textContent=tc>=5?'✅ Meta diaria cumplida':'Te faltan '+Math.max(0,5-tc)+' contactos para la meta';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();
+ const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();
 }
 segFecha.value=todayISO();render();
 </script>
