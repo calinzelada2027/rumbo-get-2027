@@ -136,6 +136,21 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 </section>
 
 <section id="resultados" class="view">
+ <div class="card">
+  <div class="daily-close-title"><h2 style="margin:0">🌙 Cierre del día</h2><span id="dailyCloseDate" class="daily-date"></span></div>
+  <p class="muted" style="margin-top:10px">Se calcula automáticamente con lo que registraste hoy en Seguimientos.</p>
+  <div class="grid">
+   <div class="daily-metric"><span>📨 Gestiones realizadas</span><b id="dGestures">0</b></div>
+   <div class="daily-metric"><span>💬 Contactos reales</span><b id="dContacts">0</b></div>
+   <div class="daily-metric"><span>💬 Conversaciones</span><b id="dConversations">0</b></div>
+   <div class="daily-metric"><span>🔁 Seguimientos</span><b id="dFollowups">0</b></div>
+   <div class="daily-metric"><span>✓ Nuevos clientes</span><b id="dClients">0</b></div>
+   <div class="daily-metric"><span>★ Nuevos distribuidores</span><b id="dDistributors">0</b></div>
+  </div>
+  <label for="dailyObservation" style="display:block;margin-top:18px;font-weight:700">Observaciones del día</label>
+  <textarea id="dailyObservation" placeholder="Ej.: Se realizaron las 5 gestiones. Tres respondieron, dos quedaron en intento. Morayma se inscribió como distribuidora."></textarea>
+  <div class="row" style="align-items:center"><button onclick="saveDailyObservation()">Guardar observaciones</button><span id="dailyObsStatus" class="obs-status"></span></div>
+ </div>
  <div class="card"><h2>📊 Semana 2 · 7–13 septiembre</h2>
   <div class="grid">
    <div class="dato">Contactos<b id="rContacts">0</b></div>
@@ -153,7 +168,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.3 · Buscador inteligente, estados principales, urgencias y deshacer actividad</small></div>
+ <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.5 · Cierre del día automático, buscador inteligente y estados</small></div>
 </section>
 </main>
 
@@ -209,6 +224,7 @@ function advanceStage(p,target){const cur=p.stage||deriveStage(p);if(target==='N
 let db=JSON.parse(localStorage.getItem(KEY)||'null') || {prospects:SEED,week2:{contacts:0,conversations:0,presentations:0,followups:0,power:0,clients:0,distributors:0},activities:[]};
 if(!db.week2)db.week2={contacts:0,conversations:0,presentations:0,followups:0,power:0};
 for(const k of ['contacts','conversations','presentations','followups','power','clients','distributors'])if(typeof db.week2[k]!=='number')db.week2[k]=0;
+if(!db.dailyObservations||typeof db.dailyObservations!=='object')db.dailyObservations={};
 if(!Array.isArray(db.prospects))db.prospects=SEED;
 for(const p of db.prospects){p.stage=deriveStage(p);p.status=p.stage;if(typeof p.everConversation!=='boolean')p.everConversation=['Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage);}
 function inferProspectId(text){const nt=normName(text);let hits=db.prospects.filter(p=>nt.includes(normName(p.name))).sort((a,b)=>b.name.length-a.name.length);return hits[0]?.id||null}
@@ -287,8 +303,28 @@ function renderActivity(){activityList.innerHTML=db.activities.length?db.activit
 function renderPriorities(){priorityList.innerHTML=PRIORITIES.map(x=>{const p=db.prospects.find(p=>normName(p.name)===normName(x.name));if(!p)return `<div class="persona"><b>${esc(x.name)}</b><small>${esc(x.note)}</small></div>`;return `<div class="persona"><b>${esc(p.name)}</b><div class="meta-line">${stageBadge(p.stage)} ${urgencyBadge(p)}</div><small>${esc(p.next||x.note)}</small></div>`}).join('')}
 function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
 function countTodayGestures(){const ids=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!['attempt','conversation'].includes(a.type))continue;if(a.prospectId!=null)ids.add(String(a.prospectId));}return ids.size}
+function todayCountByType(type){return db.activities.filter(a=>a.date===todayISO()&&a.type===type).length}
+function renderDailyClose(){
+ const d=todayISO();
+ dailyCloseDate.textContent=fmtDate(d);
+ dGestures.textContent=countTodayGestures();
+ dContacts.textContent=countTodayNewContacts();
+ dConversations.textContent=todayCountByType('conversation');
+ dFollowups.textContent=todayCountByType('followup');
+ dClients.textContent=todayCountByType('client');
+ dDistributors.textContent=todayCountByType('distributor');
+ const saved=db.dailyObservations[d]||'';
+ if(document.activeElement!==dailyObservation)dailyObservation.value=saved;
+}
+function saveDailyObservation(){
+ const d=todayISO();
+ db.dailyObservations[d]=(dailyObservation.value||'').trim();
+ persist();
+ dailyObsStatus.textContent='✓ Guardado';
+ setTimeout(()=>{dailyObsStatus.textContent=''},1800);
+}
 function render(){
- const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();
+ const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
 }
 segFecha.value=todayISO();render();
 </script>
