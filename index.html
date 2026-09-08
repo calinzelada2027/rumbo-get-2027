@@ -50,8 +50,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 .daily-counters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 14px}.daily-box{border:1px solid #e4e7ec;border-radius:16px;padding:14px;background:#f8fbff}.daily-label{font-size:13px;font-weight:700;color:#344054}.daily-number{font-size:34px;font-weight:800;margin:8px 0 5px}.daily-help{font-size:12px;line-height:1.3;color:var(--muted)}@media(max-width:390px){.daily-counters{grid-template-columns:1fr}.daily-number{font-size:32px}}
 .activity-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.activity-row:last-child{border-bottom:0}
 .activity-text{flex:1;font-size:14px;line-height:1.35}.activity-text small{display:block;color:var(--muted);margin-top:4px}.undo{background:#fff1f2;color:#b4232c;padding:7px 9px;font-size:12px}
-/* Cierre del día 4.7 - Resumen Bloque de Poder */
-.power-box{margin-top:18px;border:1px solid #dbe4ef;border-radius:16px;padding:15px;background:#f8fbff}.power-box h3{margin:0 0 10px}.power-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}.power-summary-item{background:#fff;border:1px solid #e4e7ec;border-radius:13px;padding:10px}.power-summary-item span{display:block;font-size:11px;font-weight:700;color:#667085;line-height:1.25}.power-summary-item b{display:block;font-size:18px;color:var(--ink);margin-top:6px}.power-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.power-inputs label{font-size:13px;font-weight:700;color:#344054}.power-inputs input{margin-top:5px}.power-history{margin-top:12px;border-top:1px solid #e4e7ec;padding-top:10px}.power-history-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-bottom:1px solid #edf0f4}.power-history-row:last-child{border-bottom:0}.power-note{font-size:12px;color:var(--muted);margin-top:8px}.obs-status{font-size:13px;color:var(--green);font-weight:700}@media(max-width:430px){.power-summary{grid-template-columns:1fr}.power-summary-item{padding:9px 11px}.power-summary-item b{font-size:17px}}
+/* Cierre del día 4.8 - Meta diaria de Bloque de Poder */
+.power-box{margin-top:18px;border:1px solid #dbe4ef;border-radius:16px;padding:15px;background:#f8fbff}.power-box h3{margin:0 0 10px}.power-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}.power-summary-item{background:#fff;border:1px solid #e4e7ec;border-radius:13px;padding:10px}.power-summary-item span{display:block;font-size:11px;font-weight:700;color:#667085;line-height:1.25}.power-summary-item b{display:block;font-size:18px;color:var(--ink);margin-top:6px}.power-goal{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}.power-goal-item{border-radius:13px;padding:10px 12px;background:#fff;border:1px solid #e4e7ec}.power-goal-item span{display:block;font-size:11px;font-weight:700;color:#667085}.power-goal-item b{display:block;margin-top:5px;font-size:17px}.power-goal-status{margin:0 0 12px;padding:10px 12px;border-radius:12px;font-size:13px;font-weight:700}.power-goal-status.pending{background:#fff7ed;color:#b54708}.power-goal-status.done{background:#ecfdf3;color:#067647}.power-progress{height:9px;background:#e9eef5;border-radius:999px;overflow:hidden;margin:0 0 14px}.power-progress>span{display:block;height:100%;width:0;background:var(--blue2);border-radius:999px;transition:width .25s ease}.power-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.power-inputs label{font-size:13px;font-weight:700;color:#344054}.power-inputs input{margin-top:5px}.power-history{margin-top:12px;border-top:1px solid #e4e7ec;padding-top:10px}.power-history-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-bottom:1px solid #edf0f4}.power-history-row:last-child{border-bottom:0}.power-note{font-size:12px;color:var(--muted);margin-top:8px}.obs-status{font-size:13px;color:var(--green);font-weight:700}@media(max-width:430px){.power-summary{grid-template-columns:1fr}.power-goal{grid-template-columns:1fr 1fr}.power-summary-item{padding:9px 11px}.power-summary-item b{font-size:17px}}
 </style>
 </head>
 <body>
@@ -156,12 +156,18 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
     <div class="power-summary-item"><span>ACUMULADO SEMANAL</span><b id="dPowerWeek">0 min</b></div>
     <div class="power-summary-item"><span>PROMEDIO DIARIO</span><b id="dPowerAverage">0 min</b></div>
    </div>
+   <div class="power-goal">
+    <div class="power-goal-item"><span>META DIARIA</span><b id="dPowerGoal">2 h</b></div>
+    <div class="power-goal-item"><span>TE FALTA</span><b id="dPowerRemaining">2 h</b></div>
+   </div>
+   <div id="dPowerGoalStatus" class="power-goal-status pending">Te faltan 2 h para cumplir tu meta de hoy.</div>
+   <div class="power-progress"><span id="dPowerProgress"></span></div>
    <div class="power-inputs">
     <label>Horas<input id="powerInputHours" type="number" min="0" max="12" step="1" inputmode="numeric" value="0"></label>
     <label>Minutos<input id="powerInputMinutes" type="number" min="0" max="59" step="5" inputmode="numeric" value="0"></label>
    </div>
    <div class="row" style="align-items:center"><button onclick="addPowerBlock()">Agregar al Bloque de Poder</button><span id="powerSaveStatus" class="obs-status"></span></div>
-   <div class="power-note">Cada registro se suma al total del día y al acumulado semanal. El promedio diario se calcula con los días de trabajo transcurridos de la semana (lunes a sábado). Meta de referencia: 2 h por día.</div>
+   <div class="power-note">Cada registro se suma al total del día y al acumulado semanal. El promedio diario se calcula con los días de trabajo transcurridos de la semana (lunes a sábado). Meta diaria: 2 h por día.</div>
    <div class="power-history"><b>Historial por fecha</b><div id="powerHistory"></div></div>
   </div>
   <label for="dailyObservation" style="display:block;margin-top:18px;font-weight:700">Observaciones del día</label>
@@ -186,7 +192,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.7 · Resumen de Bloque de Poder, Cierre del día, buscador inteligente y estados</small></div>
+ <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.8 · Meta diaria de Bloque de Poder, Cierre del día, buscador inteligente y estados</small></div>
 </section>
 </main>
 
@@ -323,6 +329,7 @@ function renderPriorities(){priorityList.innerHTML=PRIORITIES.map(x=>{const p=db
 function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
 function countTodayGestures(){const ids=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!['attempt','conversation'].includes(a.type))continue;if(a.prospectId!=null)ids.add(String(a.prospectId));}return ids.size}
 function todayCountByType(type){return db.activities.filter(a=>a.date===todayISO()&&a.type===type).length}
+const DAILY_POWER_GOAL_MINUTES=120;
 function powerMinutesForDate(date){
  const v=db.dailyPower?.[date];
  if(Array.isArray(v))return v.reduce((s,x)=>s+Math.max(0,Number(x?.minutes)||0),0);
@@ -375,9 +382,17 @@ function renderDailyClose(){
  dFollowups.textContent=todayCountByType('followup');
  dClients.textContent=todayCountByType('client');
  dDistributors.textContent=todayCountByType('distributor');
- dPowerTotal.textContent=fmtMinutes(powerMinutesForDate(d));
+ const todayPower=powerMinutesForDate(d);
+ const remaining=Math.max(0,DAILY_POWER_GOAL_MINUTES-todayPower);
+ const progress=Math.min(100,Math.round((todayPower/DAILY_POWER_GOAL_MINUTES)*100));
+ dPowerTotal.textContent=fmtMinutes(todayPower);
  dPowerWeek.textContent=fmtMinutes(week2PowerMinutes());
  dPowerAverage.textContent=fmtMinutes(week2PowerAverageMinutes());
+ dPowerGoal.textContent=fmtMinutes(DAILY_POWER_GOAL_MINUTES);
+ dPowerRemaining.textContent=fmtMinutes(remaining);
+ dPowerProgress.style.width=progress+'%';
+ dPowerGoalStatus.className='power-goal-status '+(remaining===0?'done':'pending');
+ dPowerGoalStatus.textContent=remaining===0?'✅ Meta diaria de Bloque de Poder cumplida.':'Te faltan '+fmtMinutes(remaining)+' para cumplir tu meta de hoy.';
  renderPowerHistory();
  const saved=db.dailyObservations[d]||'';
  if(document.activeElement!==dailyObservation)dailyObservation.value=saved;
