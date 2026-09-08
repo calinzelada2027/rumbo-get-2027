@@ -50,6 +50,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 .daily-counters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 14px}.daily-box{border:1px solid #e4e7ec;border-radius:16px;padding:14px;background:#f8fbff}.daily-label{font-size:13px;font-weight:700;color:#344054}.daily-number{font-size:34px;font-weight:800;margin:8px 0 5px}.daily-help{font-size:12px;line-height:1.3;color:var(--muted)}@media(max-width:390px){.daily-counters{grid-template-columns:1fr}.daily-number{font-size:32px}}
 .activity-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.activity-row:last-child{border-bottom:0}
 .activity-text{flex:1;font-size:14px;line-height:1.35}.activity-text small{display:block;color:var(--muted);margin-top:4px}.undo{background:#fff1f2;color:#b4232c;padding:7px 9px;font-size:12px}
+/* Cierre del día 4.6 - Bloque de Poder */
+.power-box{margin-top:18px;border:1px solid #dbe4ef;border-radius:16px;padding:15px;background:#f8fbff}.power-box h3{margin:0 0 6px}.power-total{font-size:14px;color:var(--muted);margin-bottom:10px}.power-total b{color:var(--ink);font-size:20px}.power-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.power-inputs label{font-size:13px;font-weight:700;color:#344054}.power-inputs input{margin-top:5px}.power-history{margin-top:12px;border-top:1px solid #e4e7ec;padding-top:10px}.power-history-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-bottom:1px solid #edf0f4}.power-history-row:last-child{border-bottom:0}.power-note{font-size:12px;color:var(--muted);margin-top:8px}.obs-status{font-size:13px;color:var(--green);font-weight:700}
 </style>
 </head>
 <body>
@@ -78,7 +80,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Contactos<b><span id="weekContacts">0</span> / 30</b></div>
    <div class="dato">Presentaciones<b><span id="weekPresentations">0</span> / 5</b></div>
    <div class="dato">Seguimientos<b id="weekFollowups">0</b></div>
-   <div class="dato">Bloque Poder<b><span id="powerHours">0</span> h</b></div>
+   <div class="dato">Bloque Poder<b><span id="powerHours">0 h</span></b></div>
   </div>
   <div class="history"><b>Semana 1 cerrada · 1–6 septiembre</b><br><span class="muted">27 contactos · 14 conversaciones · 6 invitaciones · 2 presentaciones · 6 seguimientos · 16 h Bloque Poder</span></div>
  </div>
@@ -147,6 +149,17 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="daily-metric"><span>✓ Nuevos clientes</span><b id="dClients">0</b></div>
    <div class="daily-metric"><span>★ Nuevos distribuidores</span><b id="dDistributors">0</b></div>
   </div>
+  <div class="power-box">
+   <h3>⏱️ Bloque de Poder de hoy</h3>
+   <div class="power-total">Total registrado hoy: <b id="dPowerTotal">0 min</b></div>
+   <div class="power-inputs">
+    <label>Horas<input id="powerInputHours" type="number" min="0" max="12" step="1" inputmode="numeric" value="0"></label>
+    <label>Minutos<input id="powerInputMinutes" type="number" min="0" max="59" step="5" inputmode="numeric" value="0"></label>
+   </div>
+   <div class="row" style="align-items:center"><button onclick="addPowerBlock()">Agregar al Bloque de Poder</button><span id="powerSaveStatus" class="obs-status"></span></div>
+   <div class="power-note">Cada registro se suma al total del día y al acumulado semanal. Meta de referencia: 2 h por día.</div>
+   <div class="power-history"><b>Historial por fecha</b><div id="powerHistory"></div></div>
+  </div>
   <label for="dailyObservation" style="display:block;margin-top:18px;font-weight:700">Observaciones del día</label>
   <textarea id="dailyObservation" placeholder="Ej.: Se realizaron las 5 gestiones. Tres respondieron, dos quedaron en intento. Morayma se inscribió como distribuidora."></textarea>
   <div class="row" style="align-items:center"><button onclick="saveDailyObservation()">Guardar observaciones</button><span id="dailyObsStatus" class="obs-status"></span></div>
@@ -159,6 +172,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b id="rFollowups">0</b></div>
    <div class="dato">Clientes nuevos<b id="rClients">0</b></div>
    <div class="dato">Distribuidores nuevos<b id="rDistributors">0</b></div>
+   <div class="dato">Bloque Poder<b id="rPower">0 h</b></div>
   </div>
  </div>
  <div class="card"><h2>🗂️ Semana 1 cerrada</h2>
@@ -168,7 +182,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.5 · Cierre del día automático, buscador inteligente y estados</small></div>
+ <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.6 · Cierre del día, Bloque de Poder, buscador inteligente y estados</small></div>
 </section>
 </main>
 
@@ -225,6 +239,7 @@ let db=JSON.parse(localStorage.getItem(KEY)||'null') || {prospects:SEED,week2:{c
 if(!db.week2)db.week2={contacts:0,conversations:0,presentations:0,followups:0,power:0};
 for(const k of ['contacts','conversations','presentations','followups','power','clients','distributors'])if(typeof db.week2[k]!=='number')db.week2[k]=0;
 if(!db.dailyObservations||typeof db.dailyObservations!=='object')db.dailyObservations={};
+if(!db.dailyPower||typeof db.dailyPower!=='object')db.dailyPower={};
 if(!Array.isArray(db.prospects))db.prospects=SEED;
 for(const p of db.prospects){p.stage=deriveStage(p);p.status=p.stage;if(typeof p.everConversation!=='boolean')p.everConversation=['Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage);}
 function inferProspectId(text){const nt=normName(text);let hits=db.prospects.filter(p=>nt.includes(normName(p.name))).sort((a,b)=>b.name.length-a.name.length);return hits[0]?.id||null}
@@ -304,6 +319,37 @@ function renderPriorities(){priorityList.innerHTML=PRIORITIES.map(x=>{const p=db
 function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
 function countTodayGestures(){const ids=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!['attempt','conversation'].includes(a.type))continue;if(a.prospectId!=null)ids.add(String(a.prospectId));}return ids.size}
 function todayCountByType(type){return db.activities.filter(a=>a.date===todayISO()&&a.type===type).length}
+function powerMinutesForDate(date){
+ const v=db.dailyPower?.[date];
+ if(Array.isArray(v))return v.reduce((s,x)=>s+Math.max(0,Number(x?.minutes)||0),0);
+ if(typeof v==='number')return Math.max(0,Math.round(v));
+ return 0;
+}
+function fmtMinutes(total){
+ total=Math.max(0,Math.round(Number(total)||0));
+ const h=Math.floor(total/60),m=total%60;
+ if(h&&m)return `${h} h ${m} min`;
+ if(h)return `${h} h`;
+ return `${m} min`;
+}
+function week2PowerMinutes(){
+ let total=0;
+ for(const [d] of Object.entries(db.dailyPower||{})){if(d>='2026-09-07'&&d<='2026-09-13')total+=powerMinutesForDate(d)}
+ return total;
+}
+function addPowerBlock(){
+ const h=Number(powerInputHours.value||0),m=Number(powerInputMinutes.value||0);
+ if(!Number.isFinite(h)||!Number.isFinite(m)||h<0||m<0||m>59||!Number.isInteger(h)||!Number.isInteger(m))return alert('Ingresa horas enteras y minutos entre 0 y 59.');
+ const minutes=h*60+m;if(minutes<=0)return alert('Ingresa al menos 1 minuto de Bloque de Poder.');
+ const d=todayISO();if(!Array.isArray(db.dailyPower[d])){const prev=powerMinutesForDate(d);db.dailyPower[d]=prev?[{id:'migrated-'+d,minutes:prev}]:[];}
+ db.dailyPower[d].push({id:'p-'+Date.now(),minutes,createdAt:new Date().toISOString()});
+ db.week2.power=week2PowerMinutes()/60;
+ powerInputHours.value=0;powerInputMinutes.value=0;persist();render();powerSaveStatus.textContent='✓ Sumado';setTimeout(()=>powerSaveStatus.textContent='',1800);
+}
+function renderPowerHistory(){
+ const rows=Object.keys(db.dailyPower||{}).filter(d=>powerMinutesForDate(d)>0).sort().reverse().slice(0,10);
+ powerHistory.innerHTML=rows.length?rows.map(d=>`<div class="power-history-row"><span>${fmtDate(d)||d}</span><b>${fmtMinutes(powerMinutesForDate(d))}</b></div>`).join(''):'<div class="muted" style="margin-top:8px;font-size:13px">Aún no hay horas registradas.</div>';
+}
 function renderDailyClose(){
  const d=todayISO();
  dailyCloseDate.textContent=fmtDate(d);
@@ -313,6 +359,8 @@ function renderDailyClose(){
  dFollowups.textContent=todayCountByType('followup');
  dClients.textContent=todayCountByType('client');
  dDistributors.textContent=todayCountByType('distributor');
+ dPowerTotal.textContent=fmtMinutes(powerMinutesForDate(d));
+ renderPowerHistory();
  const saved=db.dailyObservations[d]||'';
  if(document.activeElement!==dailyObservation)dailyObservation.value=saved;
 }
@@ -324,7 +372,7 @@ function saveDailyObservation(){
  setTimeout(()=>{dailyObsStatus.textContent=''},1800);
 }
 function render(){
- const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;powerHours.textContent=db.week2.power;rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
+ const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;const wp=week2PowerMinutes();db.week2.power=wp/60;powerHours.textContent=fmtMinutes(wp);rPower.textContent=fmtMinutes(wp);rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
 }
 segFecha.value=todayISO();render();
 </script>
