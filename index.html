@@ -52,29 +52,72 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 .activity-text{flex:1;font-size:14px;line-height:1.35}.activity-text small{display:block;color:var(--muted);margin-top:4px}.undo{background:#fff1f2;color:#b4232c;padding:7px 9px;font-size:12px}
 /* Cierre del día 4.8 - Meta diaria de Bloque de Poder */
 .power-box{margin-top:18px;border:1px solid #dbe4ef;border-radius:16px;padding:15px;background:#f8fbff}.power-box h3{margin:0 0 10px}.power-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}.power-summary-item{background:#fff;border:1px solid #e4e7ec;border-radius:13px;padding:10px}.power-summary-item span{display:block;font-size:11px;font-weight:700;color:#667085;line-height:1.25}.power-summary-item b{display:block;font-size:18px;color:var(--ink);margin-top:6px}.power-goal{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}.power-goal-item{border-radius:13px;padding:10px 12px;background:#fff;border:1px solid #e4e7ec}.power-goal-item span{display:block;font-size:11px;font-weight:700;color:#667085}.power-goal-item b{display:block;margin-top:5px;font-size:17px}.power-goal-status{margin:0 0 12px;padding:10px 12px;border-radius:12px;font-size:13px;font-weight:700}.power-goal-status.pending{background:#fff7ed;color:#b54708}.power-goal-status.done{background:#ecfdf3;color:#067647}.power-progress{height:9px;background:#e9eef5;border-radius:999px;overflow:hidden;margin:0 0 14px}.power-progress>span{display:block;height:100%;width:0;background:var(--blue2);border-radius:999px;transition:width .25s ease}.power-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.power-inputs label{font-size:13px;font-weight:700;color:#344054}.power-inputs input{margin-top:5px}.power-history{margin-top:12px;border-top:1px solid #e4e7ec;padding-top:10px}.power-history-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-bottom:1px solid #edf0f4}.power-history-row:last-child{border-bottom:0}.power-note{font-size:12px;color:var(--muted);margin-top:8px}.obs-status{font-size:13px;color:var(--green);font-weight:700}@media(max-width:430px){.power-summary{grid-template-columns:1fr}.power-goal{grid-template-columns:1fr 1fr}.power-summary-item{padding:9px 11px}.power-summary-item b{font-size:17px}}
+
+/* Mi día de hoy 4.9 */
+.day-hero{background:linear-gradient(135deg,#17477f,#1769d2);color:#fff;border-radius:22px;padding:20px;margin-bottom:18px;box-shadow:0 7px 20px rgba(23,71,127,.18)}
+.day-hero-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.day-hero h2{margin:0;font-size:24px}.day-date{font-size:13px;opacity:.9;margin-top:5px}.day-focus{margin-top:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px;font-size:14px;line-height:1.4}
+.day-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.day-kpi{background:#fff;color:var(--ink);border-radius:14px;padding:11px 9px;text-align:center}.day-kpi span{display:block;font-size:11px;color:var(--muted);font-weight:700}.day-kpi b{display:block;font-size:22px;margin-top:5px}.day-kpi.red b{color:#DC2626}.day-kpi.orange b{color:#EA580C}.day-kpi.indigo b{color:#4F46E5}
+.goal-list{display:grid;gap:10px}.goal-row{border:1px solid #e4e7ec;border-radius:15px;padding:12px;background:#fff}.goal-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.goal-head span{font-size:14px;font-weight:700}.goal-head b{font-size:16px}.mini-progress{height:8px;background:#e9eef5;border-radius:999px;overflow:hidden;margin-top:9px}.mini-progress span{display:block;height:100%;background:var(--blue2);border-radius:999px;transition:width .25s ease}.goal-note{font-size:12px;color:var(--muted);margin-top:7px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.section-head h2{margin:0}.section-count{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:999px;padding:0 9px;font-size:13px;font-weight:800;background:#f2f4f7;color:#344054}.section-count.danger{background:#fef2f2;color:#DC2626}.section-count.cita{background:#eef2ff;color:#4F46E5}
+.day-item{border:1px solid #e4e7ec;border-radius:15px;padding:12px;margin-top:9px;background:#fff;cursor:pointer}.day-item:active{transform:scale(.995)}.day-item-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.day-item-name{font-weight:800;font-size:16px}.day-item-next{margin-top:7px;font-size:13px;line-height:1.35;color:#344054}.day-item-meta{margin-top:7px;display:flex;gap:6px;flex-wrap:wrap}.empty-day{border:1px dashed #d0d5dd;border-radius:14px;padding:14px;color:var(--muted);font-size:13px;background:#fafafa}
+.quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.quick-actions button{flex:1;min-width:140px}.soft-btn{background:#eef3f8;color:var(--ink)}
+@media(max-width:390px){.day-kpis{grid-template-columns:1fr 1fr 1fr}.day-kpi b{font-size:19px}.day-hero{padding:17px}.day-hero h2{font-size:22px}}
+
 </style>
 </head>
 <body>
 <header><h1>RUMBO A GET 2027</h1><p>Plan de Acción · 90 días</p></header>
 <main>
 <section id="inicio" class="view active">
+ <div class="day-hero">
+  <div class="day-hero-top">
+   <div><h2>☀️ Mi día de hoy</h2><div id="myDayDate" class="day-date"></div></div>
+  </div>
+  <div id="myDayFocus" class="day-focus">Preparando tus prioridades...</div>
+  <div class="day-kpis">
+   <div class="day-kpi red"><span>🔴 VENCIDOS</span><b id="myOverdueCount">0</b></div>
+   <div class="day-kpi orange"><span>🟠 PARA HOY</span><b id="myTodayFollowCount">0</b></div>
+   <div class="day-kpi indigo"><span>📅 CITAS</span><b id="myAppointmentsCount">0</b></div>
+  </div>
+ </div>
+
  <div class="card">
-  <h2 style="margin-bottom:10px">🎯 Actividad de hoy</h2>
-  <div class="daily-counters">
-   <div class="daily-box">
-    <div class="daily-label">📨 GESTIONES DE HOY</div>
-    <div class="daily-number"><span id="todayGestures">0</span> / 5</div>
-    <div class="daily-help" id="gesturesMsg">Mensajes, llamadas o abordajes realizados.</div>
+  <div class="section-head"><h2>🎯 Metas diarias</h2><span class="section-count" id="dailyGoalsDone">0/3</span></div>
+  <div class="goal-list">
+   <div class="goal-row">
+    <div class="goal-head"><span>📨 Gestiones</span><b><span id="todayGestures">0</span> / 5</b></div>
+    <div class="mini-progress"><span id="gestureProgress"></span></div>
+    <div id="gesturesMsg" class="goal-note">Te faltan 5 gestiones por realizar</div>
    </div>
-   <div class="daily-box">
-    <div class="daily-label">💬 CONTACTOS REALES</div>
-    <div class="daily-number"><span id="todayContacts">0</span> / 5</div>
-    <div class="daily-help" id="todayMsg">Personas que respondieron y conversaron contigo.</div>
+   <div class="goal-row">
+    <div class="goal-head"><span>💬 Contactos reales</span><b><span id="todayContacts">0</span> / 5</b></div>
+    <div class="mini-progress"><span id="contactProgress"></span></div>
+    <div id="todayMsg" class="goal-note">Has logrado 0 contactos reales de 5</div>
+   </div>
+   <div class="goal-row">
+    <div class="goal-head"><span>⏱️ Bloque de Poder</span><b id="myPowerToday">0 min / 2 h</b></div>
+    <div class="mini-progress"><span id="powerDayProgress"></span></div>
+    <div id="myPowerRemaining" class="goal-note">Te faltan 2 h</div>
    </div>
   </div>
-  <button onclick="goToNewProspect()">+ NUEVO PROSPECTO</button>
+  <div class="quick-actions"><button onclick="goToNewProspect()">+ Nuevo prospecto</button><button class="soft-btn" onclick="show('seguimientos')">Abrir seguimientos</button></div>
  </div>
- <div class="card"><h2>🔥 Prioridades · Semana 2</h2><div id="priorityList"></div></div>
+
+ <div class="card">
+  <div class="section-head"><h2>📅 Citas de hoy</h2><span id="appointmentCountBadge" class="section-count cita">0</span></div>
+  <div id="todayAppointments"></div>
+ </div>
+
+ <div class="card">
+  <div class="section-head"><h2>🔴 Seguimientos vencidos</h2><span id="overdueCountBadge" class="section-count danger">0</span></div>
+  <div id="overdueList"></div>
+ </div>
+
+ <div class="card">
+  <div class="section-head"><h2>🔥 Prioridades de hoy</h2><span class="section-count">TOP 5</span></div>
+  <div id="priorityList"></div>
+ </div>
+
  <div class="card"><h2>📊 Avance semanal · Semana 2</h2>
   <div class="grid">
    <div class="dato">Contactos<b><span id="weekContacts">0</span> / 30</b></div>
@@ -192,7 +235,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
    <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
   </div>
  </div>
- <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.8 · Meta diaria de Bloque de Poder, Cierre del día, buscador inteligente y estados</small></div>
+ <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted">Versión 4.9 · Mi día de hoy, prioridades inteligentes, metas diarias y seguimiento</small></div>
 </section>
 </main>
 
@@ -325,7 +368,46 @@ function renderSelected(){const p=selectedProspect();if(!p){selectedTitle.textCo
 
 function renderProspects(){const q=normName(buscar.value||'');const rows=db.prospects.filter(p=>normName(p.name+' '+p.stage+' '+p.category).includes(q));prospectCount.textContent=db.prospects.length+' registrados';prospectList.innerHTML=rows.map(p=>`<div class="persona"><b>${esc(p.name)}</b><div class="meta-line"><span class="muted">${esc(p.category||'Sin categoría')}${p.phone?' · '+esc(p.phone):''}</span>${stageBadge(p.stage)}</div><div class="meta-line">${urgencyBadge(p)}</div>${p.next?`<small><b>Próximo:</b> ${esc(p.next)}</small>`:''}${p.notes?`<small class="muted">${esc(p.notes)}</small>`:''}<div class="persona-actions"><button class="secondary" onclick="openEdit(${p.id})">✏️ Editar</button><button class="danger" onclick="deleteProspect(${p.id})">🗑️ Eliminar</button></div></div>`).join('')}
 function renderActivity(){activityList.innerHTML=db.activities.length?db.activities.slice(0,30).map(a=>`<div class="activity-row"><div class="activity-text">${esc(a.text||'Actividad')}<small>${fmtDate(a.date)||a.date||''}</small></div><button class="undo" onclick="deleteActivity('${esc(a.id)}')">🗑️</button></div>`).join(''):'<p class="muted">Aún no hay actividad registrada en Semana 2.</p>'}
-function renderPriorities(){priorityList.innerHTML=PRIORITIES.map(x=>{const p=db.prospects.find(p=>normName(p.name)===normName(x.name));if(!p)return `<div class="persona"><b>${esc(x.name)}</b><small>${esc(x.note)}</small></div>`;return `<div class="persona"><b>${esc(p.name)}</b><div class="meta-line">${stageBadge(p.stage)} ${urgencyBadge(p)}</div><small>${esc(p.next||x.note)}</small></div>`}).join('')}
+function goToFollow(id){
+ show('seguimientos');
+ setTimeout(()=>selectFollowProspect(id),60);
+}
+function sameDate(a,b){const da=parseDate(a),dbb=parseDate(b);return !!(da&&dbb&&da.getFullYear()===dbb.getFullYear()&&da.getMonth()===dbb.getMonth()&&da.getDate()===dbb.getDate())}
+function todayAppointmentsRows(){return db.prospects.filter(p=>p.stage==='Invitado/Cita'&&sameDate(p.next_date,todayISO())).sort((a,b)=>a.name.localeCompare(b.name,'es',{sensitivity:'base'}))}
+function overdueRows(){return db.prospects.filter(p=>followUrgency(p).key==='overdue'&&p.stage!=='No por ahora').sort((a,b)=>{const da=parseDate(a.next_date),dbb=parseDate(b.next_date);return (dbb?.getTime()||0)-(da?.getTime()||0)})}
+function todayDueRows(){return db.prospects.filter(p=>followUrgency(p).key==='today'&&p.stage!=='No por ahora')}
+function priorityRows(){
+ const today=todayISO();
+ return db.prospects.filter(p=>p.stage!=='No por ahora'&&p.next).map(p=>{
+  const u=followUrgency(p);let score=50;
+  if(p.stage==='Invitado/Cita'&&sameDate(p.next_date,today))score=-20;
+  else if(u.key==='overdue')score=0;
+  else if(u.key==='today')score=10;
+  else if(u.key==='tomorrow')score=20;
+  else if(u.key==='soon')score=30;
+  else score=40;
+  return {p,u,score};
+ }).sort((a,b)=>a.score-b.score||a.u.rank-b.u.rank||a.p.name.localeCompare(b.p.name,'es',{sensitivity:'base'})).slice(0,5).map(x=>x.p);
+}
+function dayItem(p){return `<div class="day-item" onclick="goToFollow(${p.id})"><div class="day-item-top"><div class="day-item-name">${esc(p.name)}</div>${stageBadge(p.stage)}</div><div class="day-item-meta">${urgencyBadge(p)}<span class="muted">${esc(p.category||'Sin categoría')}</span></div>${p.next?`<div class="day-item-next"><b>Próximo:</b> ${esc(p.next)}</div>`:''}</div>`}
+function renderPriorities(){const rows=priorityRows();priorityList.innerHTML=rows.length?rows.map(dayItem).join(''):'<div class="empty-day">No tienes prioridades con fecha o próximo paso. Agrega seguimiento a tus prospectos activos.</div>'}
+function renderMyDay(){
+ const d=parseDate(todayISO())||new Date();
+ myDayDate.textContent=new Intl.DateTimeFormat('es-PE',{weekday:'long',day:'numeric',month:'long'}).format(d);
+ const overdue=overdueRows(),due=todayDueRows(),appointments=todayAppointmentsRows();
+ myOverdueCount.textContent=overdue.length;myTodayFollowCount.textContent=due.length;myAppointmentsCount.textContent=appointments.length;appointmentCountBadge.textContent=appointments.length;overdueCountBadge.textContent=overdue.length;
+ todayAppointments.innerHTML=appointments.length?appointments.map(dayItem).join(''):'<div class="empty-day">No tienes citas registradas para hoy.</div>';
+ overdueList.innerHTML=overdue.length?overdue.slice(0,4).map(dayItem).join('')+(overdue.length>4?`<div class="goal-note" style="margin-top:10px">Hay ${overdue.length-4} seguimiento${overdue.length-4===1?'':'s'} vencido${overdue.length-4===1?'':'s'} más. Ábrelos desde Seguimientos.</div>`:''):'<div class="empty-day">✅ No tienes seguimientos vencidos.</div>';
+ const tg=countTodayGestures(),tc=countTodayNewContacts(),pm=powerMinutesForDate(todayISO());
+ gestureProgress.style.width=Math.min(100,Math.round(tg/5*100))+'%';contactProgress.style.width=Math.min(100,Math.round(tc/5*100))+'%';powerDayProgress.style.width=Math.min(100,Math.round(pm/DAILY_POWER_GOAL_MINUTES*100))+'%';
+ myPowerToday.textContent=fmtMinutes(pm)+' / '+fmtMinutes(DAILY_POWER_GOAL_MINUTES);const rem=Math.max(0,DAILY_POWER_GOAL_MINUTES-pm);myPowerRemaining.textContent=rem===0?'✅ Meta cumplida':'Te faltan '+fmtMinutes(rem);
+ const goals=[tg>=5,tc>=5,pm>=DAILY_POWER_GOAL_MINUTES].filter(Boolean).length;dailyGoalsDone.textContent=goals+'/3';
+ const pri=priorityRows()[0];
+ if(appointments.length)myDayFocus.innerHTML='📅 <b>Primero:</b> tienes '+appointments.length+' cita'+(appointments.length===1?'':'s')+' hoy. '+(pri?'Tu siguiente acción es <b>'+esc(pri.name)+'</b>.':'');
+ else if(overdue.length)myDayFocus.innerHTML='🔴 Tienes <b>'+overdue.length+' seguimiento'+(overdue.length===1?'':'s')+' vencido'+(overdue.length===1?'':'s')+'</b>. Empieza por <b>'+esc(overdue[0].name)+'</b>.';
+ else if(due.length)myDayFocus.innerHTML='🟠 Tienes <b>'+due.length+' seguimiento'+(due.length===1?'':'s')+' para hoy</b>. Empieza por <b>'+esc(due[0].name)+'</b>.';
+ else myDayFocus.innerHTML=tg>=5?'✅ Cumpliste tus gestiones de hoy. Revisa próximos pasos y cierres.':'🎯 Hoy te faltan <b>'+Math.max(0,5-tg)+' gestiones</b> para tu meta diaria.';
+}
 function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
 function countTodayGestures(){const ids=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!['attempt','conversation'].includes(a.type))continue;if(a.prospectId!=null)ids.add(String(a.prospectId));}return ids.size}
 function todayCountByType(type){return db.activities.filter(a=>a.date===todayISO()&&a.type===type).length}
@@ -405,7 +487,7 @@ function saveDailyObservation(){
  setTimeout(()=>{dailyObsStatus.textContent=''},1800);
 }
 function render(){
- const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;const wp=week2PowerMinutes();db.week2.power=wp/60;powerHours.textContent=fmtMinutes(wp);rPower.textContent=fmtMinutes(wp);rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
+ const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;const wp=week2PowerMinutes();db.week2.power=wp/60;powerHours.textContent=fmtMinutes(wp);rPower.textContent=fmtMinutes(wp);rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderMyDay();renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
 }
 segFecha.value=todayISO();render();
 </script>
