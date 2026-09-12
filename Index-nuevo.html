@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17477f">
+<title>Rumbo a GET 2027 · v4.13.2</title>
+<style>
+*{box-sizing:border-box}
+:root{--blue:#17477f;--blue2:#1769d2;--ink:#172238;--muted:#667085;--bg:#f4f7fb;--green:#15945d;--line:#e7eaf0;--red:#c63c47}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--blue);color:white;padding:28px 22px 38px;border-radius:0 0 32px 32px}
+header h1{margin:0;font-size:27px}header p{margin:12px 0 0;font-size:18px}.header-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.version-badge{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.34);color:#fff;border-radius:999px;padding:6px 10px;font-size:13px;font-weight:800;white-space:nowrap}
+main{max-width:650px;margin:auto;padding:20px 15px 120px}
+.card{background:#fff;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 4px 15px rgba(0,0,0,.09)}
+.card h2,.card h3{margin:0 0 16px}.big{font-size:40px;font-weight:700;margin:15px 0}.green{color:var(--green)}.muted{color:var(--muted)}
+button{border:0;border-radius:12px;background:var(--blue2);color:#fff;padding:13px 16px;font-weight:700;font-size:15px}
+.secondary{background:#eef3f8;color:var(--ink)}.danger{background:#fff1f2;color:var(--red)}
+.persona{padding:13px 0;border-bottom:1px solid var(--line)}.persona:last-child{border-bottom:0}
+.persona b{font-size:17px}.persona small{display:block;margin-top:4px;line-height:1.35}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dato{border:1px solid #ddd;border-radius:15px;padding:13px}.dato b{display:block;font-size:22px;margin-top:3px}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #ddd;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 3px calc(8px + env(safe-area-inset-bottom));z-index:10}
+nav button{background:transparent;color:var(--ink);padding:6px 2px;font-size:12px;font-weight:400}nav button span{display:block;font-size:20px;margin-bottom:3px}
+.view{display:none}.view.active{display:block}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-radius:10px;margin:6px 0 12px;font-size:16px;background:white}
+.row{display:flex;gap:8px;flex-wrap:wrap}.pill{display:inline-block;background:#edf5ff;color:#17477f;border-radius:999px;padding:5px 9px;font-size:12px;margin-top:5px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.search{margin-top:8px}
+.history{background:#f8fafc;border:1px solid #e2e8f0;border-radius:15px;padding:14px;margin-top:12px}
+.persona-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.persona-actions button{padding:8px 11px;font-size:13px}
+.warning{display:block;color:#b54708;margin:-6px 0 10px;font-size:13px;font-weight:700}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:50;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}.modal-card{background:white;width:100%;max-width:650px;max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -6px 30px rgba(0,0,0,.18)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.modal-head h2{margin:0}.closebtn{background:#eef3f8;color:var(--ink);font-size:20px;padding:7px 11px}
+/* Seguimientos 4.3 */
+.alpha{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}.alpha::-webkit-scrollbar{display:none}
+.alpha button{min-width:38px;padding:9px 10px;background:#eef3f8;color:#344054;border-radius:10px;white-space:nowrap}
+.alpha button.active{background:var(--blue);color:#fff}
+.follow-result{border:1px solid #e4e7ec;border-radius:15px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}
+.follow-result.selected{border:2px solid var(--blue2);background:#f7fbff}
+.follow-result .name{font-weight:700;font-size:16px;margin-bottom:6px}
+.meta-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
+.stage-new{background:#f3f4f6;color:#6B7280}.stage-attempt{background:#f1f5f9;color:#64748B}.stage-conv{background:#eff6ff;color:#2563EB}.stage-cita{background:#eef2ff;color:#4F46E5}.stage-presented{background:#f5f3ff;color:#7C3AED}.stage-client{background:#f0fdf4;color:#16A34A}.stage-dist{background:#ecfdf5;color:#047857}.stage-hold{background:#f8fafc;color:#475569}
+.urg-overdue{background:#fef2f2;color:#DC2626}.urg-today{background:#fff7ed;color:#EA580C}.urg-tomorrow{background:#fffbeb;color:#CA8A04}.urg-soon{background:#eff6ff;color:#2563EB}.urg-later{background:#f8fafc;color:#475569}.urg-none{background:#f3f4f6;color:#9CA3AF}.urg-done{background:#f0fdf4;color:#16A34A}
+.selected-card{border:2px solid #dbeafe;background:#f8fbff}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.action-grid button{padding:11px 9px;font-size:13px}
+.recent-wrap{margin:4px 0 12px}.recent-chip{background:#f8fafc;color:#344054;border:1px solid #e4e7ec;padding:8px 10px;margin:4px 4px 0 0;font-size:13px}
+.countnote{font-size:12px;color:var(--muted);margin:4px 0 8px}
+.daily-counters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 14px}.daily-box{border:1px solid #e4e7ec;border-radius:16px;padding:14px;background:#f8fbff}.daily-label{font-size:13px;font-weight:700;color:#344054}.daily-number{font-size:34px;font-weight:800;margin:8px 0 5px}.daily-help{font-size:12px;line-height:1.3;color:var(--muted)}@media(max-width:390px){.daily-counters{grid-template-columns:1fr}.daily-number{font-size:32px}}
+.activity-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.activity-row:last-child{border-bottom:0}
+.activity-text{flex:1;font-size:14px;line-height:1.35}.activity-text small{display:block;color:var(--muted);margin-top:4px}.undo{background:#fff1f2;color:#b4232c;padding:7px 9px;font-size:12px}
+/* Cierre del día 4.8 - Meta diaria de Bloque de Poder */
+.power-box{margin-top:18px;border:1px solid #dbe4ef;border-radius:16px;padding:15px;background:#f8fbff}.power-box h3{margin:0 0 10px}.power-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}.power-summary-item{background:#fff;border:1px solid #e4e7ec;border-radius:13px;padding:10px}.power-summary-item span{display:block;font-size:11px;font-weight:700;color:#667085;line-height:1.25}.power-summary-item b{display:block;font-size:18px;color:var(--ink);margin-top:6px}.power-goal{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}.power-goal-item{border-radius:13px;padding:10px 12px;background:#fff;border:1px solid #e4e7ec}.power-goal-item span{display:block;font-size:11px;font-weight:700;color:#667085}.power-goal-item b{display:block;margin-top:5px;font-size:17px}.power-goal-status{margin:0 0 12px;padding:10px 12px;border-radius:12px;font-size:13px;font-weight:700}.power-goal-status.pending{background:#fff7ed;color:#b54708}.power-goal-status.done{background:#ecfdf3;color:#067647}.power-progress{height:9px;background:#e9eef5;border-radius:999px;overflow:hidden;margin:0 0 14px}.power-progress>span{display:block;height:100%;width:0;background:var(--blue2);border-radius:999px;transition:width .25s ease}.power-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.power-inputs label{font-size:13px;font-weight:700;color:#344054}.power-inputs input{margin-top:5px}.power-history{margin-top:12px;border-top:1px solid #e4e7ec;padding-top:10px}.power-history-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-bottom:1px solid #edf0f4}.power-history-row:last-child{border-bottom:0}.power-note{font-size:12px;color:var(--muted);margin-top:8px}.obs-status{font-size:13px;color:var(--green);font-weight:700}@media(max-width:430px){.power-summary{grid-template-columns:1fr}.power-goal{grid-template-columns:1fr 1fr}.power-summary-item{padding:9px 11px}.power-summary-item b{font-size:17px}}
+
+/* Mi día de hoy 4.9 */
+.day-hero{background:linear-gradient(135deg,#17477f,#1769d2);color:#fff;border-radius:22px;padding:20px;margin-bottom:18px;box-shadow:0 7px 20px rgba(23,71,127,.18)}
+.day-hero-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.day-hero h2{margin:0;font-size:24px}.day-date{font-size:13px;opacity:.9;margin-top:5px}.day-focus{margin-top:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px;font-size:14px;line-height:1.4}
+.day-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.day-kpi{background:#fff;color:var(--ink);border-radius:14px;padding:11px 9px;text-align:center}.day-kpi span{display:block;font-size:11px;color:var(--muted);font-weight:700}.day-kpi b{display:block;font-size:22px;margin-top:5px}.day-kpi.red b{color:#DC2626}.day-kpi.orange b{color:#EA580C}.day-kpi.indigo b{color:#4F46E5}
+.goal-list{display:grid;gap:10px}.goal-row{border:1px solid #e4e7ec;border-radius:15px;padding:12px;background:#fff}.goal-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.goal-head span{font-size:14px;font-weight:700}.goal-head b{font-size:16px}.mini-progress{height:8px;background:#e9eef5;border-radius:999px;overflow:hidden;margin-top:9px}.mini-progress span{display:block;height:100%;background:var(--blue2);border-radius:999px;transition:width .25s ease}.goal-note{font-size:12px;color:var(--muted);margin-top:7px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.section-head h2{margin:0}.section-count{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:999px;padding:0 9px;font-size:13px;font-weight:800;background:#f2f4f7;color:#344054}.section-count.danger{background:#fef2f2;color:#DC2626}.section-count.cita{background:#eef2ff;color:#4F46E5}
+.day-item{border:1px solid #e4e7ec;border-radius:15px;padding:12px;margin-top:9px;background:#fff;cursor:pointer}.day-item:active{transform:scale(.995)}.day-item-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.day-item-name{font-weight:800;font-size:16px}.day-item-next{margin-top:7px;font-size:13px;line-height:1.35;color:#344054}.day-item-meta{margin-top:7px;display:flex;gap:6px;flex-wrap:wrap}.empty-day{border:1px dashed #d0d5dd;border-radius:14px;padding:14px;color:var(--muted);font-size:13px;background:#fafafa}
+.quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.quick-actions button{flex:1;min-width:140px}.soft-btn{background:#eef3f8;color:var(--ink)}.activity-status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;margin-top:5px;font-size:11px;font-weight:800}.activity-status.completed{background:#f0fdf4;color:#16A34A}.activity-status.reprogrammed{background:#fff7ed;color:#EA580C}.activity-status.active{background:#eff6ff;color:#2563EB}.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%) translateY(18px);max-width:calc(100% - 32px);background:#172238;color:#fff;border-radius:14px;padding:11px 15px;font-size:13px;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:100;opacity:0;pointer-events:none;transition:.2s ease;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}button.action-locked{opacity:.62;pointer-events:none}
+@media(max-width:390px){.day-kpis{grid-template-columns:1fr 1fr 1fr}.day-kpi b{font-size:19px}.day-hero{padding:17px}.day-hero h2{font-size:22px}}
+
+/* Qué me falta hoy 4.11 */
+.missing-card{border:1px solid #dbeafe;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%)}
+.missing-intro{font-size:13px;line-height:1.4;color:var(--muted);margin:-4px 0 12px}
+.missing-list{display:grid;gap:8px}
+.missing-row{display:flex;align-items:center;gap:11px;border:1px solid #e4e7ec;border-radius:14px;padding:11px 12px;background:#fff}
+.missing-row.done{background:#f8fffb;border-color:#d1fadf}
+.missing-row.urgent{background:#fffafa;border-color:#fee2e2}
+.missing-icon{width:32px;height:32px;border-radius:10px;background:#f2f4f7;display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 32px}
+.missing-row.done .missing-icon{background:#ecfdf3}.missing-row.urgent .missing-icon{background:#fef2f2}
+.missing-copy{min-width:0;flex:1}.missing-copy b{display:block;font-size:14px}.missing-copy small{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.3}
+.missing-status{font-size:12px;font-weight:800;white-space:nowrap}.missing-status.ok{color:#16A34A}.missing-status.warn{color:#EA580C}.missing-status.danger{color:#DC2626}
+.missing-summary{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:700;line-height:1.35}
+.missing-summary.all-done{background:#ecfdf3;color:#067647}
+
+/* Contactos de hoy 4.13 */
+.daily-contacts-card{border:1px solid #e0e7ff;background:linear-gradient(180deg,#ffffff 0%,#fbfcff 100%)}
+.daily-contact-goal{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-2px 0 12px;padding:10px 12px;border:1px solid #e4e7ec;border-radius:13px;background:#fff}
+.daily-contact-goal label{font-size:13px;font-weight:800;color:#344054}.daily-contact-goal-control{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.daily-contact-goal select{width:auto;min-width:66px;margin:0;padding:8px 28px 8px 10px;font-size:14px;font-weight:800;border-radius:10px}
+.daily-contacts-summary{margin:-2px 0 12px;padding:10px 12px;border-radius:12px;background:#f8fafc;color:#475569;font-size:13px;line-height:1.35}
+.daily-contacts-summary.priority{background:#fff7ed;color:#b54708;font-weight:700}.daily-contacts-summary.done{background:#ecfdf3;color:#067647;font-weight:700}
+.daily-contact-list{display:grid;gap:9px}.daily-contact-row{display:flex;align-items:center;gap:10px;border:1px solid #e4e7ec;border-radius:15px;padding:11px;background:#fff}
+.daily-contact-row.priority{border-color:#fed7aa;background:#fffaf5}.daily-contact-main{min-width:0;flex:1}.daily-contact-name{font-size:15px;font-weight:800}.daily-contact-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.daily-contact-status{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:800;margin-top:6px}.dcs-pending{background:#fff7ed;color:#c2410c}.dcs-sent{background:#fffbeb;color:#a16207}.dcs-replied{background:#eff6ff;color:#1d4ed8}.dcs-cita{background:#eef2ff;color:#4f46e5}.dcs-presented{background:#f5f3ff;color:#7c3aed}.dcs-advanced{background:#ecfdf3;color:#047857}
+.daily-contact-actions{display:flex;flex-direction:column;gap:6px;flex:0 0 auto}.daily-contact-actions button{padding:7px 9px;font-size:11px}.daily-contact-actions .remove-target{background:#f8fafc;color:#667085}
+.daily-contact-empty{border:1px dashed #cbd5e1;border-radius:14px;padding:14px;background:#fafcff;color:#667085;font-size:13px;line-height:1.4}.target-priority{display:inline-flex;align-items:center;margin-left:6px;color:#c2410c;font-size:10px;font-weight:900}
+.target-picker-item{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #e4e7ec;border-radius:14px;padding:11px 12px;margin:8px 0;background:#fff}.target-picker-item b{font-size:15px}.target-picker-item small{display:block;color:var(--muted);margin-top:3px}.target-picker-item button{padding:8px 10px;font-size:12px}
+@media(max-width:390px){.daily-contact-row{align-items:flex-start}.daily-contact-actions{min-width:70px}}
+
+</style>
+</head>
+<body>
+<header><div class="header-top"><h1>RUMBO A GET 2027</h1><span id="appVersionBadge" class="version-badge"></span></div><p>Plan de Acción · 90 días</p></header>
+<main>
+<section id="inicio" class="view active">
+ <div class="day-hero">
+  <div class="day-hero-top">
+   <div><h2>☀️ Mi día de hoy</h2><div id="myDayDate" class="day-date"></div></div>
+  </div>
+  <div id="myDayFocus" class="day-focus">Preparando tus prioridades...</div>
+  <div class="day-kpis">
+   <div class="day-kpi red"><span>🔴 VENCIDOS</span><b id="myOverdueCount">0</b></div>
+   <div class="day-kpi orange"><span>🟠 PARA HOY</span><b id="myTodayFollowCount">0</b></div>
+   <div class="day-kpi indigo"><span>📅 CITAS</span><b id="myAppointmentsCount">0</b></div>
+  </div>
+ </div>
+
+ <div class="card missing-card">
+  <div class="section-head"><h2>🧭 Qué me falta hoy</h2><span class="section-count" id="missingTodayBadge">HOY</span></div>
+  <div id="missingTodaySummary" class="missing-summary">Calculando tu cierre de hoy...</div>
+  <div class="missing-list">
+   <div id="missingGesturesRow" class="missing-row">
+    <div class="missing-icon">📨</div><div class="missing-copy"><b>Gestiones</b><small id="missingGesturesText">Revisando...</small></div><span id="missingGesturesStatus" class="missing-status"></span>
+   </div>
+   <div id="missingContactsRow" class="missing-row">
+    <div class="missing-icon">💬</div><div class="missing-copy"><b>Contactos reales</b><small id="missingContactsText">Revisando...</small></div><span id="missingContactsStatus" class="missing-status"></span>
+   </div>
+   <div id="missingAppointmentsRow" class="missing-row">
+    <div class="missing-icon">📅</div><div class="missing-copy"><b>Citas de hoy</b><small id="missingAppointmentsText">Revisando...</small></div><span id="missingAppointmentsStatus" class="missing-status"></span>
+   </div>
+   <div id="missingFollowupsRow" class="missing-row">
+    <div class="missing-icon">🔁</div><div class="missing-copy"><b>Seguimientos</b><small id="missingFollowupsText">Revisando...</small></div><span id="missingFollowupsStatus" class="missing-status"></span>
+   </div>
+   <div id="missingPowerRow" class="missing-row">
+    <div class="missing-icon">⏱️</div><div class="missing-copy"><b>Bloque de Poder</b><small id="missingPowerText">Revisando...</small></div><span id="missingPowerStatus" class="missing-status"></span>
+   </div>
+  </div>
+  <div class="quick-actions"><button class="soft-btn" onclick="show('seguimientos')">Abrir seguimientos</button></div>
+ </div>
+
+ <div class="card daily-contacts-card">
+  <div class="section-head"><h2>🎯 Contactos de hoy</h2><span class="section-count" id="dailyContactsBadge">0 SELEC.</span></div>
+  <div class="daily-contact-goal">
+   <label for="dailyContactsGoal">Meta diaria</label>
+   <div class="daily-contact-goal-control"><select id="dailyContactsGoal" onchange="setDailyContactGoal(this.value)"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><span>personas</span></div>
+  </div>
+  <div id="dailyContactsSummary" class="daily-contacts-summary">Al comenzar el día, elige entre 1 y 10 personas. La meta puede mantenerse en 5.</div>
+  <div id="dailyContactsList" class="daily-contact-list"></div>
+  <div class="quick-actions"><button id="chooseDailyContactBtn" onclick="openDailyContactPicker()">+ Elegir contacto</button></div>
+ </div>
+
+ <div class="card">
+  <div class="section-head"><h2>🎯 Metas diarias</h2><span class="section-count" id="dailyGoalsDone">0/3</span></div>
+  <div class="goal-list">
+   <div class="goal-row">
+    <div class="goal-head"><span>📨 Gestiones</span><b><span id="todayGestures">0</span> / 5</b></div>
+    <div class="mini-progress"><span id="gestureProgress"></span></div>
+    <div id="gesturesMsg" class="goal-note">Te faltan 5 gestiones por realizar</div>
+   </div>
+   <div class="goal-row">
+    <div class="goal-head"><span>💬 Contactos reales</span><b><span id="todayContacts">0</span> / 5</b></div>
+    <div class="mini-progress"><span id="contactProgress"></span></div>
+    <div id="todayMsg" class="goal-note">Has logrado 0 contactos reales de 5</div>
+   </div>
+   <div class="goal-row">
+    <div class="goal-head"><span>⏱️ Bloque de Poder</span><b id="myPowerToday">0 min / 2 h</b></div>
+    <div class="mini-progress"><span id="powerDayProgress"></span></div>
+    <div id="myPowerRemaining" class="goal-note">Te faltan 2 h</div>
+   </div>
+  </div>
+  <div class="quick-actions"><button onclick="goToNewProspect()">+ Nuevo prospecto</button><button class="soft-btn" onclick="show('seguimientos')">Abrir seguimientos</button></div>
+ </div>
+
+ <div class="card">
+  <div class="section-head"><h2>📅 Citas de hoy</h2><span id="appointmentCountBadge" class="section-count cita">0</span></div>
+  <div id="todayAppointments"></div>
+ </div>
+
+ <div class="card">
+  <div class="section-head"><h2>🔴 Seguimientos vencidos</h2><span id="overdueCountBadge" class="section-count danger">0</span></div>
+  <div id="overdueList"></div>
+ </div>
+
+ <div class="card">
+  <div class="section-head"><h2>🔥 Prioridades de hoy</h2><span class="section-count">TOP 5</span></div>
+  <div id="priorityList"></div>
+ </div>
+
+ <div class="card"><h2>📊 Avance semanal · Semana 2</h2>
+  <div class="grid">
+   <div class="dato">Contactos<b><span id="weekContacts">0</span> / 30</b></div>
+   <div class="dato">Presentaciones<b><span id="weekPresentations">0</span> / 5</b></div>
+   <div class="dato">Seguimientos<b id="weekFollowups">0</b></div>
+   <div class="dato">Bloque Poder<b><span id="powerHours">0 h</span></b></div>
+  </div>
+  <div class="history"><b>Semana 1 cerrada · 1–6 septiembre</b><br><span class="muted">27 contactos · 14 conversaciones · 6 invitaciones · 2 presentaciones · 6 seguimientos · 16 h Bloque Poder</span></div>
+ </div>
+ <div class="card"><h2>📈 Meta Septiembre</h2><h2>3,000 PV</h2><p>Meta de ingresos: <b>S/ 5,000</b></p></div>
+</section>
+
+<section id="prospectos" class="view">
+ <div class="card">
+  <div class="topline"><h2>👥 Prospectos</h2><span class="pill" id="prospectCount"></span></div>
+  <input class="search" id="buscar" placeholder="Buscar por nombre, etapa o categoría" oninput="renderProspects()">
+  <div id="prospectList"></div>
+ </div>
+ <div class="card" id="newProspectCard">
+  <h2>➕ Nuevo prospecto</h2>
+  <input id="nombre" placeholder="Nombre y apellido" oninput="checkNameWarning()">
+  <small id="nameWarning" class="warning"></small>
+  <input id="telefono" placeholder="Teléfono">
+  <select id="categoria"><option>A - Negocio</option><option>B - Cliente</option><option>Por definir</option></select>
+  <select id="origen"><option>Conocido</option><option>Frío</option><option>Nutri Healthy</option><option>Referido</option><option>Redes sociales</option><option>Otro</option></select>
+  <textarea id="nota" placeholder="Nota breve / interés"></textarea>
+  <button onclick="addProspect()">Guardar prospecto</button>
+  <p class="muted">Guardar un prospecto no suma contacto. El contacto cuenta cuando existe una conversación real.</p>
+ </div>
+</section>
+
+<section id="seguimientos" class="view">
+ <div class="card">
+  <h2>🔁 Seguimientos</h2>
+  <input class="search" id="segSearch" placeholder="🔎 Buscar prospecto por nombre" oninput="renderFollowSearch()">
+  <div id="alphaBar" class="alpha"></div>
+  <div class="recent-wrap"><b>Recientes</b><div id="recentList"></div></div>
+  <div id="followCount" class="countnote"></div>
+  <div id="followResults"></div>
+ </div>
+ <div class="card selected-card" id="followFormCard">
+  <h2 id="selectedTitle">Selecciona un prospecto</h2>
+  <div id="selectedMeta" class="meta-line"></div>
+  <div id="selectedNext" class="history" style="display:none"></div>
+  <label>Fecha del próximo paso</label>
+  <input id="segFecha" type="date">
+  <label>Próximo paso</label>
+  <textarea id="segNota" placeholder="Ej.: Proponer videollamada por WhatsApp"></textarea>
+  <button class="js-action" onclick="addFollow(this)">Guardar seguimiento</button>
+  <div class="action-grid">
+   <button class="secondary js-action" onclick="markAttempt(this)">✉️ Registrar intento</button>
+   <button class="secondary js-action" onclick="markConversation(this)">💬 Registrar conversación</button>
+   <button class="secondary js-action" onclick="markAppointment(this)">📅 Cita acordada</button>
+   <button class="secondary js-action" onclick="markPresentation(this)">▶️ Presentación realizada</button>
+   <button class="secondary js-action" onclick="markClient(this)">✓ Nuevo cliente</button>
+   <button class="secondary js-action" onclick="markDistributor(this)">★ Nuevo distribuidor</button>
+  </div>
+  <p class="muted">La etapa principal nunca retrocede. El seguimiento se muestra aparte como acción pendiente.</p>
+ </div>
+ <div class="card"><h2>Pendientes / actividad</h2><div id="activityList"></div></div>
+</section>
+
+<section id="resultados" class="view">
+ <div class="card">
+  <div class="daily-close-title"><h2 style="margin:0">🌙 Cierre del día</h2><span id="dailyCloseDate" class="daily-date"></span></div>
+  <p class="muted" style="margin-top:10px">Se calcula automáticamente con lo que registraste hoy en Seguimientos.</p>
+  <div class="grid">
+   <div class="daily-metric"><span>📨 Gestiones realizadas</span><b id="dGestures">0</b></div>
+   <div class="daily-metric"><span>💬 Contactos reales</span><b id="dContacts">0</b></div>
+   <div class="daily-metric"><span>💬 Conversaciones</span><b id="dConversations">0</b></div>
+   <div class="daily-metric"><span>🔁 Seguimientos</span><b id="dFollowups">0</b></div>
+   <div class="daily-metric"><span>✓ Nuevos clientes</span><b id="dClients">0</b></div>
+   <div class="daily-metric"><span>★ Nuevos distribuidores</span><b id="dDistributors">0</b></div>
+  </div>
+  <div class="power-box">
+   <h3>⏱️ Resumen de Bloque de Poder</h3>
+   <div class="power-summary">
+    <div class="power-summary-item"><span>HOY</span><b id="dPowerTotal">0 min</b></div>
+    <div class="power-summary-item"><span>ACUMULADO SEMANAL</span><b id="dPowerWeek">0 min</b></div>
+    <div class="power-summary-item"><span>PROMEDIO DIARIO</span><b id="dPowerAverage">0 min</b></div>
+   </div>
+   <div class="power-goal">
+    <div class="power-goal-item"><span>META DIARIA</span><b id="dPowerGoal">2 h</b></div>
+    <div class="power-goal-item"><span>TE FALTA</span><b id="dPowerRemaining">2 h</b></div>
+   </div>
+   <div id="dPowerGoalStatus" class="power-goal-status pending">Te faltan 2 h para cumplir tu meta de hoy.</div>
+   <div class="power-progress"><span id="dPowerProgress"></span></div>
+   <div class="power-inputs">
+    <label>Horas<input id="powerInputHours" type="number" min="0" max="12" step="1" inputmode="numeric" value="0"></label>
+    <label>Minutos<input id="powerInputMinutes" type="number" min="0" max="59" step="5" inputmode="numeric" value="0"></label>
+   </div>
+   <div class="row" style="align-items:center"><button onclick="addPowerBlock()">Agregar al Bloque de Poder</button><span id="powerSaveStatus" class="obs-status"></span></div>
+   <div class="power-note">Cada registro se suma al total del día y al acumulado semanal. El promedio diario se calcula con los días de trabajo transcurridos de la semana (lunes a sábado). Meta diaria: 2 h por día.</div>
+   <div class="power-history"><b>Historial por fecha</b><div id="powerHistory"></div></div>
+  </div>
+  <label for="dailyObservation" style="display:block;margin-top:18px;font-weight:700">Observaciones del día</label>
+  <textarea id="dailyObservation" placeholder="Ej.: Se realizaron las 5 gestiones. Tres respondieron, dos quedaron en intento. Morayma se inscribió como distribuidora."></textarea>
+  <div class="row" style="align-items:center"><button onclick="saveDailyObservation()">Guardar observaciones</button><span id="dailyObsStatus" class="obs-status"></span></div>
+ </div>
+ <div class="card"><h2>📊 Semana 2 · 7–13 septiembre</h2>
+  <div class="grid">
+   <div class="dato">Contactos<b id="rContacts">0</b></div>
+   <div class="dato">Conversaciones<b id="rConversations">0</b></div>
+   <div class="dato">Presentaciones<b id="rPresentations">0</b></div>
+   <div class="dato">Seguimientos<b id="rFollowups">0</b></div>
+   <div class="dato">Clientes nuevos<b id="rClients">0</b></div>
+   <div class="dato">Distribuidores nuevos<b id="rDistributors">0</b></div>
+   <div class="dato">Bloque Poder<b id="rPower">0 h</b></div>
+  </div>
+ </div>
+ <div class="card"><h2>🗂️ Semana 1 cerrada</h2>
+  <div class="grid">
+   <div class="dato">Contactos<b>27</b></div><div class="dato">Conversaciones<b>14</b></div>
+   <div class="dato">Invitaciones<b>6</b></div><div class="dato">Presentaciones<b>2</b></div>
+   <div class="dato">Seguimientos<b>6</b></div><div class="dato">Bloque Poder<b>16 h</b></div>
+  </div>
+ </div>
+ <div class="card"><h3>Regla clave</h3><p>La etapa principal responde “¿hasta dónde llegó esta persona?”. El seguimiento responde “¿qué tengo que hacer ahora con ella?”.</p><small class="muted" id="versionFull"></small></div>
+</section>
+</main>
+<div id="appToast" class="toast" role="status" aria-live="polite"></div>
+
+<div id="editModal" class="modal" aria-hidden="true">
+ <div class="modal-card">
+  <div class="modal-head"><h2>✏️ Editar prospecto</h2><button class="closebtn" onclick="closeEdit()">✕</button></div>
+  <input type="hidden" id="editId">
+  <label>Nombre</label><input id="editNombre" placeholder="Nombre y apellido">
+  <label>Teléfono</label><input id="editTelefono" placeholder="Teléfono">
+  <label>Categoría</label><select id="editCategoria"><option>A - Negocio</option><option>B - Cliente</option><option>Por definir</option></select>
+  <label>Etapa principal</label><select id="editEstado"><option>Nuevo</option><option>Intento de contacto</option><option>Conversación</option><option>Invitado/Cita</option><option>Presentado</option><option>Cliente</option><option>Distribuidor</option><option>No por ahora</option></select>
+  <label>Origen</label><select id="editOrigen"><option>Conocido</option><option>Frío</option><option>Nutri Healthy</option><option>Referido</option><option>Redes sociales</option><option>Otro</option></select>
+  <label>Próximo paso</label><textarea id="editNext" placeholder="Próximo paso"></textarea>
+  <label>Fecha / momento</label><input id="editNextDate" placeholder="Ej.: 30/09/2026, próxima semana">
+  <label>Notas</label><textarea id="editNotes" placeholder="Notas"></textarea>
+  <div class="row"><button onclick="saveEdit()">Guardar cambios</button><button class="secondary" onclick="closeEdit()">Cancelar</button></div>
+ </div>
+</div>
+
+<div id="dailyContactPicker" class="modal" aria-hidden="true">
+ <div class="modal-card">
+  <div class="modal-head"><h2>🎯 Elegir contacto de hoy</h2><button class="closebtn" onclick="closeDailyContactPicker()">✕</button></div>
+  <div class="muted" style="font-size:13px;line-height:1.4;margin-bottom:8px">Elige manualmente entre 1 y 10 personas. La meta diaria puede quedarse en 5 aunque selecciones 6, 8 o 10. Nadie se agrega automáticamente ni queda excluido por superar la meta. Los estados se actualizan cuando registras intento, conversación, cita o presentación.</div>
+  <input id="dailyContactPickerSearch" placeholder="Buscar por nombre..." oninput="renderDailyContactPicker()">
+  <div id="dailyContactPickerCount" class="countnote"></div>
+  <div id="dailyContactPickerResults"></div>
+ </div>
+</div>
+
+<nav>
+<button onclick="show('inicio')"><span>🏠</span>Inicio</button>
+<button onclick="show('prospectos')"><span>👥</span>Prospectos</button>
+<button onclick="show('seguimientos')"><span>🔁</span>Seguimientos</button>
+<button onclick="show('resultados')"><span>📊</span>Resultados</button>
+</nav>
+
+<script>
+const SEED=[{"name": "Adan Llamo", "phone": "912576254", "category": "A - Negocio", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-01", "next": "Confirmar inscripción e iniciar plan de acción", "next_date": "2026-09-10", "notes": "Presentación de negocio realizada 02/09. Mostró interés y manifestó intención de inscribirse como distribuidor a partir del 10/09. Pendiente confirmar inscripción e iniciar activación.", "id": 1, "contacted": true}, {"name": "Alex Santa Maria", "phone": "956877045", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo visites", "notes": "Respondió WhatsApp. Pendiente conversación presencial sobre hábitos/bienestar.", "id": 2, "contacted": true}, {"name": "Alexander Peralta Chunga", "phone": "999652647", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo encuentres", "notes": "Respondió cordialmente. No profundizó por WhatsApp. Pendiente conversación presencial.", "id": 3, "contacted": true}, {"name": "Anderson Villanueva", "phone": "902675148", "category": "B - Cliente", "origin": "Nutri Healthy", "status": "Presentado", "last": "", "next": "", "next_date": "", "notes": "", "id": 4, "contacted": true}, {"name": "Andy Navarro", "phone": "922737361", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-01", "next": "Profundizar / presentar plan de negocio", "next_date": "2026-09-02", "notes": "Conversación presencial. Se explicó a grandes rasgos el negocio. Acordamos profundizar mañana.", "id": 5, "contacted": true}, {"name": "Anita Molero", "phone": "950034264", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "", "next": "", "next_date": "", "notes": "", "id": 6, "contacted": true}, {"name": "Arbañil Chozo", "phone": "991107462", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "Abordarlo presencialmente", "next_date": "", "notes": "Todavía nada hasta que hables con él.", "id": 7, "contacted": false}, {"name": "Dalma Fernandez", "phone": "952320371", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "2026-09-01", "next": "Continuar conversación desde su número personal", "next_date": "Pendiente respuesta", "notes": "Respondió y se retomó conversación. Pendiente detectar interés/necesidad.", "id": 8, "contacted": true}, {"name": "Sandra Vilchez", "phone": "995782631", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "Unos días después", "notes": "", "id": 9, "contacted": true}, {"name": "Carlos La Ciencia", "phone": "964755023", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Mantener relación / retomar más adelante", "next_date": "", "notes": "", "id": 10, "contacted": true}, {"name": "Beto Torres Cueva", "phone": "975810570", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 11, "contacted": true}, {"name": "Bibliana Briceño", "phone": "910025852", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 12, "contacted": false}, {"name": "Calin Ubillus", "phone": "950284011", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "", "next": "Concretar presentación del Plan de Marketing", "next_date": "03 o 04/09/2026", "notes": "Nuevo intento de contacto sin respuesta.", "id": 13, "contacted": true}, {"name": "Casharo", "phone": "941932401", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 14, "contacted": false}, {"name": "Celinda Gallardo", "phone": "941966428", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 15, "contacted": false}, {"name": "Cesar Bustamante", "phone": "941925377", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-04", "next": "Segundo contacto si no responde", "next_date": "", "notes": "Mensaje enviado, sin respuesta.", "id": 16, "contacted": true}, {"name": "Cesar Davila", "phone": "949960660", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Mensaje enviado, sin respuesta.", "id": 17, "contacted": true}, {"name": "Cesar Matallana", "phone": "958994500", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-05", "next": "Concretar día y hora para conversar sobre el proyecto", "next_date": "2026-09-07", "notes": "Respondió positivamente: acepta sentarse a conversar.", "id": 18, "contacted": true}, {"name": "Cesar Rodriguez", "phone": "988405859", "category": "A - Negocio", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 19, "contacted": false}, {"name": "Chavo Gustavo", "phone": "942193009", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 20, "contacted": false}, {"name": "Morayma Pizarro", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-03", "next": "Esperar respuesta por el producto / confirmar si desea avanzar con la compra o inscripción", "next_date": "", "notes": "Interesada en inscribirse para consumo personal. No interesada actualmente en desarrollar negocio.", "id": 21, "contacted": true}, {"name": "Elias Fernández", "phone": "922335449", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 22, "contacted": true}, {"name": "Ali Martinez", "phone": "953133003", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 23, "contacted": true}, {"name": "Consuelo Ocampo", "phone": "996494090", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Posible perfil de emprendedor.", "id": 24, "contacted": true}, {"name": "Carlos Alberto", "phone": "952651183", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 25, "contacted": false}, {"name": "Diana Miranda", "phone": "941932401", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 26, "contacted": false}, {"name": "Luis Vilchez", "phone": "945183319", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 27, "contacted": false}, {"name": "Chumacero", "phone": "48 355 917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 28, "contacted": false}, {"name": "Cinthia M. Morí Heredia", "phone": "971422661", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Continuar conversación y conocer cómo está actualmente", "next_date": "2026-09-07", "notes": "Sobrina en Lima. Se retomó contacto.", "id": 29, "contacted": true}, {"name": "Dirk Mejia", "phone": "939842304", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 30, "contacted": false}, {"name": "Dr Chasquero", "phone": "961435027", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 31, "contacted": false}, {"name": "Duayen- Maestro", "phone": "921610475", "category": "A - Negocio", "origin": "Conocido", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 32, "contacted": false}, {"name": "Eber Rebaza", "phone": "967754233", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 33, "contacted": false}, {"name": "Edgar Ortiz", "phone": "991367969", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 34, "contacted": false}, {"name": "Edgar Torres", "phone": "978415692", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-05", "next": "Segundo contacto e invitación a evaluación", "next_date": "2026-06-09", "notes": "Conoce tu actividad. Mensaje enviado, sin respuesta.", "id": 35, "contacted": true}, {"name": "Edgardo Sandoval", "phone": "992220549", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 36, "contacted": false}, {"name": "Edinson Maquita", "phone": "949405791", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-05", "next": "Esperar respuesta / segundo contacto", "next_date": "2026-09-09", "notes": "Mensaje enviado. Sin respuesta reportada.", "id": 37, "contacted": true}, {"name": "Edwin Ampuero", "phone": "982178585", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Retomar conversación y conocer necesidades", "next_date": "2026-09-09", "notes": "Primo lejano. Se retomó contacto; receptivo a conversar posteriormente.", "id": 38, "contacted": true}, {"name": "Efrain Meza", "phone": "929253999", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 39, "contacted": false}, {"name": "Elvira Cruz", "phone": "918898043", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 40, "contacted": false}, {"name": "Elena Vallejos", "phone": "922373394", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 41, "contacted": false}, {"name": "Eli Chachapoyas", "phone": "978951082", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 42, "contacted": false}, {"name": "Elias Arquitecto", "phone": "952226747", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 43, "contacted": false}, {"name": "Elias Serrato", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 44, "contacted": false}, {"name": "Elíseo Bazan", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 45, "contacted": false}, {"name": "Eloy Silva", "phone": "981340917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 46, "contacted": false}, {"name": "Elmer Herrera", "phone": "949500205", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 47, "contacted": false}, {"name": "Elva Cubas", "phone": "949408677", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 48, "contacted": false}, {"name": "Judith Diaz", "phone": "957311588", "category": "A - Negocio", "origin": "Frío", "status": "Presentado", "last": "2026-09-04", "next": "Retomar conversación y acordar siguiente paso", "next_date": "2026-09-07", "notes": "Contacto en frío. Le interesa emprender. Fue invitada a la reunión del sábado pero no asistió.", "id": 49, "contacted": true}, {"name": "Celso", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Presentado", "last": "2026-09-04", "next": "Confirmar compra del paquete de 7 días para su esposa", "next_date": "Próxima semana", "notes": "Manifestó intención de comprar esta semana para iniciar la siguiente.", "id": 50, "contacted": true}, {"name": "Samir Carvajal", "phone": "", "category": "A - Negocio", "origin": "Conocido", "status": "No por ahora", "last": "2026-06-04", "next": "Sin seguimiento inmediato", "next_date": "", "notes": "Conversó, pero no mostró interés actualmente.", "id": 51, "contacted": true}];
+const PRIORITIES=[{"name": "Adan Llamo", "note": "Confirmar inscripción e iniciar plan de acción"}, {"name": "Judith Diaz", "note": "Retomar conversación y acordar siguiente paso"}, {"name": "Celso", "note": "Confirmar compra del paquete de 7 días para su esposa"}, {"name": "Cesar Matallana", "note": "Concretar día y hora para conversar sobre el proyecto"}, {"name": "Calin Ubillus", "note": "Concretar presentación del Plan de Marketing"}];
+const APP_VERSION='4.13.2';
+const APP_VERSION_NAME='Contactos de hoy · recuperación automática segura';
+const KEY='rumboGET2027_v4';
+const STAGE_ORDER={'Nuevo':0,'Intento de contacto':1,'Conversación':2,'Invitado/Cita':3,'Presentado':4,'Cliente':5,'Distribuidor':6,'No por ahora':-1};
+const DAILY_CONTACT_MAX=10;
+let followLetter='Todos';
+let selectedFollowId=null;
+
+function localISO(d=new Date()){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function normName(s){return String(s||'').trim().replace(/\s+/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()}
+function normPhone(s){return String(s||'').replace(/\D/g,'')}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+const VALID_STAGES=['Nuevo','Intento de contacto','Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'];
+function deriveStage(p){
+ const manual=String(p.manualStage||'').trim();
+ if(VALID_STAGES.includes(manual))return manual;
+ const s=String(p.stage||p.status||'').trim(); const notes=normName((p.notes||'')+' '+(p.next||''));
+ if(s==='Distribuidor')return 'Distribuidor'; if(s==='Cliente')return 'Cliente'; if(s==='Presentado')return 'Presentado';
+ if(s==='Invitado'||s==='Invitado/Cita'||s==='Cita')return 'Invitado/Cita'; if(s==='Conversación')return 'Conversación';
+ if(s==='Intento de contacto'||s==='Intento')return 'Intento de contacto';
+ if(s==='Contactado')return (notes.includes('respondio')||notes.includes('convers'))?'Conversación':'Intento de contacto';
+ if(s==='Seguimiento'){if(notes.includes('presentacion')&&notes.includes('realizada'))return 'Presentado';return 'Conversación'}
+ if(s==='No por ahora')return 'No por ahora'; return 'Nuevo';
+}
+function stageClass(s){return {'Nuevo':'stage-new','Intento de contacto':'stage-attempt','Conversación':'stage-conv','Invitado/Cita':'stage-cita','Presentado':'stage-presented','Cliente':'stage-client','Distribuidor':'stage-dist','No por ahora':'stage-hold'}[s]||'stage-new'}
+function stageIcon(s){return {'Nuevo':'○','Intento de contacto':'✉️','Conversación':'💬','Invitado/Cita':'📅','Presentado':'▶️','Cliente':'✓','Distribuidor':'★','No por ahora':'⏸'}[s]||'○'}
+function stageText(s){return {'Nuevo':'NUEVO','Intento de contacto':'INTENTO','Conversación':'CONVERSACIÓN','Invitado/Cita':'CITA','Presentado':'PRESENTADO','Cliente':'CLIENTE','Distribuidor':'DISTRIBUIDOR','No por ahora':'NO POR AHORA'}[s]||String(s||'NUEVO').toUpperCase()}
+function stageBadge(s){return `<span class="badge ${stageClass(s)}">${stageIcon(s)} ${stageText(s)}</span>`}
+function advanceStage(p,target){const cur=p.stage||deriveStage(p);if(target==='No por ahora'){p.stage=target;p.status=target;if(p.manualStage)p.manualStage=target;return};if((STAGE_ORDER[target]??0)>(STAGE_ORDER[cur]??0))p.stage=target;else p.stage=cur;p.status=p.stage;if(p.manualStage)p.manualStage=p.stage}
+
+let db=JSON.parse(localStorage.getItem(KEY)||'null') || {prospects:SEED,week2:{contacts:0,conversations:0,presentations:0,followups:0,power:0,clients:0,distributors:0},activities:[]};
+if(!db.week2)db.week2={contacts:0,conversations:0,presentations:0,followups:0,power:0};
+for(const k of ['contacts','conversations','presentations','followups','power','clients','distributors'])if(typeof db.week2[k]!=='number')db.week2[k]=0;
+if(!db.dailyObservations||typeof db.dailyObservations!=='object')db.dailyObservations={};
+if(!db.dailyPower||typeof db.dailyPower!=='object')db.dailyPower={};
+if(!db.dailyContactTargets||typeof db.dailyContactTargets!=='object')db.dailyContactTargets={};
+if(!db.dailyContactTargetDismissed||typeof db.dailyContactTargetDismissed!=='object')db.dailyContactTargetDismissed={};
+if(!db.dailyContactTargetMode||typeof db.dailyContactTargetMode!=='object')db.dailyContactTargetMode={};
+if(!Number.isInteger(Number(db.dailyContactGoal))||Number(db.dailyContactGoal)<1||Number(db.dailyContactGoal)>DAILY_CONTACT_MAX)db.dailyContactGoal=5;else db.dailyContactGoal=Number(db.dailyContactGoal);
+if(!Array.isArray(db.prospects))db.prospects=SEED;
+for(const p of db.prospects){
+ let resolved=deriveStage(p);
+ // v4.10.2: reparación prudente de etapas heredadas. Si un registro antiguo dice NUEVO
+ // pero ya constaba como contactado, recuperamos la etapa mínima desde el SEED original.
+ if(!p.manualStage&&resolved==='Nuevo'&&p.contacted===true){
+  const seed=SEED.find(x=>Number(x.id)===Number(p.id)||normName(x.name)===normName(p.name));
+  const seedStage=seed?deriveStage(seed):'Intento de contacto';
+  resolved=seedStage==='Nuevo'?'Intento de contacto':seedStage;
+ }
+ p.stage=resolved;p.status=resolved;p.manualStage=resolved;
+ if(typeof p.everConversation!=='boolean')p.everConversation=['Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage);
+ if(typeof p.followupActive!=='boolean')p.followupActive=!!p.next;if(!p.next)p.followupActive=false;if(typeof p.activeFollowupId==='undefined')p.activeFollowupId=null;
+}
+function inferProspectId(text){const nt=normName(text);let hits=db.prospects.filter(p=>nt.includes(normName(p.name))).sort((a,b)=>b.name.length-a.name.length);return hits[0]?.id||null}
+function migrateActivity(a,i){if(typeof a!=='string')return a;let type='other',delta={};if(a.startsWith('🔁')){type='followup';delta.followups=1}else if(a.startsWith('💬')){type='conversation';delta.conversations=1}else if(a.startsWith('📣')||a.startsWith('▶️')){type='presentation';delta.presentations=1};return {id:'legacy-'+i+'-'+Date.now(),text:a,type,date:'2026-09-07',prospectId:inferProspectId(a),delta,legacy:true,followupStatus:type==='followup'?'history':undefined}}
+const hadLegacyActivities=(db.activities||[]).some(a=>typeof a==='string');
+if(hadLegacyActivities && typeof db.legacyTodayContacts!=='number')db.legacyTodayContacts=db.week2.contacts||0;
+db.activities=(db.activities||[]).map(migrateActivity);
+for(const a of db.activities){if(a.type==='followup'&&!a.followupStatus)a.followupStatus='history';}
+function persist(){localStorage.setItem(KEY,JSON.stringify(db))}
+function setVersionLabels(){if(window.appVersionBadge)appVersionBadge.textContent='v'+APP_VERSION;if(window.versionFull)versionFull.textContent='Versión '+APP_VERSION+' · '+APP_VERSION_NAME}
+function showToast(msg){if(!window.appToast)return;appToast.textContent=msg;appToast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>appToast.classList.remove('show'),1700)}
+let actionLock=false;
+function beginAction(btn){if(actionLock)return false;actionLock=true;document.querySelectorAll('.js-action').forEach(b=>b.classList.add('action-locked'));if(btn)btn.dataset.oldText=btn.textContent;return true}
+function endAction(btn,msg='✓ Registrado'){if(btn&&btn.dataset.oldText){const old=btn.dataset.oldText;btn.textContent=msg;setTimeout(()=>{btn.textContent=old;delete btn.dataset.oldText},850)}showToast(msg);setTimeout(()=>{actionLock=false;document.querySelectorAll('.js-action').forEach(b=>b.classList.remove('action-locked'))},700)}
+function cancelAction(){actionLock=false;document.querySelectorAll('.js-action').forEach(b=>b.classList.remove('action-locked'))}
+function sameProspectDayType(p,type,date=todayISO()){return db.activities.filter(a=>Number(a.prospectId)===Number(p.id)&&a.type===type&&a.date===date)}
+function activeFollowActivity(p){if(p.activeFollowupId){const a=db.activities.find(x=>String(x.id)===String(p.activeFollowupId));if(a&&a.type==='followup'&&a.followupStatus==='active')return a;}const candidates=db.activities.filter(a=>Number(a.prospectId)===Number(p.id)&&a.type==='followup'&&a.followupStatus==='active');return candidates[0]||null}
+function linkLegacyActiveFollowups(){for(const p of db.prospects){if(!p.next||!p.followupActive||p.activeFollowupId)continue;const match=db.activities.find(a=>Number(a.prospectId)===Number(p.id)&&a.type==='followup'&&normName(a.text||'').includes(normName(p.next)));if(match){match.followupStatus='active';match.followupNote=match.followupNote||p.next;match.followupDate=match.followupDate||p.next_date;p.activeFollowupId=match.id;}}}
+function closeActiveFollowup(p,status='completed'){
+ if(!p.next||p.followupActive===false)return null;
+ const info={id:null,previousStatus:null,note:p.next,date:p.next_date};const a=activeFollowActivity(p);
+ if(a){info.id=a.id;info.previousStatus=a.followupStatus;a.followupStatus=status;a.closedDate=todayISO();}
+ p.next='';p.next_date='';p.followupActive=false;p.activeFollowupId=null;return info;
+}
+function restoreClosedFollowup(info){if(!info||!info.id)return;const a=db.activities.find(x=>String(x.id)===String(info.id));if(a){a.followupStatus=info.previousStatus||'active';delete a.closedDate;}}
+function autoCloseLegacyOverdues(){
+ // v4.10.1: un vencido solo se cierra si existe una acción posterior REAL en el historial. Gestiones = personas únicas de prospección por día.
+ // La fecha p.last por sí sola nunca es evidencia suficiente para cerrarlo.
+ if(db.v410HistoryCleanupDone)return;
+ const today=parseDate(todayISO());
+ const closingActionTypes=['attempt','conversation','appointment','presentation','client','distributor'];
+ for(const p of db.prospects){
+  if(!p.next||p.followupActive===false)continue;
+  const due=parseDate(p.next_date);
+  if(!due||!today||due>=today)continue;
+  const hasLaterHistoryAction=db.activities.some(a=>{
+   if(Number(a.prospectId)!==Number(p.id)||!closingActionTypes.includes(a.type))return false;
+   const actionDate=parseDate(a.date);
+   return !!actionDate&&actionDate>due;
+  });
+  if(!hasLaterHistoryAction)continue;
+  const old=closeActiveFollowup(p,'completed');
+  if(old)db.activities.unshift({id:'auto-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),prospectId:p.id,type:'followup_close',text:'✅ Pendiente antiguo cerrado automáticamente · '+p.name+' · '+old.note,date:todayISO(),delta:{},system:true});
+ }
+ db.v410HistoryCleanupDone=true;
+}
+linkLegacyActiveFollowups();
+autoCloseLegacyOverdues();
+db.appVersion=APP_VERSION;
+persist();
+
+function save(){persist();render()}
+function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
+function goToNewProspect(){show('prospectos');setTimeout(()=>{const el=document.getElementById('nombre');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.focus();}},120)}
+function todayISO(){return localISO()}
+function findSameName(n,excludeId=null){const k=normName(n);return k?db.prospects.find(p=>Number(p.id)!==Number(excludeId)&&normName(p.name)===k):null}
+function findSamePhone(t,excludeId=null){const k=normPhone(t);return k?db.prospects.find(p=>Number(p.id)!==Number(excludeId)&&normPhone(p.phone)===k):null}
+function checkNameWarning(){const d=findSameName(nombre.value);nameWarning.textContent=d?'⚠️ Ya existe un prospecto con este nombre: '+d.name:''}
+function addProspect(){
+ const n=nombre.value.trim().replace(/\s+/g,' '),t=telefono.value.trim();if(!n)return alert('Escribe el nombre.');
+ const samePhone=findSamePhone(t);if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');
+ const sameName=findSameName(n);if(sameName&&!confirm('⚠️ Ya existe un prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardarlo de todos modos?'))return;
+ db.prospects.push({id:Date.now(),name:n,phone:t,category:categoria.value,origin:origen.value,status:'Nuevo',stage:'Nuevo',last:'',next:'',next_date:'',notes:nota.value.trim(),contacted:false,everConversation:false});
+ nombre.value='';telefono.value='';nota.value='';nameWarning.textContent='';save();alert('Prospecto guardado. Todavía no suma como contacto.');
+}
+function openEdit(id){const p=db.prospects.find(x=>Number(x.id)===Number(id));if(!p)return;editId.value=p.id;editNombre.value=p.name||'';editTelefono.value=p.phone||'';editCategoria.value=['A - Negocio','B - Cliente','Por definir'].includes(p.category)?p.category:'Por definir';editEstado.value=['Nuevo','Intento de contacto','Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage)?p.stage:'Nuevo';editOrigen.value=['Conocido','Frío','Nutri Healthy','Referido','Redes sociales','Otro'].includes(p.origin)?p.origin:'Otro';editNext.value=p.next||'';editNextDate.value=p.next_date||'';editNotes.value=p.notes||'';editModal.classList.add('open');editModal.setAttribute('aria-hidden','false')}
+function closeEdit(){editModal.classList.remove('open');editModal.setAttribute('aria-hidden','true')}
+function saveEdit(){
+ const id=Number(editId.value),p=db.prospects.find(x=>Number(x.id)===id);if(!p)return;const n=editNombre.value.trim().replace(/\s+/g,' '),t=editTelefono.value.trim();if(!n)return alert('Escribe el nombre.');
+ const samePhone=findSamePhone(t,id);if(samePhone)return alert('⚠️ Ese teléfono ya está registrado a nombre de '+samePhone.name+'.');const sameName=findSameName(n,id);if(sameName&&!confirm('⚠️ Ya existe otro prospecto con el nombre "'+sameName.name+'".\n\n¿Deseas guardar este nombre de todos modos?'))return;
+ const oldNext=p.next||'',oldDate=p.next_date||'',oldActive=p.followupActive!==false&&!!oldNext,newNext=editNext.value.trim(),newDate=editNextDate.value.trim();
+ p.name=n;p.phone=t;p.category=editCategoria.value;p.stage=editEstado.value;p.status=p.stage;p.manualStage=p.stage;p.origin=editOrigen.value;
+ if(oldActive&&(normName(oldNext)!==normName(newNext)||String(oldDate)!==String(newDate)))closeActiveFollowup(p,newNext?'reprogrammed':'completed');
+ p.next=newNext;p.next_date=newDate;p.followupActive=!!newNext;if(!newNext)p.activeFollowupId=null;p.notes=editNotes.value.trim();if(['Conversación','Invitado/Cita','Presentado','Cliente','Distribuidor','No por ahora'].includes(p.stage))p.everConversation=true;closeEdit();save();alert('Cambios guardados.');
+}
+function deleteProspect(id){const p=db.prospects.find(x=>Number(x.id)===Number(id));if(!p)return;if(!confirm('¿Eliminar a '+p.name+' de la lista?\n\nLos resultados ya registrados no se borrarán.'))return;db.prospects=db.prospects.filter(x=>Number(x.id)!==Number(id));for(const d of Object.keys(db.dailyContactTargets||{}))db.dailyContactTargets[d]=(db.dailyContactTargets[d]||[]).filter(x=>Number(x)!==Number(id));for(const d of Object.keys(db.dailyContactTargetDismissed||{}))db.dailyContactTargetDismissed[d]=(db.dailyContactTargetDismissed[d]||[]).filter(x=>Number(x)!==Number(id));if(Number(selectedFollowId)===Number(id))selectedFollowId=null;save();alert('Prospecto eliminado.')}
+
+function parseDate(v){if(!v)return null;let m=String(v).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3],12);m=String(v).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1],12);return null}
+function fmtDate(v){const d=parseDate(v);if(!d)return v||'';return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+function followUrgency(p){
+ if(!p.next||p.followupActive===false)return {key:'none',rank:(p.stage==='Nuevo'?6:5),cls:'urg-none',icon:'⚪',label:'SIN PRÓXIMO PASO',date:''};
+ const d=parseDate(p.next_date);if(!d)return {key:'later',rank:4,cls:'urg-later',icon:'🗓️',label:'PROGRAMADO',date:p.next_date||'SIN FECHA'};
+ const t=new Date();t.setHours(12,0,0,0);const diff=Math.round((d-t)/86400000);
+ if(diff<0)return {key:'overdue',rank:0,cls:'urg-overdue',icon:'🔴',label:'VENCIDO',date:fmtDate(p.next_date)};
+ if(diff===0)return {key:'today',rank:1,cls:'urg-today',icon:'🟠',label:'HOY',date:fmtDate(p.next_date)};
+ if(diff===1)return {key:'tomorrow',rank:2,cls:'urg-tomorrow',icon:'🟡',label:'MAÑANA',date:fmtDate(p.next_date)};
+ if(diff<=7)return {key:'soon',rank:3,cls:'urg-soon',icon:'🔵',label:'PRÓXIMO',date:fmtDate(p.next_date)};
+ return {key:'later',rank:4,cls:'urg-later',icon:'🗓️',label:'PROGRAMADO',date:fmtDate(p.next_date)};
+}
+function urgencyBadge(p){const u=followUrgency(p);return `<span class="badge ${u.cls}">${u.icon} ${u.label}${u.date?' · '+esc(u.date):''}</span>`}
+
+function selectedProspect(){return db.prospects.find(p=>Number(p.id)===Number(selectedFollowId))}
+function snapshot(p){return {stage:p.stage,status:p.status,manualStage:p.manualStage,next:p.next,next_date:p.next_date,last:p.last,everConversation:p.everConversation,followupActive:p.followupActive,activeFollowupId:p.activeFollowupId}}
+function addActivity(p,type,text,delta={},before=null){const a={id:'a-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),prospectId:p?.id||null,type,text,date:todayISO(),delta,before};db.activities.unshift(a);for(const [k,v] of Object.entries(delta))db.week2[k]=Math.max(0,(db.week2[k]||0)+v);return a}
+function isProspectingGestureEligible(a){if(!a||!['attempt','conversation'].includes(a.type))return false;if(typeof a.gestureEligible==='boolean')return a.gestureEligible;const beforeStage=String(a.before?.stage||a.before?.status||'').trim();if(beforeStage==='Distribuidor')return false;return true}
+function activityProspectKey(a){if(a?.prospectId!=null)return 'id:'+String(a.prospectId);const inferred=inferProspectId(a?.text||'');if(inferred!=null)return 'id:'+String(inferred);const raw=normName(a?.text||'');return raw?'text:'+raw:null}
+function requireSelected(){const p=selectedProspect();if(!p)alert('Primero selecciona un prospecto.');return p}
+function markAttempt(btn){const p=requireSelected();if(!p)return;if(!beginAction(btn))return;const same=sameProspectDayType(p,'attempt');if(same.length){if(!confirm('Ya registraste un intento con '+p.name+' hoy.\n\n¿Fue un intento distinto y deseas guardarlo solo en el historial? No sumará otra gestión.')){cancelAction();return;}{const a=addActivity(p,'attempt','✉️ Intento adicional · '+p.name,{},null);a.gestureEligible=false;}save();endAction(btn,'✓ Guardado sin duplicar');return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');advanceStage(p,'Intento de contacto');p.last=todayISO();const a=addActivity(p,'attempt','✉️ Intento de contacto · '+p.name,{},before);a.gestureEligible=before.stage!=='Distribuidor';a.closedFollowup=closed;save();endAction(btn)}
+function markConversation(btn){const p=requireSelected();if(!p)return;if(!beginAction(btn))return;const same=sameProspectDayType(p,'conversation');if(same.length){if(!confirm('Ya registraste una conversación con '+p.name+' hoy.\n\n¿Fue una interacción distinta y deseas guardarla solo en el historial? No sumará otra conversación ni otra gestión.')){cancelAction();return;}{const a=addActivity(p,'conversation','💬 Conversación adicional · '+p.name,{},null);a.gestureEligible=false;}save();endAction(btn,'✓ Guardado sin duplicar');return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');let dc=0;if(!p.everConversation){p.everConversation=true;dc=1};advanceStage(p,'Conversación');p.last=todayISO();const a=addActivity(p,'conversation','💬 Conversación · '+p.name,{conversations:1,contacts:dc},before);a.gestureEligible=before.stage!=='Distribuidor';a.closedFollowup=closed;save();endAction(btn)}
+function markAppointment(btn){const p=requireSelected();if(!p)return;if(!beginAction(btn))return;if(sameProspectDayType(p,'appointment').length){alert('📅 Esta cita ya fue registrada hoy. Si cambió la fecha, reprograma el próximo paso en lugar de crear otra cita.');cancelAction();return;}if(p.stage==='Invitado/Cita'&&p.next&&p.followupActive!==false){alert('📅 '+p.name+' ya tiene una cita activa. Para cambiarla, modifica la fecha o el próximo paso y guárdalo como reprogramación.');cancelAction();return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');advanceStage(p,'Invitado/Cita');p.last=todayISO();const a=addActivity(p,'appointment','📅 Cita acordada · '+p.name,{},before);a.closedFollowup=closed;save();endAction(btn)}
+function markPresentation(btn){const p=requireSelected();if(!p)return;if(!beginAction(btn))return;if(sameProspectDayType(p,'presentation').length){alert('▶️ Esta presentación ya fue registrada para '+p.name+' hoy. No se volverá a sumar.');cancelAction();return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');advanceStage(p,'Presentado');p.last=todayISO();const a=addActivity(p,'presentation','▶️ Presentación realizada · '+p.name,{presentations:1},before);a.closedFollowup=closed;save();endAction(btn)}
+function markClient(btn){const p=requireSelected();if(!p)return;if(!beginAction(btn))return;if(p.stage==='Cliente'||p.stage==='Distribuidor'){alert('Este prospecto ya está registrado como '+p.stage+'.');cancelAction();return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');advanceStage(p,'Cliente');p.last=todayISO();const a=addActivity(p,'client','✓ Nuevo cliente · '+p.name,{clients:1},before);a.closedFollowup=closed;save();endAction(btn)}
+function markDistributor(btn){const p=requireSelected();if(!p)return;if(!beginAction(btn))return;if(p.stage==='Distribuidor'){alert('Este prospecto ya está registrado como Distribuidor.');cancelAction();return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');advanceStage(p,'Distribuidor');p.last=todayISO();const a=addActivity(p,'distributor','★ Nuevo distribuidor · '+p.name,{distributors:1},before);a.closedFollowup=closed;save();endAction(btn)}
+function addFollow(btn){const p=requireSelected();if(!p)return;const note=segNota.value.trim(),date=segFecha.value;if(!note)return alert('Escribe el próximo paso antes de guardar el seguimiento.');if(!date)return alert('Selecciona la fecha del próximo paso.');if(!beginAction(btn))return;if(p.next&&p.followupActive!==false&&normName(p.next)===normName(note)&&String(p.next_date||'')===String(date)){alert('🔁 Este seguimiento ya está activo con la misma fecha y el mismo próximo paso. No se creará un duplicado.');cancelAction();return;}const before=snapshot(p);let replaced=null;if(p.next&&p.followupActive!==false)replaced=closeActiveFollowup(p,'reprogrammed');p.next=note;p.next_date=date;p.followupActive=true;const countedToday=sameProspectDayType(p,'followup').some(a=>((a.delta||{}).followups||0)>0);const a=addActivity(p,'followup','🔁 '+p.name+' · '+note,{followups:countedToday?0:1},before);a.followupNote=note;a.followupDate=date;a.followupStatus='active';a.replacesFollowup=replaced;p.activeFollowupId=a.id;segNota.value='';save();endAction(btn,replaced?'✓ Reprogramado':'✓ Seguimiento guardado')}
+function deleteActivity(id){const idx=db.activities.findIndex(a=>String(a.id)===String(id));if(idx<0)return;const a=db.activities[idx];if(a.system&&!confirm('Este registro fue generado automáticamente por la versión '+APP_VERSION+'. ¿Deseas eliminarlo del historial?'))return;if(!a.system&&!confirm('¿Eliminar este registro de actividad?\n\nSe corregirá el contador correspondiente.'))return;
+ const p=db.prospects.find(x=>Number(x.id)===Number(a.prospectId));const newer=!!(p&&db.activities.slice(0,idx).some(x=>Number(x.prospectId)===Number(p.id)&&!x.system));
+ if(a.type==='followup'&&((a.delta||{}).followups||0)>0){const alt=db.activities.find((x,j)=>j!==idx&&Number(x.prospectId)===Number(a.prospectId)&&x.type==='followup'&&x.date===a.date);if(alt){alt.delta=alt.delta||{};alt.delta.followups=1;a.delta.followups=0;}}
+ for(const [k,v] of Object.entries(a.delta||{}))db.week2[k]=Math.max(0,(db.week2[k]||0)-v);
+ if(!newer&&a.closedFollowup)restoreClosedFollowup(a.closedFollowup);
+ if(!newer&&a.replacesFollowup)restoreClosedFollowup(a.replacesFollowup);
+ if(p&&a.before&&!newer)Object.assign(p,a.before);
+ db.activities.splice(idx,1);save()}
+
+function setFollowLetter(letter){followLetter=letter;renderFollowSearch()}
+function selectFollowProspect(id){selectedFollowId=Number(id);const p=selectedProspect();if(p&&parseDate(p.next_date))segFecha.value=p.next_date;else segFecha.value=todayISO();renderFollowSearch();renderSelected();setTimeout(()=>document.getElementById('followFormCard').scrollIntoView({behavior:'smooth',block:'start'}),80)}
+function relevance(name,q){const n=normName(name),x=normName(q);if(!x)return 9;if(n===x)return 0;if(n.startsWith(x))return 1;if(n.includes(x))return 2;return 99}
+function renderFollowSearch(){
+ const letters=['Todos',...'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'];alphaBar.innerHTML=letters.map(l=>`<button class="${followLetter===l?'active':''}" onclick="setFollowLetter('${l}')">${l}</button>`).join('');
+ const q=segSearch.value||'';let rows=db.prospects.filter(p=>{const n=normName(p.name);const letterOk=followLetter==='Todos'||n.startsWith(normName(followLetter));const qOk=!q||n.includes(normName(q));return letterOk&&qOk});
+ rows.sort((a,b)=>{if(q){const ra=relevance(a.name,q),rb=relevance(b.name,q);if(ra!==rb)return ra-rb}else{const ua=followUrgency(a).rank,ub=followUrgency(b).rank;if(ua!==ub)return ua-ub}return a.name.localeCompare(b.name,'es',{sensitivity:'base'})});
+ const shown=rows.slice(0,25);followCount.textContent=rows.length?`Mostrando ${shown.length} de ${rows.length} resultado${rows.length===1?'':'s'}`:'Sin resultados';
+ followResults.innerHTML=shown.length?shown.map(p=>`<div class="follow-result ${Number(selectedFollowId)===Number(p.id)?'selected':''}" onclick="selectFollowProspect(${p.id})"><div class="name">${esc(p.name)}</div><div class="meta-line"><span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}</div><div class="meta-line">${urgencyBadge(p)}</div>${p.next?`<small><b>${esc(p.next)}</b></small>`:''}</div>`).join(''):'<div class="history"><b>No se encontró ningún prospecto.</b><br><span class="muted">Puedes ir a Prospectos y agregarlo.</span><br><br><button onclick="goToNewProspect()">+ Nuevo prospecto</button></div>';
+ const recentIds=[];for(const a of db.activities){if(a.prospectId&&!recentIds.includes(Number(a.prospectId)))recentIds.push(Number(a.prospectId));if(recentIds.length>=5)break}const rec=recentIds.map(id=>db.prospects.find(p=>Number(p.id)===id)).filter(Boolean);recentList.innerHTML=rec.length?rec.map(p=>`<button class="recent-chip" onclick="selectFollowProspect(${p.id})">${esc(p.name)}</button>`).join(''):'<span class="muted">Aún no hay recientes.</span>';
+}
+function renderSelected(){const p=selectedProspect();if(!p){selectedTitle.textContent='Selecciona un prospecto';selectedMeta.innerHTML='';selectedNext.style.display='none';return}selectedTitle.textContent=p.name;selectedMeta.innerHTML=`<span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}`;if(p.next){selectedNext.style.display='block';selectedNext.innerHTML=`${urgencyBadge(p)}<br><b style="display:inline-block;margin-top:8px">${esc(p.next)}</b>`}else selectedNext.style.display='none'}
+
+function renderProspects(){const q=normName(buscar.value||'');const rows=db.prospects.filter(p=>normName(p.name+' '+p.stage+' '+p.category).includes(q));prospectCount.textContent=db.prospects.length+' registrados';prospectList.innerHTML=rows.map(p=>`<div class="persona"><b>${esc(p.name)}</b><div class="meta-line"><span class="muted">${esc(p.category||'Sin categoría')}${p.phone?' · '+esc(p.phone):''}</span>${stageBadge(p.stage)}</div><div class="meta-line">${urgencyBadge(p)}</div>${p.next?`<small><b>Próximo:</b> ${esc(p.next)}</small>`:''}${p.notes?`<small class="muted">${esc(p.notes)}</small>`:''}<div class="persona-actions"><button class="secondary" onclick="openEdit(${p.id})">✏️ Editar</button><button class="danger" onclick="deleteProspect(${p.id})">🗑️ Eliminar</button></div></div>`).join('')}
+function renderActivity(){activityList.innerHTML=db.activities.length?db.activities.slice(0,40).map(a=>{let st='';if(a.type==='followup'){const x=a.followupStatus;if(x==='active')st='<span class="activity-status active">🔵 ACTIVO</span>';else if(x==='completed')st='<span class="activity-status completed">✅ COMPLETADO</span>';else if(x==='reprogrammed')st='<span class="activity-status reprogrammed">↪️ REPROGRAMADO</span>';}return `<div class="activity-row"><div class="activity-text">${esc(a.text||'Actividad')}<small>${fmtDate(a.date)||a.date||''}</small>${st}</div><button class="undo" onclick="deleteActivity('${esc(a.id)}')">🗑️</button></div>`}).join(''):'<p class="muted">Aún no hay actividad registrada en Semana 2.</p>'}
+function goToFollow(id){
+ show('seguimientos');
+ setTimeout(()=>selectFollowProspect(id),60);
+}
+function sameDate(a,b){const da=parseDate(a),dbb=parseDate(b);return !!(da&&dbb&&da.getFullYear()===dbb.getFullYear()&&da.getMonth()===dbb.getMonth()&&da.getDate()===dbb.getDate())}
+function todayAppointmentsRows(){return db.prospects.filter(p=>p.stage==='Invitado/Cita'&&sameDate(p.next_date,todayISO())).sort((a,b)=>a.name.localeCompare(b.name,'es',{sensitivity:'base'}))}
+function overdueRows(){return db.prospects.filter(p=>followUrgency(p).key==='overdue'&&p.stage!=='No por ahora').sort((a,b)=>{const da=parseDate(a.next_date),dbb=parseDate(b.next_date);return (dbb?.getTime()||0)-(da?.getTime()||0)})}
+function todayDueRows(){return db.prospects.filter(p=>followUrgency(p).key==='today'&&p.stage!=='No por ahora')}
+function priorityRows(){
+ const today=todayISO();
+ return db.prospects.filter(p=>p.stage!=='No por ahora'&&p.next).map(p=>{
+  const u=followUrgency(p);let score=50;
+  if(p.stage==='Invitado/Cita'&&sameDate(p.next_date,today))score=-20;
+  else if(u.key==='overdue')score=0;
+  else if(u.key==='today')score=10;
+  else if(u.key==='tomorrow')score=20;
+  else if(u.key==='soon')score=30;
+  else score=40;
+  return {p,u,score};
+ }).sort((a,b)=>a.score-b.score||a.u.rank-b.u.rank||a.p.name.localeCompare(b.p.name,'es',{sensitivity:'base'})).slice(0,5).map(x=>x.p);
+}
+function dayItem(p){return `<div class="day-item" onclick="goToFollow(${p.id})"><div class="day-item-top"><div class="day-item-name">${esc(p.name)}</div>${stageBadge(p.stage)}</div><div class="day-item-meta">${urgencyBadge(p)}<span class="muted">${esc(p.category||'Sin categoría')}</span></div>${p.next?`<div class="day-item-next"><b>Próximo:</b> ${esc(p.next)}</div>`:''}</div>`}
+function renderPriorities(){const rows=priorityRows();priorityList.innerHTML=rows.length?rows.map(dayItem).join(''):'<div class="empty-day">No tienes prioridades con fecha o próximo paso. Agrega seguimiento a tus prospectos activos.</div>'}
+
+function dailyContactGoal(){
+ const n=Number(db.dailyContactGoal);
+ return Number.isInteger(n)&&n>=1&&n<=DAILY_CONTACT_MAX?n:5;
+}
+function setDailyContactGoal(value){
+ const n=Math.max(1,Math.min(DAILY_CONTACT_MAX,parseInt(value,10)||5));
+ db.dailyContactGoal=n;
+ persist();
+ renderDailyContacts();
+ showToast('✓ Meta diaria: '+n+' contacto'+(n===1?'':'s'));
+}
+function dailyTargetIds(date=todayISO()){
+ const raw=db.dailyContactTargets?.[date];
+ if(!Array.isArray(raw))return [];
+ const seen=new Set(),out=[];
+ for(const x of raw){const id=Number(x);if(!Number.isFinite(id)||seen.has(id)||!db.prospects.some(p=>Number(p.id)===id))continue;seen.add(id);out.push(id);if(out.length>=DAILY_CONTACT_MAX)break;}
+ return out;
+}
+function setDailyTargetIds(ids,date=todayISO()){
+ db.dailyContactTargets[date]=[...new Set((ids||[]).map(Number).filter(Number.isFinite))].slice(0,DAILY_CONTACT_MAX);
+}
+const DAILY_TARGET_ACTIVITY_TYPES=new Set(['attempt','conversation','appointment','presentation','client','distributor']);
+function dailyActivityProspectIds(date=todayISO()){
+ // db.activities guarda lo más reciente primero. Conservamos ese orden para que,
+ // si el día ya empezó antes de elegir la lista, entren primero las personas
+ // trabajadas más recientemente.
+ const out=[],seen=new Set();
+ for(const a of (db.activities||[])){
+  if(a.date!==date||!DAILY_TARGET_ACTIVITY_TYPES.has(a.type))continue;
+  const id=Number(a.prospectId);
+  if(!Number.isFinite(id)||seen.has(id))continue;
+  const p=db.prospects.find(x=>Number(x.id)===id);
+  if(!p)continue;
+  if((a.type==='attempt'||a.type==='conversation')&&a.gestureEligible===false)continue;
+  seen.add(id);out.push(id);
+ }
+ return out;
+}
+function autoFillDailyTargetsFromActivity(date=todayISO()){
+ const current=dailyTargetIds(date);
+ const dismissed=new Set((db.dailyContactTargetDismissed?.[date]||[]).map(Number));
+ const mode=db.dailyContactTargetMode?.[date]||'';
+
+ // Si el usuario ya eligió o modificó manualmente su lista, jamás la reemplazamos.
+ if(mode==='manual'&&current.length)return false;
+
+ // Una lista heredada completamente trabajada se considera autogenerada.
+ // Una lista con personas aún pendientes se respeta como selección manual.
+ if(!mode&&current.length){
+  const hasPending=current.some(id=>{
+   const p=db.prospects.find(x=>Number(x.id)===Number(id));
+   return p&&dailyTargetStatus(p,date).rank===0;
+  });
+  db.dailyContactTargetMode[date]=hasPending?'manual':'auto';
+ }
+
+ const effectiveMode=db.dailyContactTargetMode?.[date]||'auto';
+ if(effectiveMode==='manual'){persist();return false;}
+
+ // En modo automático completamos hasta la meta configurada (máximo 10).
+ // Si ya había más personas autogeneradas que la meta actual, no eliminamos a nadie.
+ const autoLimit=Math.min(DAILY_CONTACT_MAX,Math.max(dailyContactGoal(),current.length));
+ const latest=[];
+ for(const id of dailyActivityProspectIds(date)){
+  if(latest.length>=autoLimit)break;
+  if(dismissed.has(id))continue;
+  latest.push(id);
+ }
+ const same=current.length===latest.length&&current.every((id,i)=>Number(id)===Number(latest[i]));
+ if(!same){setDailyTargetIds(latest,date);db.dailyContactTargetMode[date]='auto';persist();return true;}
+ if(!db.dailyContactTargetMode[date]){db.dailyContactTargetMode[date]='auto';persist();}
+ return false;
+}
+function dailyTargetStatus(p,date=todayISO()){
+ const rows=db.activities.filter(a=>Number(a.prospectId)===Number(p.id)&&a.date===date);
+ const has=t=>rows.some(a=>a.type===t);
+ if(has('client')||has('distributor'))return {rank:5,key:'advanced',label:'✅ AVANZÓ',detail:'Conversión registrada hoy',cls:'dcs-advanced'};
+ if(has('presentation'))return {rank:4,key:'presented',label:'▶️ PRESENTADO',detail:'Presentación registrada hoy',cls:'dcs-presented'};
+ if(has('appointment'))return {rank:3,key:'cita',label:'📅 CITA',detail:'Cita acordada hoy',cls:'dcs-cita'};
+ if(has('conversation'))return {rank:2,key:'replied',label:'💬 RESPONDIÓ',detail:'Conversación registrada hoy',cls:'dcs-replied'};
+ if(has('attempt'))return {rank:1,key:'sent',label:'✉️ ENVIADO',detail:'Esperando respuesta',cls:'dcs-sent'};
+ return {rank:0,key:'pending',label:'⚪ PENDIENTE',detail:'Aún no registraste mensaje hoy',cls:'dcs-pending'};
+}
+function renderDailyContacts(){
+ if(!window.dailyContactsList)return;
+ autoFillDailyTargetsFromActivity();
+ const goal=dailyContactGoal();
+ if(window.dailyContactsGoal)dailyContactsGoal.value=String(goal);
+ const ids=dailyTargetIds(),rows=ids.map(id=>db.prospects.find(p=>Number(p.id)===id)).filter(Boolean).map((p,i)=>({p,i,s:dailyTargetStatus(p)}));
+ rows.sort((a,b)=>a.s.rank-b.s.rank||a.i-b.i);
+ const worked=rows.filter(x=>x.s.rank>0).length,pending=rows.filter(x=>x.s.rank===0).length,sent=rows.filter(x=>x.s.rank===1).length,replied=rows.filter(x=>x.s.rank>=2).length;
+ const remainingToGoal=Math.max(0,goal-worked),slots=DAILY_CONTACT_MAX-ids.length;
+ dailyContactsBadge.textContent=`${ids.length} SELEC.`;
+ chooseDailyContactBtn.disabled=ids.length>=DAILY_CONTACT_MAX;chooseDailyContactBtn.style.opacity=ids.length>=DAILY_CONTACT_MAX?'.55':'1';chooseDailyContactBtn.textContent=ids.length>=DAILY_CONTACT_MAX?'✓ 10 contactos elegidos':'+ Elegir contacto';
+ dailyContactsSummary.className='daily-contacts-summary '+(pending?'priority':(worked>=goal?'done':''));
+ if(!ids.length)dailyContactsSummary.textContent=`Meta de hoy: ${goal}. Elige manualmente entre 1 y 10 personas; puedes superar la meta sin excluir a nadie.`;
+ else if(pending)dailyContactsSummary.textContent=`⚠️ Prioridad: ${pending} contacto${pending===1?'':'s'} aún sin mensaje · ${worked}/${ids.length} trabajado${worked===1?'':'s'} · Meta ${goal}.`;
+ else if(worked<goal)dailyContactsSummary.textContent=`✅ Todos los seleccionados ya fueron trabajados · ${worked}/${goal} de la meta · te faltan ${remainingToGoal}. Puedes agregar hasta ${slots} más.`;
+ else dailyContactsSummary.textContent=`✅ Meta cumplida · ${worked} trabajado${worked===1?'':'s'} / meta ${goal} · ${sent} esperando respuesta · ${replied} con respuesta o avance.`;
+ dailyContactsList.innerHTML=rows.length?rows.map(({p,s})=>`<div class="daily-contact-row ${s.rank===0?'priority':''}"><div class="daily-contact-main"><div class="daily-contact-name">${esc(p.name)}${s.rank===0?'<span class="target-priority">PRIORIDAD</span>':''}</div><div class="daily-contact-meta">${esc(p.category||'Sin categoría')}</div><span class="daily-contact-status ${s.cls}">${s.label}</span><div class="daily-contact-meta">${s.detail}</div></div><div class="daily-contact-actions"><button onclick="goToFollow(${p.id})">Abrir</button><button class="remove-target" onclick="removeDailyContact(${p.id})">✕ Quitar</button></div></div>`).join(''):`<div class="daily-contact-empty">Todavía no elegiste contactos para hoy. Pulsa <b>+ Elegir contacto</b> y arma tu lista de 1 a ${DAILY_CONTACT_MAX} personas.</div>`;
+}
+function openDailyContactPicker(){
+ if(dailyTargetIds().length>=DAILY_CONTACT_MAX)return alert('Ya elegiste el máximo de 10 contactos de hoy. Quita uno si deseas reemplazarlo.');
+ dailyContactPickerSearch.value='';dailyContactPicker.classList.add('open');dailyContactPicker.setAttribute('aria-hidden','false');renderDailyContactPicker();setTimeout(()=>dailyContactPickerSearch.focus(),100);
+}
+function closeDailyContactPicker(){dailyContactPicker.classList.remove('open');dailyContactPicker.setAttribute('aria-hidden','true')}
+function renderDailyContactPicker(){
+ if(!window.dailyContactPickerResults)return;
+ const ids=dailyTargetIds(),q=normName(dailyContactPickerSearch.value||'');
+ let rows=db.prospects.filter(p=>!ids.includes(Number(p.id))&&p.stage!=='No por ahora'&&(!q||normName(p.name+' '+(p.category||'')).includes(q)));
+ rows.sort((a,b)=>a.name.localeCompare(b.name,'es',{sensitivity:'base'}));rows=rows.slice(0,35);
+ dailyContactPickerCount.textContent=`${ids.length}/${DAILY_CONTACT_MAX} elegidos · Meta ${dailyContactGoal()} · ${rows.length} disponibles${q?' para esta búsqueda':''}`;
+ dailyContactPickerResults.innerHTML=rows.length?rows.map(p=>`<div class="target-picker-item"><div><b>${esc(p.name)}</b><small>${esc(p.category||'Sin categoría')} · ${stageText(p.stage)}</small></div><button onclick="addDailyContact(${p.id})">+ Agregar</button></div>`).join(''):'<div class="empty-day">No hay prospectos disponibles con esa búsqueda.</div>';
+}
+function addDailyContact(id){
+ const ids=dailyTargetIds();if(ids.length>=DAILY_CONTACT_MAX)return alert('Máximo 10 contactos por día.');id=Number(id);if(ids.includes(id))return;
+ const d=todayISO();db.dailyContactTargetDismissed[d]=(db.dailyContactTargetDismissed[d]||[]).filter(x=>Number(x)!==id);
+ db.dailyContactTargetMode[d]='manual';
+ ids.push(id);setDailyTargetIds(ids,d);persist();render();closeDailyContactPicker();showToast('✓ Contacto agregado a hoy');
+}
+function removeDailyContact(id){
+ const d=todayISO();id=Number(id);
+ db.dailyContactTargetMode[d]='manual';
+ const ids=dailyTargetIds(d).filter(x=>Number(x)!==id);setDailyTargetIds(ids,d);
+ const dismissed=new Set((db.dailyContactTargetDismissed[d]||[]).map(Number));dismissed.add(id);db.dailyContactTargetDismissed[d]=[...dismissed];
+ persist();render();showToast('Contacto retirado de la lista de hoy');
+}
+
+function setMissingRow(rowId,textId,statusId,{done=false,urgent=false,text='',status=''}){
+ const row=document.getElementById(rowId),txt=document.getElementById(textId),st=document.getElementById(statusId);
+ if(!row||!txt||!st)return;
+ row.classList.toggle('done',!!done);row.classList.toggle('urgent',!!urgent&&!done);
+ txt.textContent=text;st.textContent=status;
+ st.className='missing-status '+(done?'ok':urgent?'danger':'warn');
+}
+function renderMissingToday(){
+ const tg=countTodayGestures(),tc=countTodayNewContacts(),pm=powerMinutesForDate(todayISO());
+ const overdue=overdueRows(),due=todayDueRows(),appointments=todayAppointmentsRows();
+ const remGest=Math.max(0,5-tg),remContacts=Math.max(0,5-tc),remPower=Math.max(0,DAILY_POWER_GOAL_MINUTES-pm);
+ setMissingRow('missingGesturesRow','missingGesturesText','missingGesturesStatus',{
+  done:remGest===0,text:remGest===0?`Meta cumplida · llevas ${tg} / 5`:`Te faltan ${remGest} · llevas ${tg} / 5`,status:remGest===0?'LISTO':`${remGest} FALTA${remGest===1?'':'N'}`
+ });
+ setMissingRow('missingContactsRow','missingContactsText','missingContactsStatus',{
+  done:remContacts===0,text:remContacts===0?`Meta cumplida · llevas ${tc} / 5`:`Te faltan ${remContacts} · llevas ${tc} / 5`,status:remContacts===0?'LISTO':`${remContacts} FALTA${remContacts===1?'':'N'}`
+ });
+ setMissingRow('missingAppointmentsRow','missingAppointmentsText','missingAppointmentsStatus',{
+  done:appointments.length===0,text:appointments.length===0?'No tienes citas pendientes para hoy':`${appointments.length} cita${appointments.length===1?'':'s'} por atender`,status:appointments.length===0?'AL DÍA':`${appointments.length} PEND.`
+ });
+ const followTotal=overdue.length+due.length;
+ setMissingRow('missingFollowupsRow','missingFollowupsText','missingFollowupsStatus',{
+  done:followTotal===0,urgent:overdue.length>0,
+  text:followTotal===0?'Sin seguimientos urgentes':`${overdue.length} vencido${overdue.length===1?'':'s'} · ${due.length} para hoy`,
+  status:followTotal===0?'AL DÍA':`${followTotal} PEND.`
+ });
+ setMissingRow('missingPowerRow','missingPowerText','missingPowerStatus',{
+  done:remPower===0,text:remPower===0?`Meta cumplida · ${fmtMinutes(pm)} / ${fmtMinutes(DAILY_POWER_GOAL_MINUTES)}`:`Te faltan ${fmtMinutes(remPower)} · llevas ${fmtMinutes(pm)}`,status:remPower===0?'LISTO':'PEND.'
+ });
+ const openGroups=[remGest>0,remContacts>0,appointments.length>0,followTotal>0,remPower>0].filter(Boolean).length;
+ if(window.missingTodayBadge)missingTodayBadge.textContent=openGroups===0?'TODO LISTO':`${openGroups} PEND.`;
+ if(window.missingTodaySummary){
+  missingTodaySummary.classList.toggle('all-done',openGroups===0);
+  if(openGroups===0)missingTodaySummary.textContent='✅ Todo bajo control por hoy. Tus cinco frentes están al día.';
+  else if(appointments.length)missingTodaySummary.textContent=`📅 Prioridad: tienes ${appointments.length} cita${appointments.length===1?'':'s'} por atender hoy.`;
+  else if(overdue.length)missingTodaySummary.textContent=`🔴 Prioridad: resuelve primero tus ${overdue.length} seguimiento${overdue.length===1?'':'s'} vencido${overdue.length===1?'':'s'}.`;
+  else if(remContacts>0)missingTodaySummary.textContent=`💬 Te faltan ${remContacts} contacto${remContacts===1?'':'s'} real${remContacts===1?'':'es'} para completar la meta de hoy.`;
+  else if(remGest>0)missingTodaySummary.textContent=`📨 Te faltan ${remGest} gestiones para completar la meta de hoy.`;
+  else missingTodaySummary.textContent=`⏱️ Te faltan ${fmtMinutes(remPower)} de Bloque de Poder para cerrar el día.`;
+ }
+}
+function renderMyDay(){
+ const d=parseDate(todayISO())||new Date();
+ myDayDate.textContent=new Intl.DateTimeFormat('es-PE',{weekday:'long',day:'numeric',month:'long'}).format(d);
+ const overdue=overdueRows(),due=todayDueRows(),appointments=todayAppointmentsRows();
+ myOverdueCount.textContent=overdue.length;myTodayFollowCount.textContent=due.length;myAppointmentsCount.textContent=appointments.length;appointmentCountBadge.textContent=appointments.length;overdueCountBadge.textContent=overdue.length;
+ todayAppointments.innerHTML=appointments.length?appointments.map(dayItem).join(''):'<div class="empty-day">No tienes citas registradas para hoy.</div>';
+ overdueList.innerHTML=overdue.length?overdue.slice(0,4).map(dayItem).join('')+(overdue.length>4?`<div class="goal-note" style="margin-top:10px">Hay ${overdue.length-4} seguimiento${overdue.length-4===1?'':'s'} vencido${overdue.length-4===1?'':'s'} más. Ábrelos desde Seguimientos.</div>`:''):'<div class="empty-day">✅ No tienes seguimientos vencidos.</div>';
+ const tg=countTodayGestures(),tc=countTodayNewContacts(),pm=powerMinutesForDate(todayISO());
+ gestureProgress.style.width=Math.min(100,Math.round(tg/5*100))+'%';contactProgress.style.width=Math.min(100,Math.round(tc/5*100))+'%';powerDayProgress.style.width=Math.min(100,Math.round(pm/DAILY_POWER_GOAL_MINUTES*100))+'%';
+ myPowerToday.textContent=fmtMinutes(pm)+' / '+fmtMinutes(DAILY_POWER_GOAL_MINUTES);const rem=Math.max(0,DAILY_POWER_GOAL_MINUTES-pm);myPowerRemaining.textContent=rem===0?'✅ Meta cumplida':'Te faltan '+fmtMinutes(rem);
+ const goals=[tg>=5,tc>=5,pm>=DAILY_POWER_GOAL_MINUTES].filter(Boolean).length;dailyGoalsDone.textContent=goals+'/3';
+ const pri=priorityRows()[0];
+ if(appointments.length)myDayFocus.innerHTML='📅 <b>Primero:</b> tienes '+appointments.length+' cita'+(appointments.length===1?'':'s')+' hoy. '+(pri?'Tu siguiente acción es <b>'+esc(pri.name)+'</b>.':'');
+ else if(overdue.length)myDayFocus.innerHTML='🔴 Tienes <b>'+overdue.length+' seguimiento'+(overdue.length===1?'':'s')+' vencido'+(overdue.length===1?'':'s')+'</b>. Empieza por <b>'+esc(overdue[0].name)+'</b>.';
+ else if(due.length)myDayFocus.innerHTML='🟠 Tienes <b>'+due.length+' seguimiento'+(due.length===1?'':'s')+' para hoy</b>. Empieza por <b>'+esc(due[0].name)+'</b>.';
+ else myDayFocus.innerHTML=tg>=5?'✅ Cumpliste tus gestiones de hoy. Revisa próximos pasos y cierres.':'🎯 Hoy te faltan <b>'+Math.max(0,5-tg)+' gestiones</b> para tu meta diaria.';
+ renderMissingToday();
+}
+function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
+function countTodayGestures(){const people=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!isProspectingGestureEligible(a))continue;const key=activityProspectKey(a);if(key)people.add(key);}return people.size}
+function todayCountByType(type){const rows=db.activities.filter(a=>a.date===todayISO()&&a.type===type);if(['attempt','conversation','appointment','presentation','followup','client','distributor'].includes(type)){const ids=new Set(rows.map(a=>a.prospectId==null?a.id:String(a.prospectId)));return ids.size}return rows.length}
+const DAILY_POWER_GOAL_MINUTES=120;
+function powerMinutesForDate(date){
+ const v=db.dailyPower?.[date];
+ if(Array.isArray(v))return v.reduce((s,x)=>s+Math.max(0,Number(x?.minutes)||0),0);
+ if(typeof v==='number')return Math.max(0,Math.round(v));
+ return 0;
+}
+function fmtMinutes(total){
+ total=Math.max(0,Math.round(Number(total)||0));
+ const h=Math.floor(total/60),m=total%60;
+ if(h&&m)return `${h} h ${m} min`;
+ if(h)return `${h} h`;
+ return `${m} min`;
+}
+function week2PowerMinutes(){
+ let total=0;
+ for(const [d] of Object.entries(db.dailyPower||{})){if(d>='2026-09-07'&&d<='2026-09-13')total+=powerMinutesForDate(d)}
+ return total;
+}
+function week2ElapsedWorkdays(){
+ const start=parseDate('2026-09-07'),end=parseDate('2026-09-12'),today=parseDate(todayISO());
+ if(!start||!end||!today||today<start)return 0;
+ const stop=today>end?end:today;
+ let count=0;
+ for(let d=new Date(start);d<=stop;d.setDate(d.getDate()+1)){const day=d.getDay();if(day>=1&&day<=6)count++;}
+ return count;
+}
+function week2PowerAverageMinutes(){
+ const days=week2ElapsedWorkdays();
+ return days?week2PowerMinutes()/days:0;
+}
+function addPowerBlock(){
+ const h=Number(powerInputHours.value||0),m=Number(powerInputMinutes.value||0);
+ if(!Number.isFinite(h)||!Number.isFinite(m)||h<0||m<0||m>59||!Number.isInteger(h)||!Number.isInteger(m))return alert('Ingresa horas enteras y minutos entre 0 y 59.');
+ const minutes=h*60+m;if(minutes<=0)return alert('Ingresa al menos 1 minuto de Bloque de Poder.');
+ const d=todayISO();if(!Array.isArray(db.dailyPower[d])){const prev=powerMinutesForDate(d);db.dailyPower[d]=prev?[{id:'migrated-'+d,minutes:prev}]:[];}
+ db.dailyPower[d].push({id:'p-'+Date.now(),minutes,createdAt:new Date().toISOString()});
+ db.week2.power=week2PowerMinutes()/60;
+ powerInputHours.value=0;powerInputMinutes.value=0;persist();render();powerSaveStatus.textContent='✓ Sumado';setTimeout(()=>powerSaveStatus.textContent='',1800);
+}
+function renderPowerHistory(){
+ const rows=Object.keys(db.dailyPower||{}).filter(d=>powerMinutesForDate(d)>0).sort().reverse().slice(0,10);
+ powerHistory.innerHTML=rows.length?rows.map(d=>`<div class="power-history-row"><span>${fmtDate(d)||d}</span><b>${fmtMinutes(powerMinutesForDate(d))}</b></div>`).join(''):'<div class="muted" style="margin-top:8px;font-size:13px">Aún no hay horas registradas.</div>';
+}
+function renderDailyClose(){
+ const d=todayISO();
+ dailyCloseDate.textContent=fmtDate(d);
+ dGestures.textContent=countTodayGestures();
+ dContacts.textContent=countTodayNewContacts();
+ dConversations.textContent=todayCountByType('conversation');
+ dFollowups.textContent=todayCountByType('followup');
+ dClients.textContent=todayCountByType('client');
+ dDistributors.textContent=todayCountByType('distributor');
+ const todayPower=powerMinutesForDate(d);
+ const remaining=Math.max(0,DAILY_POWER_GOAL_MINUTES-todayPower);
+ const progress=Math.min(100,Math.round((todayPower/DAILY_POWER_GOAL_MINUTES)*100));
+ dPowerTotal.textContent=fmtMinutes(todayPower);
+ dPowerWeek.textContent=fmtMinutes(week2PowerMinutes());
+ dPowerAverage.textContent=fmtMinutes(week2PowerAverageMinutes());
+ dPowerGoal.textContent=fmtMinutes(DAILY_POWER_GOAL_MINUTES);
+ dPowerRemaining.textContent=fmtMinutes(remaining);
+ dPowerProgress.style.width=progress+'%';
+ dPowerGoalStatus.className='power-goal-status '+(remaining===0?'done':'pending');
+ dPowerGoalStatus.textContent=remaining===0?'✅ Meta diaria de Bloque de Poder cumplida.':'Te faltan '+fmtMinutes(remaining)+' para cumplir tu meta de hoy.';
+ renderPowerHistory();
+ const saved=db.dailyObservations[d]||'';
+ if(document.activeElement!==dailyObservation)dailyObservation.value=saved;
+}
+function saveDailyObservation(){
+ const d=todayISO();
+ db.dailyObservations[d]=(dailyObservation.value||'').trim();
+ persist();
+ dailyObsStatus.textContent='✓ Guardado';
+ setTimeout(()=>{dailyObsStatus.textContent=''},1800);
+}
+function render(){
+ setVersionLabels();
+ const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;const wp=week2PowerMinutes();db.week2.power=wp/60;powerHours.textContent=fmtMinutes(wp);rPower.textContent=fmtMinutes(wp);rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderMyDay();renderDailyContacts();renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
+}
+segFecha.value=todayISO();render();
+</script>
+</body>
+</html>
