@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#17477f">
-  <title>Rumbo a GET 2027 · v4.13.4</title>
+  <title>Rumbo a GET 2027 · v4.13.5</title>
 <style>
 *{box-sizing:border-box}
 :root{--blue:#17477f;--blue2:#1769d2;--ink:#172238;--muted:#667085;--bg:#f4f7fb;--green:#15945d;--line:#e7eaf0;--red:#c63c47}
@@ -117,7 +117,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
     <div class="missing-icon">📨</div><div class="missing-copy"><b>Gestiones</b><small id="missingGesturesText">Revisando...</small></div><span id="missingGesturesStatus" class="missing-status"></span>
    </div>
    <div id="missingContactsRow" class="missing-row">
-    <div class="missing-icon">💬</div><div class="missing-copy"><b>Contactos reales</b><small id="missingContactsText">Revisando...</small></div><span id="missingContactsStatus" class="missing-status"></span>
+    <div class="missing-icon">💬</div><div class="missing-copy"><b>Conversaciones reales</b><small id="missingContactsText">Revisando...</small></div><span id="missingContactsStatus" class="missing-status"></span>
    </div>
    <div id="missingAppointmentsRow" class="missing-row">
     <div class="missing-icon">📅</div><div class="missing-copy"><b>Citas de hoy</b><small id="missingAppointmentsText">Revisando...</small></div><span id="missingAppointmentsStatus" class="missing-status"></span>
@@ -152,9 +152,9 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
     <div id="gesturesMsg" class="goal-note">Te faltan 5 gestiones por realizar</div>
    </div>
    <div class="goal-row">
-    <div class="goal-head"><span>💬 Contactos reales</span><b><span id="todayContacts">0</span> / 5</b></div>
+    <div class="goal-head"><span>💬 Conversaciones reales</span><b><span id="todayContacts">0</span> / 5</b></div>
     <div class="mini-progress"><span id="contactProgress"></span></div>
-    <div id="todayMsg" class="goal-note">Has logrado 0 contactos reales de 5</div>
+    <div id="todayMsg" class="goal-note">Has logrado 0 conversaciones reales de 5</div>
    </div>
    <div class="goal-row">
     <div class="goal-head"><span>⏱️ Bloque de Poder</span><b id="myPowerToday">0 min / 2 h</b></div>
@@ -248,7 +248,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
   <p class="muted" style="margin-top:10px">Se calcula automáticamente con lo que registraste hoy en Seguimientos.</p>
   <div class="grid">
    <div class="daily-metric"><span>📨 Gestiones realizadas</span><b id="dGestures">0</b></div>
-   <div class="daily-metric"><span>💬 Contactos reales</span><b id="dContacts">0</b></div>
+   <div class="daily-metric"><span>💬 Conversaciones reales</span><b id="dContacts">0</b></div>
    <div class="daily-metric"><span>💬 Conversaciones</span><b id="dConversations">0</b></div>
    <div class="daily-metric"><span>🔁 Seguimientos</span><b id="dFollowups">0</b></div>
    <div class="daily-metric"><span>✓ Nuevos clientes</span><b id="dClients">0</b></div>
@@ -338,8 +338,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d6dae1;border-ra
 <script>
 const SEED=[{"name": "Adan Llamo", "phone": "912576254", "category": "A - Negocio", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-01", "next": "Confirmar inscripción e iniciar plan de acción", "next_date": "2026-09-10", "notes": "Presentación de negocio realizada 02/09. Mostró interés y manifestó intención de inscribirse como distribuidor a partir del 10/09. Pendiente confirmar inscripción e iniciar activación.", "id": 1, "contacted": true}, {"name": "Alex Santa Maria", "phone": "956877045", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo visites", "notes": "Respondió WhatsApp. Pendiente conversación presencial sobre hábitos/bienestar.", "id": 2, "contacted": true}, {"name": "Alexander Peralta Chunga", "phone": "999652647", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo encuentres", "notes": "Respondió cordialmente. No profundizó por WhatsApp. Pendiente conversación presencial.", "id": 3, "contacted": true}, {"name": "Anderson Villanueva", "phone": "902675148", "category": "B - Cliente", "origin": "Nutri Healthy", "status": "Presentado", "last": "", "next": "", "next_date": "", "notes": "", "id": 4, "contacted": true}, {"name": "Andy Navarro", "phone": "922737361", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-01", "next": "Profundizar / presentar plan de negocio", "next_date": "2026-09-02", "notes": "Conversación presencial. Se explicó a grandes rasgos el negocio. Acordamos profundizar mañana.", "id": 5, "contacted": true}, {"name": "Anita Molero", "phone": "950034264", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "", "next": "", "next_date": "", "notes": "", "id": 6, "contacted": true}, {"name": "Arbañil Chozo", "phone": "991107462", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "Abordarlo presencialmente", "next_date": "", "notes": "Todavía nada hasta que hables con él.", "id": 7, "contacted": false}, {"name": "Dalma Fernandez", "phone": "952320371", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "2026-09-01", "next": "Continuar conversación desde su número personal", "next_date": "Pendiente respuesta", "notes": "Respondió y se retomó conversación. Pendiente detectar interés/necesidad.", "id": 8, "contacted": true}, {"name": "Sandra Vilchez", "phone": "995782631", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "Unos días después", "notes": "", "id": 9, "contacted": true}, {"name": "Carlos La Ciencia", "phone": "964755023", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Mantener relación / retomar más adelante", "next_date": "", "notes": "", "id": 10, "contacted": true}, {"name": "Beto Torres Cueva", "phone": "975810570", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 11, "contacted": true}, {"name": "Bibliana Briceño", "phone": "910025852", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 12, "contacted": false}, {"name": "Calin Ubillus", "phone": "950284011", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "", "next": "Concretar presentación del Plan de Marketing", "next_date": "03 o 04/09/2026", "notes": "Nuevo intento de contacto sin respuesta.", "id": 13, "contacted": true}, {"name": "Casharo", "phone": "941932401", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 14, "contacted": false}, {"name": "Celinda Gallardo", "phone": "941966428", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 15, "contacted": false}, {"name": "Cesar Bustamante", "phone": "941925377", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-04", "next": "Segundo contacto si no responde", "next_date": "", "notes": "Mensaje enviado, sin respuesta.", "id": 16, "contacted": true}, {"name": "Cesar Davila", "phone": "949960660", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Mensaje enviado, sin respuesta.", "id": 17, "contacted": true}, {"name": "Cesar Matallana", "phone": "958994500", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-05", "next": "Concretar día y hora para conversar sobre el proyecto", "next_date": "2026-09-07", "notes": "Respondió positivamente: acepta sentarse a conversar.", "id": 18, "contacted": true}, {"name": "Cesar Rodriguez", "phone": "988405859", "category": "A - Negocio", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 19, "contacted": false}, {"name": "Chavo Gustavo", "phone": "942193009", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 20, "contacted": false}, {"name": "Morayma Pizarro", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-03", "next": "Esperar respuesta por el producto / confirmar si desea avanzar con la compra o inscripción", "next_date": "", "notes": "Interesada en inscribirse para consumo personal. No interesada actualmente en desarrollar negocio.", "id": 21, "contacted": true}, {"name": "Elias Fernández", "phone": "922335449", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 22, "contacted": true}, {"name": "Ali Martinez", "phone": "953133003", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 23, "contacted": true}, {"name": "Consuelo Ocampo", "phone": "996494090", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Posible perfil de emprendedor.", "id": 24, "contacted": true}, {"name": "Carlos Alberto", "phone": "952651183", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 25, "contacted": false}, {"name": "Diana Miranda", "phone": "941932401", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 26, "contacted": false}, {"name": "Luis Vilchez", "phone": "945183319", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 27, "contacted": false}, {"name": "Chumacero", "phone": "48 355 917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 28, "contacted": false}, {"name": "Cinthia M. Morí Heredia", "phone": "971422661", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Continuar conversación y conocer cómo está actualmente", "next_date": "2026-09-07", "notes": "Sobrina en Lima. Se retomó contacto.", "id": 29, "contacted": true}, {"name": "Dirk Mejia", "phone": "939842304", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 30, "contacted": false}, {"name": "Dr Chasquero", "phone": "961435027", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 31, "contacted": false}, {"name": "Duayen- Maestro", "phone": "921610475", "category": "A - Negocio", "origin": "Conocido", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 32, "contacted": false}, {"name": "Eber Rebaza", "phone": "967754233", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 33, "contacted": false}, {"name": "Edgar Ortiz", "phone": "991367969", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 34, "contacted": false}, {"name": "Edgar Torres", "phone": "978415692", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-05", "next": "Segundo contacto e invitación a evaluación", "next_date": "2026-06-09", "notes": "Conoce tu actividad. Mensaje enviado, sin respuesta.", "id": 35, "contacted": true}, {"name": "Edgardo Sandoval", "phone": "992220549", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 36, "contacted": false}, {"name": "Edinson Maquita", "phone": "949405791", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-05", "next": "Esperar respuesta / segundo contacto", "next_date": "2026-09-09", "notes": "Mensaje enviado. Sin respuesta reportada.", "id": 37, "contacted": true}, {"name": "Edwin Ampuero", "phone": "982178585", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Retomar conversación y conocer necesidades", "next_date": "2026-09-09", "notes": "Primo lejano. Se retomó contacto; receptivo a conversar posteriormente.", "id": 38, "contacted": true}, {"name": "Efrain Meza", "phone": "929253999", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 39, "contacted": false}, {"name": "Elvira Cruz", "phone": "918898043", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 40, "contacted": false}, {"name": "Elena Vallejos", "phone": "922373394", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 41, "contacted": false}, {"name": "Eli Chachapoyas", "phone": "978951082", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 42, "contacted": false}, {"name": "Elias Arquitecto", "phone": "952226747", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 43, "contacted": false}, {"name": "Elias Serrato", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 44, "contacted": false}, {"name": "Elíseo Bazan", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 45, "contacted": false}, {"name": "Eloy Silva", "phone": "981340917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 46, "contacted": false}, {"name": "Elmer Herrera", "phone": "949500205", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 47, "contacted": false}, {"name": "Elva Cubas", "phone": "949408677", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 48, "contacted": false}, {"name": "Judith Diaz", "phone": "957311588", "category": "A - Negocio", "origin": "Frío", "status": "Presentado", "last": "2026-09-04", "next": "Retomar conversación y acordar siguiente paso", "next_date": "2026-09-07", "notes": "Contacto en frío. Le interesa emprender. Fue invitada a la reunión del sábado pero no asistió.", "id": 49, "contacted": true}, {"name": "Celso", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Presentado", "last": "2026-09-04", "next": "Confirmar compra del paquete de 7 días para su esposa", "next_date": "Próxima semana", "notes": "Manifestó intención de comprar esta semana para iniciar la siguiente.", "id": 50, "contacted": true}, {"name": "Samir Carvajal", "phone": "", "category": "A - Negocio", "origin": "Conocido", "status": "No por ahora", "last": "2026-06-04", "next": "Sin seguimiento inmediato", "next_date": "", "notes": "Conversó, pero no mostró interés actualmente.", "id": 51, "contacted": true}];
 const PRIORITIES=[{"name": "Adan Llamo", "note": "Confirmar inscripción e iniciar plan de acción"}, {"name": "Judith Diaz", "note": "Retomar conversación y acordar siguiente paso"}, {"name": "Celso", "note": "Confirmar compra del paquete de 7 días para su esposa"}, {"name": "Cesar Matallana", "note": "Concretar día y hora para conversar sobre el proyecto"}, {"name": "Calin Ubillus", "note": "Concretar presentación del Plan de Marketing"}];
-const APP_VERSION='4.13.4';
-const APP_VERSION_NAME='Recuperación reforzada · cinco contactos del 11/09';
+const APP_VERSION='4.13.5';
+const APP_VERSION_NAME='Estados diarios corregidos · conversaciones reales';
 const KEY='rumboGET2027_v4';
 const STAGE_ORDER={'Nuevo':0,'Intento de contacto':1,'Conversación':2,'Invitado/Cita':3,'Presentado':4,'Cliente':5,'Distribuidor':6,'No por ahora':-1};
 const DAILY_CONTACT_MAX=10;
@@ -478,6 +478,26 @@ function recoverFiveContactsFromSeptember11V2(){
  db.recovery20260911FiveDoneV2=true;
 }
 recoverFiveContactsFromSeptember11V2();
+function fixRecovery20260911StatusesV4135(){
+ if(db.fixRecovery20260911StatusesV4135Done)return;
+ const date='2026-09-11';
+ const attempts=new Set(['isabel pinedo','juan carlos mejia','javier zuloeta','javier solueta','jorge navarro']);
+ for(const a of db.activities){
+  if(!a||a.date!==date||a.recovered!==true||a.type!=='conversation')continue;
+  const p=db.prospects.find(x=>Number(x.id)===Number(a.prospectId));
+  if(!p||!attempts.has(normName(p.name)))continue;
+  const d=a.delta||{};
+  if(d.conversations)db.week2.conversations=Math.max(0,(db.week2.conversations||0)-Number(d.conversations||0));
+  if(d.contacts)db.week2.contacts=Math.max(0,(db.week2.contacts||0)-Number(d.contacts||0));
+  a.type='attempt';a.text='✉️ Intento recuperado · '+p.name;a.delta={};a.gestureEligible=true;a.recoveryStatusFixedV4135=true;
+  const hasOtherReal=db.activities.some(x=>x!==a&&Number(x.prospectId)===Number(p.id)&&['conversation','appointment','presentation','client','distributor'].includes(x.type));
+  if(!hasOtherReal&&p.stage==='Conversación'){
+   p.stage='Intento de contacto';p.status='Intento de contacto';p.manualStage='Intento de contacto';p.everConversation=false;
+  }
+ }
+ db.fixRecovery20260911StatusesV4135Done=true;
+}
+fixRecovery20260911StatusesV4135();
 db.appVersion=APP_VERSION;
 persist();
 
@@ -658,16 +678,18 @@ function autoFillDailyTargetsFromActivity(date=todayISO()){
 function dailyTargetStatus(p,date=todayISO()){
  const rows=db.activities.filter(a=>Number(a.prospectId)===Number(p.id)&&a.date===date);
  const has=t=>rows.some(a=>a.type===t);
- if(has('client')||has('distributor'))return {rank:5,key:'advanced',label:'✅ AVANZÓ',detail:'Conversión registrada hoy',cls:'dcs-advanced'};
- if(has('presentation'))return {rank:4,key:'presented',label:'▶️ PRESENTADO',detail:'Presentación registrada hoy',cls:'dcs-presented'};
+ // v4.13.5: exactamente cinco estados visibles, en orden de avance.
+ // Cliente/Distribuidor se muestran como PRESENTADO dentro de este cuadro porque
+ // el objetivo del cuadro es reflejar el avance del contacto del día, no su etapa comercial final.
+ if(has('presentation')||has('client')||has('distributor'))return {rank:4,key:'presented',label:'▶️ PRESENTADO',detail:'Presentación o avance registrado hoy',cls:'dcs-presented'};
  if(has('appointment'))return {rank:3,key:'cita',label:'📅 CITA',detail:'Cita acordada hoy',cls:'dcs-cita'};
- if(has('conversation'))return {rank:2,key:'replied',label:'💬 RESPONDIÓ',detail:'Conversación registrada hoy',cls:'dcs-replied'};
- if(has('attempt'))return {rank:1,key:'sent',label:'✉️ ENVIADO',detail:'Esperando respuesta',cls:'dcs-sent'};
+ if(has('conversation'))return {rank:2,key:'replied',label:'💬 RESPONDIÓ',detail:'Hubo conversación real hoy',cls:'dcs-replied'};
+ if(has('attempt'))return {rank:1,key:'sent',label:'✉️ ENVIADO',detail:'Mensaje enviado · esperando respuesta',cls:'dcs-sent'};
  return {rank:0,key:'pending',label:'⚪ PENDIENTE',detail:'Aún no registraste mensaje hoy',cls:'dcs-pending'};
 }
 function renderDailyContacts(){
  if(!window.dailyContactsList)return;
- autoFillDailyTargetsFromActivity();
+ // v4.13.5: Contactos de hoy es una lista manual. La actividad no agrega personas automáticamente.
  const goal=dailyContactGoal();
  if(window.dailyContactsGoal)dailyContactsGoal.value=String(goal);
  const ids=dailyTargetIds(),rows=ids.map(id=>db.prospects.find(p=>Number(p.id)===id)).filter(Boolean).map((p,i)=>({p,i,s:dailyTargetStatus(p)}));
@@ -718,7 +740,7 @@ function setMissingRow(rowId,textId,statusId,{done=false,urgent=false,text='',st
  st.className='missing-status '+(done?'ok':urgent?'danger':'warn');
 }
 function renderMissingToday(){
- const tg=countTodayGestures(),tc=countTodayNewContacts(),pm=powerMinutesForDate(todayISO());
+ const tg=countTodayGestures(),tc=countTodayRealConversations(),pm=powerMinutesForDate(todayISO());
  const overdue=overdueRows(),due=todayDueRows(),appointments=todayAppointmentsRows();
  const remGest=Math.max(0,5-tg),remContacts=Math.max(0,5-tc),remPower=Math.max(0,DAILY_POWER_GOAL_MINUTES-pm);
  setMissingRow('missingGesturesRow','missingGesturesText','missingGesturesStatus',{
@@ -746,7 +768,7 @@ function renderMissingToday(){
   if(openGroups===0)missingTodaySummary.textContent='✅ Todo bajo control por hoy. Tus cinco frentes están al día.';
   else if(appointments.length)missingTodaySummary.textContent=`📅 Prioridad: tienes ${appointments.length} cita${appointments.length===1?'':'s'} por atender hoy.`;
   else if(overdue.length)missingTodaySummary.textContent=`🔴 Prioridad: resuelve primero tus ${overdue.length} seguimiento${overdue.length===1?'':'s'} vencido${overdue.length===1?'':'s'}.`;
-  else if(remContacts>0)missingTodaySummary.textContent=`💬 Te faltan ${remContacts} contacto${remContacts===1?'':'s'} real${remContacts===1?'':'es'} para completar la meta de hoy.`;
+  else if(remContacts>0)missingTodaySummary.textContent=`💬 Te faltan ${remContacts} conversación${remContacts===1?'':'es'} real${remContacts===1?'':'es'} para completar la meta de hoy.`;
   else if(remGest>0)missingTodaySummary.textContent=`📨 Te faltan ${remGest} gestiones para completar la meta de hoy.`;
   else missingTodaySummary.textContent=`⏱️ Te faltan ${fmtMinutes(remPower)} de Bloque de Poder para cerrar el día.`;
  }
@@ -758,7 +780,7 @@ function renderMyDay(){
  myOverdueCount.textContent=overdue.length;myTodayFollowCount.textContent=due.length;myAppointmentsCount.textContent=appointments.length;appointmentCountBadge.textContent=appointments.length;overdueCountBadge.textContent=overdue.length;
  todayAppointments.innerHTML=appointments.length?appointments.map(dayItem).join(''):'<div class="empty-day">No tienes citas registradas para hoy.</div>';
  overdueList.innerHTML=overdue.length?overdue.slice(0,4).map(dayItem).join('')+(overdue.length>4?`<div class="goal-note" style="margin-top:10px">Hay ${overdue.length-4} seguimiento${overdue.length-4===1?'':'s'} vencido${overdue.length-4===1?'':'s'} más. Ábrelos desde Seguimientos.</div>`:''):'<div class="empty-day">✅ No tienes seguimientos vencidos.</div>';
- const tg=countTodayGestures(),tc=countTodayNewContacts(),pm=powerMinutesForDate(todayISO());
+ const tg=countTodayGestures(),tc=countTodayRealConversations(),pm=powerMinutesForDate(todayISO());
  gestureProgress.style.width=Math.min(100,Math.round(tg/5*100))+'%';contactProgress.style.width=Math.min(100,Math.round(tc/5*100))+'%';powerDayProgress.style.width=Math.min(100,Math.round(pm/DAILY_POWER_GOAL_MINUTES*100))+'%';
  myPowerToday.textContent=fmtMinutes(pm)+' / '+fmtMinutes(DAILY_POWER_GOAL_MINUTES);const rem=Math.max(0,DAILY_POWER_GOAL_MINUTES-pm);myPowerRemaining.textContent=rem===0?'✅ Meta cumplida':'Te faltan '+fmtMinutes(rem);
  const goals=[tg>=5,tc>=5,pm>=DAILY_POWER_GOAL_MINUTES].filter(Boolean).length;dailyGoalsDone.textContent=goals+'/3';
@@ -769,7 +791,19 @@ function renderMyDay(){
  else myDayFocus.innerHTML=tg>=5?'✅ Cumpliste tus gestiones de hoy. Revisa próximos pasos y cierres.':'🎯 Hoy te faltan <b>'+Math.max(0,5-tg)+' gestiones</b> para tu meta diaria.';
  renderMissingToday();
 }
-function countTodayNewContacts(){let n=db.activities.filter(a=>a.date===todayISO()&&((a.delta||{}).contacts||0)>0).reduce((s,a)=>s+(a.delta.contacts||0),0);if(todayISO()==='2026-09-07')n+=(db.legacyTodayContacts||0);return n}
+const REAL_CONVERSATION_TYPES=new Set(['conversation','appointment','presentation','client','distributor']);
+function countRealConversationsForDate(date=todayISO()){
+ const people=new Set();
+ for(const a of db.activities){
+  if(a.date!==date||!REAL_CONVERSATION_TYPES.has(a.type))continue;
+  const key=activityProspectKey(a);
+  if(key)people.add(key);
+ }
+ // Compatibilidad con el registro heredado del 07/09.
+ if(date==='2026-09-07'&&typeof db.legacyTodayContacts==='number')return Math.max(people.size,db.legacyTodayContacts||0);
+ return people.size;
+}
+function countTodayRealConversations(){return countRealConversationsForDate(todayISO())}
 function countTodayGestures(){const people=new Set();for(const a of db.activities){if(a.date!==todayISO())continue;if(!isProspectingGestureEligible(a))continue;const key=activityProspectKey(a);if(key)people.add(key);}return people.size}
 function todayCountByType(type){const rows=db.activities.filter(a=>a.date===todayISO()&&a.type===type);if(['attempt','conversation','appointment','presentation','followup','client','distributor'].includes(type)){const ids=new Set(rows.map(a=>a.prospectId==null?a.id:String(a.prospectId)));return ids.size}return rows.length}
 const DAILY_POWER_GOAL_MINUTES=120;
@@ -820,7 +854,7 @@ function renderDailyClose(){
  const d=todayISO();
  dailyCloseDate.textContent=fmtDate(d);
  dGestures.textContent=countTodayGestures();
- dContacts.textContent=countTodayNewContacts();
+ dContacts.textContent=countTodayRealConversations();
  dConversations.textContent=todayCountByType('conversation');
  dFollowups.textContent=todayCountByType('followup');
  dClients.textContent=todayCountByType('client');
@@ -849,7 +883,7 @@ function saveDailyObservation(){
 }
 function render(){
  setVersionLabels();
- const tc=countTodayNewContacts(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;const wp=week2PowerMinutes();db.week2.power=wp/60;powerHours.textContent=fmtMinutes(wp);rPower.textContent=fmtMinutes(wp);rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 contactos reales':'Has logrado '+tc+' contacto'+(tc===1?'':'s')+' real'+(tc===1?'':'es')+' de 5';renderMyDay();renderDailyContacts();renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
+ const tc=countTodayRealConversations(),tg=countTodayGestures();todayGestures.textContent=tg;todayContacts.textContent=tc;weekContacts.textContent=db.week2.contacts;weekPresentations.textContent=db.week2.presentations;weekFollowups.textContent=db.week2.followups;const wp=week2PowerMinutes();db.week2.power=wp/60;powerHours.textContent=fmtMinutes(wp);rPower.textContent=fmtMinutes(wp);rContacts.textContent=db.week2.contacts;rConversations.textContent=db.week2.conversations;rPresentations.textContent=db.week2.presentations;rFollowups.textContent=db.week2.followups;rClients.textContent=db.week2.clients||0;rDistributors.textContent=db.week2.distributors||0;gesturesMsg.textContent=tg>=5?'✅ Cumpliste tus 5 gestiones de hoy':'Te faltan '+Math.max(0,5-tg)+' gestiones por realizar';todayMsg.textContent=tc>=5?'✅ Lograste 5 conversaciones reales':'Has logrado '+tc+' conversación'+(tc===1?'':'es')+' real'+(tc===1?'':'es')+' de 5';renderMyDay();renderDailyContacts();renderPriorities();renderProspects();renderFollowSearch();renderSelected();renderActivity();renderDailyClose();
 }
 segFecha.value=todayISO();render();
 </script>
