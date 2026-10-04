@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#17477f">
-  <title>Rumbo a GET 2027 · v4.16.3</title>
+  <title>Rumbo a GET 2027 · v4.17.3</title>
 <style>
 *{box-sizing:border-box}
 :root{--blue:#17477f;--blue2:#1769d2;--ink:#172238;--muted:#667085;--bg:#f4f7fb;--green:#15945d;--line:#e7eaf0;--red:#c63c47}
@@ -275,50 +275,72 @@ body.sunday-mode .sunday-power-note{display:block}
   <h2 id="selectedTitle">Selecciona un prospecto</h2>
   <div id="selectedMeta" class="meta-line"></div>
   <div id="selectedNext" class="history" style="display:none"></div>
-  <h3 style="margin:16px 0 8px">📝 Registrar gestión</h3>
-  <p class="muted" style="margin-top:0">Toca directamente lo que ocurrió. No hay menús escondidos. El sistema se encarga del resto.</p>
-  <details class="management-time">
-   <summary>🕒 Hoy · cambiar fecha/hora solo si hace falta</summary>
-   <div class="row" style="margin-top:10px">
-    <div style="flex:1;min-width:145px"><label>Fecha</label><input id="segActividadFecha" type="date"></div>
-    <div style="flex:1;min-width:120px"><label>Hora</label><input id="segActividadHora" type="time"></div>
+  <div id="activeAppointmentArea" style="display:none;margin-top:16px">
+   <h3 style="margin:0 0 8px">📅 Cita acordada</h3>
+   <p id="activeAppointmentHint" class="muted" style="margin-top:0"></p>
+   <div id="activeAppointmentSummary" style="padding:12px;border:1px solid #dfe4ea;border-radius:12px;background:#f8fafc;margin-bottom:12px"></div>
+   <div style="display:grid;gap:9px">
+    <button id="activeAppointmentCompleteBtn" type="button" class="js-action" onclick="completeActiveAppointment(this)" style="display:none;width:100%;padding:14px;font-weight:800">▶️ Presentación realizada</button>
+    <button type="button" class="secondary" onclick="toggleActiveAppointmentReprogram()" style="width:100%;padding:14px;font-weight:800">🕒 Reprogramar cita</button>
+    <button id="activeAppointmentCancelBtn" type="button" class="danger js-action" onclick="cancelActiveAppointment(this)" style="width:100%;padding:14px;font-weight:800">❌ Cancelar cita</button>
    </div>
-  </details>
-  <label style="margin-top:10px"><b>¿Qué pasó hoy?</b></label>
-  <input id="simpleOutcome" type="hidden" value="">
-  <div class="outcome-grid" id="simpleOutcomeButtons">
-   <button type="button" class="outcome-btn" data-outcome="attempt" onclick="selectSimpleOutcome('attempt',this)">✉️ Envié mensaje</button>
-   <button type="button" class="outcome-btn" data-outcome="conversation" onclick="selectSimpleOutcome('conversation',this)">💬 Conversamos</button>
-   <button type="button" class="outcome-btn" data-outcome="appointment" onclick="selectSimpleOutcome('appointment',this)">📅 Acordamos cita</button>
-   <button type="button" class="outcome-btn" data-outcome="presentation" onclick="selectSimpleOutcome('presentation',this)">▶️ Hice presentación</button>
-   <button type="button" class="outcome-btn" data-outcome="client" onclick="selectSimpleOutcome('client',this)">✓ Nuevo cliente</button>
-   <button type="button" class="outcome-btn" data-outcome="distributor" onclick="selectSimpleOutcome('distributor',this)">★ Nuevo distribuidor</button>
-   <button type="button" class="outcome-btn full" data-outcome="followup" onclick="selectSimpleOutcome('followup',this)">🔁 Solo seguimiento / reprogramar</button>
-  </div>
-  <label style="margin-top:10px">Nota <span class="muted">(opcional)</span></label>
-  <textarea id="segActividadNota" placeholder="Ej.: Conversamos y mostró interés en conocer el plan."></textarea>
-
-  <div id="simpleNextToggleWrap" style="display:none;margin-top:12px;padding:10px 12px;border:1px solid #e3e6eb;border-radius:10px;background:#fafbfc">
-   <label style="display:flex;align-items:center;gap:9px;margin:0;cursor:pointer"><input id="simpleHasNext" type="checkbox" onchange="simpleToggleNext()" style="width:auto;margin:0"> ¿Quedó algo pendiente para después?</label>
-  </div>
-
-  <div id="simpleNextBox" style="display:none;margin-top:12px;padding:12px;border:1px solid #dfe4ea;border-radius:12px;background:#f8fafc">
-   <h3 id="simpleNextTitle" style="margin:0 0 8px">➡️ Próximo paso</h3>
-   <label id="simpleNextLabel">Qué toca hacer</label>
-   <textarea id="segNota" placeholder="Ej.: Enviar audio del Reto de 7 Días"></textarea>
-   <div class="row">
-    <div style="flex:1;min-width:145px"><label id="simpleDateLabel">Fecha</label><input id="segFecha" type="date"></div>
-    <div style="flex:1;min-width:120px"><label id="simpleTimeLabel">Hora</label><input id="segHora" type="time"></div>
+   <div id="activeAppointmentReprogramBox" style="display:none;margin-top:12px;padding:12px;border:1px solid #dfe4ea;border-radius:12px;background:#f8fafc">
+    <label>Motivo / qué se hará</label>
+    <textarea id="apptReNote" placeholder="Motivo de la cita"></textarea>
+    <div class="row">
+     <div style="flex:1;min-width:145px"><label>Nueva fecha</label><input id="apptReDate" type="date"></div>
+     <div style="flex:1;min-width:120px"><label>Nueva hora</label><input id="apptReTime" type="time"></div>
+    </div>
+    <button type="button" class="js-action" onclick="reprogramActiveAppointment(this)" style="width:100%;margin-top:10px">💾 Guardar nueva fecha y hora</button>
    </div>
-   <p id="simpleNextHelp" class="muted" style="margin:6px 0 0"></p>
   </div>
 
-  <button id="simpleSaveBtn" class="js-action" onclick="saveSimpleManagement(this)" style="width:100%;margin-top:14px;padding:13px;font-weight:800">💾 Guardar gestión</button>
-  <p class="muted" style="margin-top:8px;text-align:center">Una acción real = un solo registro.</p>
+  <div id="normalManagementArea">
+   <h3 style="margin:16px 0 8px">📝 Registrar gestión</h3>
+   <p class="muted" style="margin-top:0">Toca directamente lo que ocurrió. No hay menús escondidos. El sistema se encarga del resto.</p>
+   <details class="management-time">
+    <summary>🕒 Hoy · cambiar fecha/hora solo si hace falta</summary>
+    <div class="row" style="margin-top:10px">
+     <div style="flex:1;min-width:145px"><label>Fecha</label><input id="segActividadFecha" type="date"></div>
+     <div style="flex:1;min-width:120px"><label>Hora</label><input id="segActividadHora" type="time"></div>
+    </div>
+   </details>
+   <label style="margin-top:10px"><b>¿Qué pasó hoy?</b></label>
+   <input id="simpleOutcome" type="hidden" value="">
+   <div class="outcome-grid" id="simpleOutcomeButtons">
+    <button type="button" class="outcome-btn" data-outcome="attempt" onclick="selectSimpleOutcome('attempt',this)">✉️ Envié mensaje</button>
+    <button type="button" class="outcome-btn" data-outcome="conversation" onclick="selectSimpleOutcome('conversation',this)">💬 Conversamos</button>
+    <button type="button" class="outcome-btn" data-outcome="appointment" onclick="selectSimpleOutcome('appointment',this)">📅 Acordamos cita</button>
+    <button type="button" class="outcome-btn" data-outcome="presentation" onclick="selectSimpleOutcome('presentation',this)">▶️ Hice presentación</button>
+    <button type="button" class="outcome-btn" data-outcome="client" onclick="selectSimpleOutcome('client',this)">✓ Nuevo cliente</button>
+    <button type="button" class="outcome-btn" data-outcome="distributor" onclick="selectSimpleOutcome('distributor',this)">★ Nuevo distribuidor</button>
+    <button type="button" class="outcome-btn full" data-outcome="followup" onclick="selectSimpleOutcome('followup',this)">🔁 Solo seguimiento / reprogramar</button>
+   </div>
+   <label style="margin-top:10px">Nota <span class="muted">(opcional)</span></label>
+   <textarea id="segActividadNota" placeholder="Ej.: Conversamos y mostró interés en conocer el plan."></textarea>
 
-  <div class="follow-tools" style="margin-top:14px">
-   <button id="selectedWhatsAppBtn" class="wa-btn" onclick="openSelectedWhatsApp()">🟢 Abrir WhatsApp</button>
-   <button class="pause-btn" onclick="pauseSelectedFollowup()">⚪ Pausar / sin próximo paso</button>
+   <div id="simpleNextToggleWrap" style="display:none;margin-top:12px;padding:10px 12px;border:1px solid #e3e6eb;border-radius:10px;background:#fafbfc">
+    <label style="display:flex;align-items:center;gap:9px;margin:0;cursor:pointer"><input id="simpleHasNext" type="checkbox" onchange="simpleToggleNext()" style="width:auto;margin:0"> ¿Quedó algo pendiente para después?</label>
+   </div>
+
+   <div id="simpleNextBox" style="display:none;margin-top:12px;padding:12px;border:1px solid #dfe4ea;border-radius:12px;background:#f8fafc">
+    <h3 id="simpleNextTitle" style="margin:0 0 8px">➡️ Próximo paso</h3>
+    <label id="simpleNextLabel">Qué toca hacer</label>
+    <textarea id="segNota" placeholder="Ej.: Enviar audio del Reto de 7 Días"></textarea>
+    <div class="row">
+     <div style="flex:1;min-width:145px"><label id="simpleDateLabel">Fecha</label><input id="segFecha" type="date"></div>
+     <div style="flex:1;min-width:120px"><label id="simpleTimeLabel">Hora</label><input id="segHora" type="time"></div>
+    </div>
+    <p id="simpleNextHelp" class="muted" style="margin:6px 0 0"></p>
+   </div>
+
+   <button id="simpleSaveBtn" class="js-action" onclick="saveSimpleManagement(this)" style="width:100%;margin-top:14px;padding:13px;font-weight:800">💾 Guardar gestión</button>
+   <p class="muted" style="margin-top:8px;text-align:center">Una acción real = un solo registro.</p>
+
+   <div class="follow-tools" style="margin-top:14px">
+    <button id="selectedWhatsAppBtn" class="wa-btn" onclick="openSelectedWhatsApp()">🟢 Abrir WhatsApp</button>
+    <button class="pause-btn" onclick="pauseSelectedFollowup()">⚪ Pausar / sin próximo paso</button>
+   </div>
   </div>
  </div>
  <div class="card"><h2>Pendientes / actividad</h2><div id="activityList"></div></div>
@@ -434,8 +456,8 @@ body.sunday-mode .sunday-power-note{display:block}
 <script>
 const SEED=[{"name": "Adan Llamo", "phone": "912576254", "category": "A - Negocio", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-01", "next": "Confirmar inscripción e iniciar plan de acción", "next_date": "2026-09-10", "notes": "Presentación de negocio realizada 02/09. Mostró interés y manifestó intención de inscribirse como distribuidor a partir del 10/09. Pendiente confirmar inscripción e iniciar activación.", "id": 1, "contacted": true}, {"name": "Alex Santa Maria", "phone": "956877045", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo visites", "notes": "Respondió WhatsApp. Pendiente conversación presencial sobre hábitos/bienestar.", "id": 2, "contacted": true}, {"name": "Alexander Peralta Chunga", "phone": "999652647", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-01", "next": "Conversar presencialmente", "next_date": "Cuando lo encuentres", "notes": "Respondió cordialmente. No profundizó por WhatsApp. Pendiente conversación presencial.", "id": 3, "contacted": true}, {"name": "Anderson Villanueva", "phone": "902675148", "category": "B - Cliente", "origin": "Nutri Healthy", "status": "Presentado", "last": "", "next": "", "next_date": "", "notes": "", "id": 4, "contacted": true}, {"name": "Andy Navarro", "phone": "922737361", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-01", "next": "Profundizar / presentar plan de negocio", "next_date": "2026-09-02", "notes": "Conversación presencial. Se explicó a grandes rasgos el negocio. Acordamos profundizar mañana.", "id": 5, "contacted": true}, {"name": "Anita Molero", "phone": "950034264", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "", "next": "", "next_date": "", "notes": "", "id": 6, "contacted": true}, {"name": "Arbañil Chozo", "phone": "991107462", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "Abordarlo presencialmente", "next_date": "", "notes": "Todavía nada hasta que hables con él.", "id": 7, "contacted": false}, {"name": "Dalma Fernandez", "phone": "952320371", "category": "A - Negocio", "origin": "Conocido", "status": "Conversación", "last": "2026-09-01", "next": "Continuar conversación desde su número personal", "next_date": "Pendiente respuesta", "notes": "Respondió y se retomó conversación. Pendiente detectar interés/necesidad.", "id": 8, "contacted": true}, {"name": "Sandra Vilchez", "phone": "995782631", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "Unos días después", "notes": "", "id": 9, "contacted": true}, {"name": "Carlos La Ciencia", "phone": "964755023", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Mantener relación / retomar más adelante", "next_date": "", "notes": "", "id": 10, "contacted": true}, {"name": "Beto Torres Cueva", "phone": "975810570", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 11, "contacted": true}, {"name": "Bibliana Briceño", "phone": "910025852", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 12, "contacted": false}, {"name": "Calin Ubillus", "phone": "950284011", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "", "next": "Concretar presentación del Plan de Marketing", "next_date": "03 o 04/09/2026", "notes": "Nuevo intento de contacto sin respuesta.", "id": 13, "contacted": true}, {"name": "Casharo", "phone": "941932401", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 14, "contacted": false}, {"name": "Celinda Gallardo", "phone": "941966428", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 15, "contacted": false}, {"name": "Cesar Bustamante", "phone": "941925377", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-04", "next": "Segundo contacto si no responde", "next_date": "", "notes": "Mensaje enviado, sin respuesta.", "id": 16, "contacted": true}, {"name": "Cesar Davila", "phone": "949960660", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Mensaje enviado, sin respuesta.", "id": 17, "contacted": true}, {"name": "Cesar Matallana", "phone": "958994500", "category": "A - Negocio", "origin": "Conocido", "status": "Invitado", "last": "2026-09-05", "next": "Concretar día y hora para conversar sobre el proyecto", "next_date": "2026-09-07", "notes": "Respondió positivamente: acepta sentarse a conversar.", "id": 18, "contacted": true}, {"name": "Cesar Rodriguez", "phone": "988405859", "category": "A - Negocio", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 19, "contacted": false}, {"name": "Chavo Gustavo", "phone": "942193009", "category": "B - Cliente", "origin": "Conocido", "status": "Nuevo", "last": "", "next": "", "next_date": "", "notes": "", "id": 20, "contacted": false}, {"name": "Morayma Pizarro", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Seguimiento", "last": "2026-09-03", "next": "Esperar respuesta por el producto / confirmar si desea avanzar con la compra o inscripción", "next_date": "", "notes": "Interesada en inscribirse para consumo personal. No interesada actualmente en desarrollar negocio.", "id": 21, "contacted": true}, {"name": "Elias Fernández", "phone": "922335449", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 22, "contacted": true}, {"name": "Ali Martinez", "phone": "953133003", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "", "id": 23, "contacted": true}, {"name": "Consuelo Ocampo", "phone": "996494090", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-04", "next": "Segundo contacto si no responde", "next_date": "2026-09-08", "notes": "Posible perfil de emprendedor.", "id": 24, "contacted": true}, {"name": "Carlos Alberto", "phone": "952651183", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 25, "contacted": false}, {"name": "Diana Miranda", "phone": "941932401", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 26, "contacted": false}, {"name": "Luis Vilchez", "phone": "945183319", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 27, "contacted": false}, {"name": "Chumacero", "phone": "48 355 917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 28, "contacted": false}, {"name": "Cinthia M. Morí Heredia", "phone": "971422661", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Continuar conversación y conocer cómo está actualmente", "next_date": "2026-09-07", "notes": "Sobrina en Lima. Se retomó contacto.", "id": 29, "contacted": true}, {"name": "Dirk Mejia", "phone": "939842304", "category": "A - Negocio", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 30, "contacted": false}, {"name": "Dr Chasquero", "phone": "961435027", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 31, "contacted": false}, {"name": "Duayen- Maestro", "phone": "921610475", "category": "A - Negocio", "origin": "Conocido", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 32, "contacted": false}, {"name": "Eber Rebaza", "phone": "967754233", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 33, "contacted": false}, {"name": "Edgar Ortiz", "phone": "991367969", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 34, "contacted": false}, {"name": "Edgar Torres", "phone": "978415692", "category": "B - Cliente", "origin": "Conocido", "status": "Contactado", "last": "2026-06-05", "next": "Segundo contacto e invitación a evaluación", "next_date": "2026-06-09", "notes": "Conoce tu actividad. Mensaje enviado, sin respuesta.", "id": 35, "contacted": true}, {"name": "Edgardo Sandoval", "phone": "992220549", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 36, "contacted": false}, {"name": "Edinson Maquita", "phone": "949405791", "category": "A - Negocio", "origin": "Conocido", "status": "Contactado", "last": "2026-09-05", "next": "Esperar respuesta / segundo contacto", "next_date": "2026-09-09", "notes": "Mensaje enviado. Sin respuesta reportada.", "id": 37, "contacted": true}, {"name": "Edwin Ampuero", "phone": "982178585", "category": "B - Cliente", "origin": "Conocido", "status": "Conversación", "last": "2026-09-05", "next": "Retomar conversación y conocer necesidades", "next_date": "2026-09-09", "notes": "Primo lejano. Se retomó contacto; receptivo a conversar posteriormente.", "id": 38, "contacted": true}, {"name": "Efrain Meza", "phone": "929253999", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 39, "contacted": false}, {"name": "Elvira Cruz", "phone": "918898043", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 40, "contacted": false}, {"name": "Elena Vallejos", "phone": "922373394", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 41, "contacted": false}, {"name": "Eli Chachapoyas", "phone": "978951082", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 42, "contacted": false}, {"name": "Elias Arquitecto", "phone": "952226747", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 43, "contacted": false}, {"name": "Elias Serrato", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 44, "contacted": false}, {"name": "Elíseo Bazan", "phone": "947234519", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 45, "contacted": false}, {"name": "Eloy Silva", "phone": "981340917", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 46, "contacted": false}, {"name": "Elmer Herrera", "phone": "949500205", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 47, "contacted": false}, {"name": "Elva Cubas", "phone": "949408677", "category": "", "origin": "", "status": "", "last": "", "next": "", "next_date": "", "notes": "", "id": 48, "contacted": false}, {"name": "Judith Diaz", "phone": "957311588", "category": "A - Negocio", "origin": "Frío", "status": "Presentado", "last": "2026-09-04", "next": "Retomar conversación y acordar siguiente paso", "next_date": "2026-09-07", "notes": "Contacto en frío. Le interesa emprender. Fue invitada a la reunión del sábado pero no asistió.", "id": 49, "contacted": true}, {"name": "Celso", "phone": "", "category": "B - Cliente", "origin": "Conocido", "status": "Presentado", "last": "2026-09-04", "next": "Confirmar compra del paquete de 7 días para su esposa", "next_date": "Próxima semana", "notes": "Manifestó intención de comprar esta semana para iniciar la siguiente.", "id": 50, "contacted": true}, {"name": "Samir Carvajal", "phone": "", "category": "A - Negocio", "origin": "Conocido", "status": "No por ahora", "last": "2026-06-04", "next": "Sin seguimiento inmediato", "next_date": "", "notes": "Conversó, pero no mostró interés actualmente.", "id": 51, "contacted": true}];
 const PRIORITIES=[{"name": "Adan Llamo", "note": "Confirmar inscripción e iniciar plan de acción"}, {"name": "Judith Diaz", "note": "Retomar conversación y acordar siguiente paso"}, {"name": "Celso", "note": "Confirmar compra del paquete de 7 días para su esposa"}, {"name": "Cesar Matallana", "note": "Concretar día y hora para conversar sobre el proyecto"}, {"name": "Calin Ubillus", "note": "Concretar presentación del Plan de Marketing"}];
-const APP_VERSION='4.17.1';
-const APP_VERSION_NAME='Acciones visibles · cita en un toque';
+const APP_VERSION='4.17.3';
+const APP_VERSION_NAME='Cita activa · solo acciones del momento';
 const KEY='rumboGET2027_v4';
 const STAGE_ORDER={'Nuevo':0,'Intento de contacto':1,'Conversación':2,'Invitado/Cita':3,'Presentado':4,'Cliente':5,'Distribuidor':6,'Pausado':-1,'No por ahora':-2};
 const DAILY_CONTACT_MAX=10;
@@ -750,6 +772,68 @@ function confirmExistingAppointment(btn){
  if(window.segHora)segHora.value=p.next_time||'';
  markAppointment(btn);
 }
+function hasActiveAppointment(p){return !!(p&&p.stage==='Invitado/Cita'&&p.next&&p.next_date&&p.next_time&&p.followupActive!==false)}
+function renderAppointmentMode(p){
+ const active=hasActiveAppointment(p);
+ if(window.activeAppointmentArea)activeAppointmentArea.style.display=active?'block':'none';
+ if(window.normalManagementArea)normalManagementArea.style.display=active?'none':'block';
+ // Si hay una cita activa, no repetimos el mismo pendiente arriba: la cita manda.
+ if(active&&window.selectedNext)selectedNext.style.display='none';
+ if(!active){if(window.activeAppointmentReprogramBox)activeAppointmentReprogramBox.style.display='none';return;}
+ const today=todayISO(),date=String(p.next_date||'');
+ const isFuture=date>today,isToday=date===today,isPast=date<today;
+ const relative=isFuture?(date===isoShift(today,1)?'MAÑANA':'PRÓXIMA CITA'):(isToday?'HOY':'CITA PENDIENTE');
+ if(window.activeAppointmentSummary)activeAppointmentSummary.innerHTML=`<div style="font-size:12px;font-weight:800;color:#b36b00;margin-bottom:6px">${relative} · ${esc(fmtDate(date))} · ${esc(fmtTime(p.next_time))}</div><b>${esc(p.next)}</b>`;
+ if(window.activeAppointmentHint)activeAppointmentHint.textContent=isFuture?'Esta cita todavía no se realiza. Hoy solo puedes reprogramarla o cancelarla.':(isToday?'Hoy corresponde esta cita. Registra únicamente lo que ocurrió con ella.':'Esta cita ya venció. Indica si se realizó, reprograma o márcala como no realizada.');
+ if(window.activeAppointmentCompleteBtn)activeAppointmentCompleteBtn.style.display=isFuture?'none':'block';
+ if(window.activeAppointmentCancelBtn)activeAppointmentCancelBtn.textContent=isFuture?'❌ Cancelar cita':'❌ No se realizó';
+ if(window.apptReNote)apptReNote.value=p.next||'';
+ if(window.apptReDate)apptReDate.value=p.next_date||todayISO();
+ if(window.apptReTime)apptReTime.value=p.next_time||'';
+}
+function completeActiveAppointment(btn){
+ const p=requireSelected();if(!p)return;
+ if(!hasActiveAppointment(p))return alert('Esta persona ya no tiene una cita activa.');
+ if(!confirm('¿Confirmar que la PRESENTACIÓN ya se realizó?'))return;
+ if(window.segActividadFecha)segActividadFecha.value=todayISO();
+ if(window.segActividadHora)segActividadHora.value=localTimeHHMM();
+ if(window.segActividadNota)segActividadNota.value='';
+ if(window.segNota)segNota.value='';if(window.segFecha)segFecha.value=todayISO();if(window.segHora)segHora.value='';
+ markPresentation(btn);
+}
+function toggleActiveAppointmentReprogram(){
+ const p=requireSelected();if(!p||!hasActiveAppointment(p))return;
+ if(!window.activeAppointmentReprogramBox)return;
+ const opening=activeAppointmentReprogramBox.style.display==='none'||!activeAppointmentReprogramBox.style.display;
+ activeAppointmentReprogramBox.style.display=opening?'block':'none';
+ if(opening){if(window.apptReNote)apptReNote.value=p.next||'';if(window.apptReDate)apptReDate.value=p.next_date||todayISO();if(window.apptReTime)apptReTime.value=p.next_time||'';}
+}
+function reprogramActiveAppointment(btn){
+ const p=requireSelected();if(!p)return;
+ if(!hasActiveAppointment(p))return alert('Esta persona ya no tiene una cita activa.');
+ const note=(window.apptReNote?.value||'').trim(),date=(window.apptReDate?.value||'').trim(),time=(window.apptReTime?.value||'').trim();
+ if(!note)return alert('Escribe el motivo de la cita.');if(!date)return alert('Selecciona la nueva fecha.');if(!time)return alert('Selecciona la nueva hora.');
+ if(String(date)===String(p.next_date||'')&&String(time)===String(p.next_time||'')&&normName(note)===normName(p.next||''))return alert('No hiciste ningún cambio en la cita.');
+ if(!confirm('¿Reprogramar la cita para '+fmtDate(date)+' · '+fmtTime(time)+'?'))return;
+ if(!beginAction(btn))return;
+ const activityDate=todayISO(),activityTime=localTimeHHMM(),replaced=closeActiveFollowup(p,'reprogrammed');
+ p.next=note;p.next_date=date;p.next_time=time;p.followupActive=true;
+ const f=addActivity(p,'followup','↪️ Cita reprogramada · '+p.name,{},null,activityDate,activityTime,'');
+ f.followupNote=note;f.followupDate=date;f.followupTime=time;f.followupStatus='active';f.replacesFollowup=replaced;p.activeFollowupId=f.id;
+ p.last=activityDate;save();endAction(btn,'✓ Cita reprogramada');
+}
+function cancelActiveAppointment(btn){
+ const p=requireSelected();if(!p)return;
+ if(!hasActiveAppointment(p))return alert('Esta persona ya no tiene una cita activa.');
+ const isFuture=String(p.next_date||'')>todayISO();
+ const question=isFuture?'¿Cancelar esta cita?\n\nLa cita dejará de estar activa.':'¿Confirmar que la cita NO SE REALIZÓ?\n\nLa cita dejará de estar activa.';
+ if(!confirm(question))return;
+ if(!beginAction(btn))return;
+ const before=snapshot(p),x=activityFormData(),closed=closeActiveFollowup(p,'completed');
+ p.stage='Conversación';p.status='Conversación';p.manualStage='Conversación';p.everConversation=true;p.last=x.date;
+ const a=addActivity(p,'appointment_cancelled',(isFuture?'❌ Cita cancelada · ':'❌ Cita no realizada · ')+p.name,{},before,x.date,x.time,x.note);a.closedFollowup=closed;
+ clearActivityForm();clearNextForm();save();endAction(btn,isFuture?'✓ Cita cancelada':'✓ Cita marcada como no realizada');
+}
 function markAttempt(btn){const p=requireSelected();if(!p)return;const x=activityFormData();if(!x.date||!x.time)return alert('Registra fecha y hora de la gestión.');if(!beginAction(btn))return;const same=sameProspectDayType(p,'attempt',x.date);if(same.length){if(!confirm('Ya registraste un intento con '+p.name+' ese día.\n\n¿Fue un intento distinto y deseas guardarlo solo en el historial? No sumará otra gestión.')){cancelAction();return;}const a=addActivity(p,'attempt','✉️ Intento adicional · '+p.name,{},null,x.date,x.time,x.note);a.gestureEligible=false;saveNextFromForm(p,x.date,x.time,false);clearActivityForm();clearNextForm();save();endAction(btn,'✓ Guardado sin duplicar');return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');advanceStage(p,'Intento de contacto');p.last=x.date;const a=addActivity(p,'attempt','✉️ Intento de contacto · '+p.name,{},before,x.date,x.time,x.note);a.gestureEligible=before.stage!=='Distribuidor';a.closedFollowup=closed;const next=saveNextFromForm(p,x.date,x.time,false);if(next===false){if(closed)restoreClosedFollowup(closed);Object.assign(p,before);db.activities=db.activities.filter(z=>z.id!==a.id);cancelAction();return;}clearActivityForm();clearNextForm();save();endAction(btn)}
 function markConversation(btn){const p=requireSelected();if(!p)return;const x=activityFormData();if(!x.date||!x.time)return alert('Registra fecha y hora de la gestión.');if(!beginAction(btn))return;const same=sameProspectDayType(p,'conversation',x.date);if(same.length){if(!confirm('Ya registraste una conversación con '+p.name+' ese día.\n\n¿Fue una interacción distinta y deseas guardarla solo en el historial? No sumará otra conversación ni otra gestión.')){cancelAction();return;}const a=addActivity(p,'conversation','💬 Conversación adicional · '+p.name,{},null,x.date,x.time,x.note);a.gestureEligible=false;const next=saveNextFromForm(p,x.date,x.time,false);if(next===false){db.activities=db.activities.filter(z=>z.id!==a.id);cancelAction();return;}clearActivityForm();clearNextForm();save();endAction(btn,'✓ Guardado sin duplicar');return;}const before=snapshot(p),closed=closeActiveFollowup(p,'completed');let dc=0;if(!p.everConversation){p.everConversation=true;dc=1};advanceStage(p,'Conversación');p.last=x.date;const a=addActivity(p,'conversation','💬 Conversación · '+p.name,{conversations:1,contacts:dc},before,x.date,x.time,x.note);a.gestureEligible=before.stage!=='Distribuidor';a.closedFollowup=closed;const next=saveNextFromForm(p,x.date,x.time,false);if(next===false){if(closed)restoreClosedFollowup(closed);Object.assign(p,before);db.activities=db.activities.filter(z=>z.id!==a.id);cancelAction();return;}clearActivityForm();clearNextForm();save();endAction(btn)}
 function markAppointment(btn){
@@ -802,7 +886,7 @@ function renderFollowSearch(){
  followResults.innerHTML=shown.length?shown.map(p=>`<div class="follow-result ${Number(selectedFollowId)===Number(p.id)?'selected':''}" onclick="selectFollowProspect(${p.id})"><div class="name">${esc(p.name)}</div><div class="meta-line"><span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}</div><div class="meta-line">${urgencyBadge(p)}</div>${p.next?`<small><b>${esc(p.next)}</b></small>`:''}${whatsappPhone(p.phone)?`<div style="margin-top:8px"><button class="wa-btn" style="padding:7px 10px;font-size:12px" onclick="event.stopPropagation();openWhatsAppFor(${p.id})">🟢 WhatsApp</button></div>`:''}</div>`).join(''):'<div class="history"><b>No se encontró ningún prospecto.</b><br><span class="muted">Puedes ir a Prospectos y agregarlo.</span><br><br><button onclick="goToNewProspect()">+ Nuevo prospecto</button></div>';
  const recentIds=[];for(const a of db.activities){if(a.prospectId&&!recentIds.includes(Number(a.prospectId)))recentIds.push(Number(a.prospectId));if(recentIds.length>=5)break}const rec=recentIds.map(id=>db.prospects.find(p=>Number(p.id)===id)).filter(Boolean);recentList.innerHTML=rec.length?rec.map(p=>`<button class="recent-chip" onclick="selectFollowProspect(${p.id})">${esc(p.name)}</button>`).join(''):'<span class="muted">Aún no hay recientes.</span>';
 }
-function renderSelected(){const p=selectedProspect();if(!p){selectedTitle.textContent='Selecciona un prospecto';selectedMeta.innerHTML='';selectedNext.style.display='none';if(window.selectedWhatsAppBtn){selectedWhatsAppBtn.disabled=true;selectedWhatsAppBtn.style.opacity='.55'}return}selectedTitle.textContent=p.name;const lastNote=latestActivityNote(p);selectedMeta.innerHTML=`<span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}${lastNote?`<div class="muted" style="width:100%;margin-top:6px"><b>Última nota:</b> ${esc(lastNote.note)} · ${fmtDate(lastNote.date)}${lastNote.time?' '+esc(fmtTime(lastNote.time)):''}</div>`:''}`;if(window.selectedWhatsAppBtn){const ok=!!whatsappPhone(p.phone);selectedWhatsAppBtn.disabled=!ok;selectedWhatsAppBtn.style.opacity=ok?'1':'.55';selectedWhatsAppBtn.textContent=ok?'🟢 Abrir WhatsApp':'🟢 WhatsApp sin número'}if(p.next){const canPromote=(STAGE_ORDER[p.stage]??0)<(STAGE_ORDER['Invitado/Cita']??3)&&!!parseDate(p.next_date)&&!!p.next_time;selectedNext.style.display='block';selectedNext.innerHTML=`${urgencyBadge(p)}<br><b style="display:inline-block;margin-top:8px">${esc(p.next)}</b>${p.next_time?`<div class="muted" style="margin-top:5px">Hora: ${esc(fmtTime(p.next_time))}</div>`:''}${canPromote?`<div class="muted" style="margin-top:9px;line-height:1.35">💡 Este pendiente tiene fecha y hora. Si ya es una cita confirmada, toca el botón azul:</div><button type="button" class="quick-appt-btn js-action" onclick="confirmExistingAppointment(this)">📅 Confirmar esta cita</button>`:''}`}else selectedNext.style.display='none'}
+function renderSelected(){const p=selectedProspect();if(!p){selectedTitle.textContent='Selecciona un prospecto';selectedMeta.innerHTML='';selectedNext.style.display='none';if(window.activeAppointmentArea)activeAppointmentArea.style.display='none';if(window.normalManagementArea)normalManagementArea.style.display='block';if(window.selectedWhatsAppBtn){selectedWhatsAppBtn.disabled=true;selectedWhatsAppBtn.style.opacity='.55'}return}selectedTitle.textContent=p.name;const lastNote=latestActivityNote(p);selectedMeta.innerHTML=`<span class="muted">${esc(p.category||'Sin categoría')}</span>${stageBadge(p.stage)}${lastNote?`<div class="muted" style="width:100%;margin-top:6px"><b>Última nota:</b> ${esc(lastNote.note)} · ${fmtDate(lastNote.date)}${lastNote.time?' '+esc(fmtTime(lastNote.time)):''}</div>`:''}`;if(window.selectedWhatsAppBtn){const ok=!!whatsappPhone(p.phone);selectedWhatsAppBtn.disabled=!ok;selectedWhatsAppBtn.style.opacity=ok?'1':'.55';selectedWhatsAppBtn.textContent=ok?'🟢 Abrir WhatsApp':'🟢 WhatsApp sin número'}if(p.next){const canPromote=(STAGE_ORDER[p.stage]??0)<(STAGE_ORDER['Invitado/Cita']??3)&&!!parseDate(p.next_date)&&!!p.next_time;selectedNext.style.display='block';selectedNext.innerHTML=`${urgencyBadge(p)}<br><b style="display:inline-block;margin-top:8px">${esc(p.next)}</b>${p.next_time?`<div class="muted" style="margin-top:5px">Hora: ${esc(fmtTime(p.next_time))}</div>`:''}${canPromote?`<div class="muted" style="margin-top:9px;line-height:1.35">💡 Este pendiente tiene fecha y hora. Si ya es una cita confirmada, toca el botón azul:</div><button type="button" class="quick-appt-btn js-action" onclick="confirmExistingAppointment(this)">📅 Confirmar esta cita</button>`:''}`}else selectedNext.style.display='none';renderAppointmentMode(p)}
 
 const PROSPECT_FILTERS=[['Todos','TODOS'],['Nuevo','PENDIENTES'],['Intento de contacto','ENVIADOS'],['Conversación','RESPONDIÓ'],['Invitado/Cita','CITA'],['Presentado','PRESENTADO'],['Cliente','CLIENTE'],['Distribuidor','DISTRIBUIDOR'],['Pausado','PAUSADOS'],['No por ahora','NO POR AHORA']];
 function setProspectStageFilter(stage){prospectStageFilter=stage;renderProspects()}
